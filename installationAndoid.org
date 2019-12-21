@@ -20,3 +20,4 @@ Run it and press Enter.
 
 https://wiki.termux.com/wiki/MariaDB
 
+https://parzibyte.me/blog/en/2019/04/16/install-mysql-mariadb-android-termux/
