@@ -1,35 +1,56 @@
+* Installer Termux
 
+https://termux.com
+
+** Afficher le clavier s'il a disparu
+Il y a un tiroir à gauche de l'écran que l'on peut afficher en le faisant glisser vers la droite.
+Dans le tiroir =Keyboard= permet d'afficher le clavier.
+** Quitter une session Termux
+- Maintenir un appui sur l'écran.
+- More...
+- Kill process
+
+* Installation de mariadb dans Termux
 In your Termux application execute:
 
+#+BEGIN_SRC shell
 apt update
+#+END_SRC
 
 And then:
 
+#+BEGIN_SRC shell
 apt upgrade
-
 pkg install mariadb
+#+END_SRC
 
-start the MySQL daemon (this should also be done if we restart the phone).
+* Start the MySQL daemon 
+(this should also be done if we restart the phone).
 
 To do this, execute:
 
+#+BEGIN_SRC shell
 mysqld_safe -u root &
+#+END_SRC
 
-What we do is run mysqld_safe with the root user; the ampersand & is to run it in the background.
-Run it and press Enter. 
-
-https://wiki.termux.com/wiki/MariaDB
-
-https://parzibyte.me/blog/en/2019/04/16/install-mysql-mariadb-android-termux/
+What we do is run =mysqld_safe= with the root user; the ampersand =&= is to run it in the background.
+Run it _and press Enter_. 
 
 
-Stop MySQL/MariaDB process
+
+* Stop MySQL/MariaDB process
 If you want to stop the process, find the ID from whichever process that has the word “mysql” using ps with grep, and then kill them with kill -9 [ID], the -9 is to send a KILL SIGNAL.
 
 If you take a  look, they are two processes with 15406 and 15488 ids. The third is from grep but we omit it. Remember that it will change in your case because the process id isn’t always the same.
 
 When you have the IDs kill them:
-
+#+BEGIN_SRC shell
 kill -9 15406
-
 kill -9 15488
+#+END_SRC
+
+* Sources
+
+https://wiki.termux.com/wiki/MariaDB
+
+https://parzibyte.me/blog/en/2019/04/16/install-mysql-mariadb-android-termux/
