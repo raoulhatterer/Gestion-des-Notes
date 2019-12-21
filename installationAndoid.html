@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-12-21 Sat 22:57 -->
+<!-- 2019-12-22 Sun 00:15 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&lrm;</title>
@@ -233,29 +233,29 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#orgbc503b2">1. Installer Termux</a>
+<li><a href="#org4e2d0f1">1. Installer Termux</a>
 <ul>
-<li><a href="#org0915f23">1.1. Afficher le clavier s'il a disparu</a></li>
-<li><a href="#org686c7ac">1.2. Quitter une session Termux</a></li>
+<li><a href="#org3dc13af">1.1. Afficher le clavier s'il a disparu</a></li>
+<li><a href="#org38c783e">1.2. Quitter une session Termux</a></li>
 </ul>
 </li>
-<li><a href="#org4b0264f">2. Installation de mariadb dans Termux</a></li>
-<li><a href="#orgda0d1ce">3. Start the MySQL daemon</a></li>
-<li><a href="#org7f07d81">4. Stop MySQL/MariaDB process</a></li>
-<li><a href="#orgb9dcd35">5. Sources</a></li>
+<li><a href="#org319b5cb">2. Installation de mariadb dans Termux</a></li>
+<li><a href="#org8ac464c">3. Start the MySQL daemon</a></li>
+<li><a href="#orgdea9a79">4. Stop MySQL/MariaDB process</a></li>
+<li><a href="#org3e1d76d">5. Sources</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-orgbc503b2" class="outline-2">
-<h2 id="orgbc503b2"><span class="section-number-2">1</span> Installer Termux</h2>
+<div id="outline-container-org4e2d0f1" class="outline-2">
+<h2 id="org4e2d0f1"><span class="section-number-2">1</span> Installer Termux</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <a href="https://termux.com">https://termux.com</a>
 </p>
 </div>
 
-<div id="outline-container-org0915f23" class="outline-3">
-<h3 id="org0915f23"><span class="section-number-3">1.1</span> Afficher le clavier s'il a disparu</h3>
+<div id="outline-container-org3dc13af" class="outline-3">
+<h3 id="org3dc13af"><span class="section-number-3">1.1</span> Afficher le clavier s'il a disparu</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Il y a un tiroir à gauche de l'écran que l'on peut afficher en le faisant glisser vers la droite.
@@ -263,8 +263,8 @@ Dans le tiroir <code>Keyboard</code> permet d'afficher le clavier.
 </p>
 </div>
 </div>
-<div id="outline-container-org686c7ac" class="outline-3">
-<h3 id="org686c7ac"><span class="section-number-3">1.2</span> Quitter une session Termux</h3>
+<div id="outline-container-org38c783e" class="outline-3">
+<h3 id="org38c783e"><span class="section-number-3">1.2</span> Quitter une session Termux</h3>
 <div class="outline-text-3" id="text-1-2">
 <ul class="org-ul">
 <li>Maintenir un appui sur l'écran.</li>
@@ -275,8 +275,8 @@ Dans le tiroir <code>Keyboard</code> permet d'afficher le clavier.
 </div>
 </div>
 
-<div id="outline-container-org4b0264f" class="outline-2">
-<h2 id="org4b0264f"><span class="section-number-2">2</span> Installation de mariadb dans Termux</h2>
+<div id="outline-container-org319b5cb" class="outline-2">
+<h2 id="org319b5cb"><span class="section-number-2">2</span> Installation de mariadb dans Termux</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 In your Termux application execute:
@@ -299,8 +299,8 @@ pkg install mariadb
 </div>
 </div>
 
-<div id="outline-container-orgda0d1ce" class="outline-2">
-<h2 id="orgda0d1ce"><span class="section-number-2">3</span> Start the MySQL daemon</h2>
+<div id="outline-container-org8ac464c" class="outline-2">
+<h2 id="org8ac464c"><span class="section-number-2">3</span> Start the MySQL daemon</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 (this should also be done if we restart the phone).
@@ -324,12 +324,17 @@ Run it <span class="underline">and press Enter</span>.
 
 
 
-<div id="outline-container-org7f07d81" class="outline-2">
-<h2 id="org7f07d81"><span class="section-number-2">4</span> Stop MySQL/MariaDB process</h2>
+<div id="outline-container-orgdea9a79" class="outline-2">
+<h2 id="orgdea9a79"><span class="section-number-2">4</span> Stop MySQL/MariaDB process</h2>
 <div class="outline-text-2" id="text-4">
 <p>
 If you want to stop the process, find the ID from whichever process that has the word “mysql” using ps with grep, and then kill them with kill -9 [ID], the -9 is to send a KILL SIGNAL.
 </p>
+
+<div class="org-src-container">
+<pre class="src src-shell">ps aux | grep mysql
+</pre>
+</div>
 
 <p>
 If you take a  look, they are two processes with 15406 and 15488 ids. The third is from grep but we omit it. Remember that it will change in your case because the process id isn’t always the same.
@@ -346,8 +351,8 @@ When you have the IDs kill them:
 </div>
 </div>
 
-<div id="outline-container-orgb9dcd35" class="outline-2">
-<h2 id="orgb9dcd35"><span class="section-number-2">5</span> Sources</h2>
+<div id="outline-container-org3e1d76d" class="outline-2">
+<h2 id="org3e1d76d"><span class="section-number-2">5</span> Sources</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 <a href="https://wiki.termux.com/wiki/MariaDB">https://wiki.termux.com/wiki/MariaDB</a>
@@ -361,7 +366,7 @@ When you have the IDs kill them:
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Raoul</p>
-<p class="date">Created: 2019-12-21 Sat 22:57</p>
+<p class="date">Created: 2019-12-22 Sun 00:15</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

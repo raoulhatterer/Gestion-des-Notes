@@ -41,6 +41,10 @@ Run it _and press Enter_.
 * Stop MySQL/MariaDB process
 If you want to stop the process, find the ID from whichever process that has the word “mysql” using ps with grep, and then kill them with kill -9 [ID], the -9 is to send a KILL SIGNAL.
 
+#+BEGIN_SRC shell
+ps aux | grep mysql
+#+END_SRC
+
 If you take a  look, they are two processes with 15406 and 15488 ids. The third is from grep but we omit it. Remember that it will change in your case because the process id isn’t always the same.
 
 When you have the IDs kill them:
