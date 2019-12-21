@@ -1,1 +1,7 @@
 https://wiki.termux.com/wiki/MariaDB
+
+start the MySQL daemon (this should also be done if we restart the phone).
+To do this, execute:
+mysqld_safe -u root &
+What we do is run mysqld_safe with the root user; the ampersand & is to run it in the background.
+Run it and press Enter. 
