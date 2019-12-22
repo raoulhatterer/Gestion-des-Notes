@@ -2,7 +2,7 @@
 
   https://termux.com
 
-** Ouvrir Termux pour partager des fichiers 
+** Partager des fichiers dans Termux
 https://wiki.termux.com/wiki/Sharing_Data
 
 ** Afficher le clavier s'il a disparu
