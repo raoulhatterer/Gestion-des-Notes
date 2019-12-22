@@ -118,6 +118,16 @@ Well, although developers of MySQL does not make available a mysql show users co
 
 Once logged in, run the following command on the mysql> prompt:
 
+ #+BEGIN_SRC shell
+    mysql> select * from mysql.user;
+ #+END_SRC
+
+
+Given that we’re running a SELECT ALL sql query with the select * from mysql.user; statement, the query returns a large amount of information – both useful and unuseful. So it’s much better and efficient to modify the sql query to reflect as much information as really needed.
+
+So for example, to show MySQL users’ username, password and host, we’ll modify the sql query to accordingly as such:
+
+
 * Stop MySQL/MariaDB process
   If you want to stop the process, find the ID from whichever process that has the word “mysql” using ps with grep, and then kill them with kill -9 [ID], the -9 is to send a KILL SIGNAL.
 
