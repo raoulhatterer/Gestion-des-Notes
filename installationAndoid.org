@@ -153,3 +153,5 @@ The above sql query will present you with a list of users and their respective u
   https://wiki.termux.com/wiki/MariaDB
 
   https://parzibyte.me/blog/en/2019/04/16/install-mysql-mariadb-android-termux/
+
+  https://www.dailyrazor.com/blog/mysql-show-users
