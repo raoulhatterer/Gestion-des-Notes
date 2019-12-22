@@ -127,6 +127,10 @@ Given that we’re running a SELECT ALL sql query with the select * from mysql.u
 
 So for example, to show MySQL users’ username, password and host, we’ll modify the sql query to accordingly as such:
 
+#+BEGIN_SRC shell
+    select user, password, host from mysql.user;
+ #+END_SRC
+
 
 * Stop MySQL/MariaDB process
   If you want to stop the process, find the ID from whichever process that has the word “mysql” using ps with grep, and then kill them with kill -9 [ID], the -9 is to send a KILL SIGNAL.
