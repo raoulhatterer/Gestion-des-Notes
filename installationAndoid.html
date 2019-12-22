@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-12-22 Sun 00:15 -->
+<!-- 2019-12-22 Sun 02:25 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&lrm;</title>
@@ -233,29 +233,37 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org4e2d0f1">1. Installer Termux</a>
+<li><a href="#org4fe3009">1. Installer Termux</a>
 <ul>
-<li><a href="#org3dc13af">1.1. Afficher le clavier s'il a disparu</a></li>
-<li><a href="#org38c783e">1.2. Quitter une session Termux</a></li>
+<li><a href="#orgf9ee61f">1.1. Afficher le clavier s'il a disparu</a></li>
+<li><a href="#org85bc573">1.2. Quitter une session Termux</a></li>
 </ul>
 </li>
-<li><a href="#org319b5cb">2. Installation de mariadb dans Termux</a></li>
-<li><a href="#org8ac464c">3. Start the MySQL daemon</a></li>
-<li><a href="#orgdea9a79">4. Stop MySQL/MariaDB process</a></li>
-<li><a href="#org3e1d76d">5. Sources</a></li>
+<li><a href="#org96d776b">2. Installation de mariadb dans Termux</a></li>
+<li><a href="#org25f0e9d">3. Enable access to root account</a></li>
+<li><a href="#org8f64f81">4. Login as 'root'</a>
+<ul>
+<li><a href="#org430fbc9">4.1. Commandes de base en ligne de commande</a></li>
+<li><a href="#orgb4c6fc1">4.2. Création d'une nouvelle base de données</a></li>
+<li><a href="#orgd78041a">4.3. CREATION d'un utilisateur 'gestionnaire'</a></li>
+</ul>
+</li>
+<li><a href="#org08c1245">5. Start the MySQL daemon</a></li>
+<li><a href="#orgf610ba4">6. Stop MySQL/MariaDB process</a></li>
+<li><a href="#org4f6c497">7. Sources</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org4e2d0f1" class="outline-2">
-<h2 id="org4e2d0f1"><span class="section-number-2">1</span> Installer Termux</h2>
+<div id="outline-container-org4fe3009" class="outline-2">
+<h2 id="org4fe3009"><span class="section-number-2">1</span> Installer Termux</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <a href="https://termux.com">https://termux.com</a>
 </p>
 </div>
 
-<div id="outline-container-org3dc13af" class="outline-3">
-<h3 id="org3dc13af"><span class="section-number-3">1.1</span> Afficher le clavier s'il a disparu</h3>
+<div id="outline-container-orgf9ee61f" class="outline-3">
+<h3 id="orgf9ee61f"><span class="section-number-3">1.1</span> Afficher le clavier s'il a disparu</h3>
 <div class="outline-text-3" id="text-1-1">
 <p>
 Il y a un tiroir à gauche de l'écran que l'on peut afficher en le faisant glisser vers la droite.
@@ -263,8 +271,8 @@ Dans le tiroir <code>Keyboard</code> permet d'afficher le clavier.
 </p>
 </div>
 </div>
-<div id="outline-container-org38c783e" class="outline-3">
-<h3 id="org38c783e"><span class="section-number-3">1.2</span> Quitter une session Termux</h3>
+<div id="outline-container-org85bc573" class="outline-3">
+<h3 id="org85bc573"><span class="section-number-3">1.2</span> Quitter une session Termux</h3>
 <div class="outline-text-3" id="text-1-2">
 <ul class="org-ul">
 <li>Maintenir un appui sur l'écran.</li>
@@ -275,8 +283,8 @@ Dans le tiroir <code>Keyboard</code> permet d'afficher le clavier.
 </div>
 </div>
 
-<div id="outline-container-org319b5cb" class="outline-2">
-<h2 id="org319b5cb"><span class="section-number-2">2</span> Installation de mariadb dans Termux</h2>
+<div id="outline-container-org96d776b" class="outline-2">
+<h2 id="org96d776b"><span class="section-number-2">2</span> Installation de mariadb dans Termux</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 In your Termux application execute:
@@ -296,12 +304,156 @@ And then:
 pkg install mariadb
 </pre>
 </div>
+
+
+<p>
+The command shown above will also initialize the database with 2 all-privilege accounts.
+The first one is "root" which is inaccessible and the second one with name of your Termux user (check with command <code>id -un</code> or <code>whoami</code>).
+</p>
 </div>
 </div>
 
-<div id="outline-container-org8ac464c" class="outline-2">
-<h2 id="org8ac464c"><span class="section-number-2">3</span> Start the MySQL daemon</h2>
+
+<div id="outline-container-org25f0e9d" class="outline-2">
+<h2 id="org25f0e9d"><span class="section-number-2">3</span> Enable access to root account</h2>
 <div class="outline-text-2" id="text-3">
+<p>
+To enable access to root account, you need to login with your Termux user name
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-shell">mysql -u $(<span style="color: #ff00ff;">whoami</span>)
+</pre>
+</div>
+
+<p>
+and manually change password for root
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell">use mysql;
+<span style="color: #483d8b;">set</span> password for <span style="color: #8b2252;">'root'</span>@<span style="color: #8b2252;">'localhost'</span> = password(<span style="color: #8b2252;">'YOUR_ROOT_PASSWORD_HERE'</span>);
+flush privileges;
+quit
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org8f64f81" class="outline-2">
+<h2 id="org8f64f81"><span class="section-number-2">4</span> Login as 'root'</h2>
+<div class="outline-text-2" id="text-4">
+<p>
+Verify that you are able to login as 'root' with:
+</p>
+<div class="org-src-container">
+<pre class="src src-sql">mysql -u root -p
+</pre>
+</div>
+
+
+<p>
+You will need to provide password set in previous step. (hatterer)
+</p>
+
+<p>
+Il y a trois types d'utilisateur d'un SGBD, trois rôles bien distincts :
+</p>
+<ol class="org-ol">
+<li>l'administrateur du SGBD (DataBases Administrator -DBA) et donc des Bases de Données. Son rôle est d'installer et gérer le SGBD dans sa globalité. Pour MySQL ou MariaDB, il s'appelle 'root'.</li>
+<li>les créateurs de Bases de Données dans un SGBD existant : création (CREATE TABLE), modification (ALTER TABLE), suppression (DROP TABLE) de tables&#x2026;</li>
+<li>les utilisateurs de bases de données même s'ils ne le savent pas toujours.</li>
+</ol>
+
+<p>
+Il ne faut pas travailler sur une bases de données en tant qu'administrateur de bases de données, ce n'est pas son rôle.
+L'administrateur crée une base de données et délègue sa gestion à un autre utilisateur.
+</p>
+</div>
+
+<div id="outline-container-org430fbc9" class="outline-3">
+<h3 id="org430fbc9"><span class="section-number-3">4.1</span> Commandes de base en ligne de commande</h3>
+<div class="outline-text-3" id="text-4-1">
+<ul class="org-ul">
+<li><code>SHOW DATABASES</code></li>
+</ul>
+<p>
+Liste les bases de données
+</p>
+<ul class="org-ul">
+<li><code>SHOW STATUS</code></li>
+</ul>
+<p>
+Affiche le statut du serveur
+</p>
+<ul class="org-ul">
+<li><code>USE nom_base</code></li>
+</ul>
+<p>
+Sélectionne la base par défaut
+</p>
+<ul class="org-ul">
+<li><code>SHOW TABLES</code></li>
+</ul>
+<p>
+Affiche les tables de la base courante
+</p>
+<ul class="org-ul">
+<li><code>DESCRIBLE table</code></li>
+</ul>
+<p>
+Affiche la structure de la table
+</p>
+<ul class="org-ul">
+<li><code>SELECT * FROM table</code></li>
+</ul>
+<p>
+Affiche le contenu de la table
+</p>
+<ul class="org-ul">
+<li><code>CREATE DATABASE base</code></li>
+</ul>
+<p>
+Crée une nouvelle base de données
+</p>
+</div>
+</div>
+
+<div id="outline-container-orgb4c6fc1" class="outline-3">
+<h3 id="orgb4c6fc1"><span class="section-number-3">4.2</span> Création d'une nouvelle base de données</h3>
+<div class="outline-text-3" id="text-4-2">
+<p>
+Création d'une nouvelle base de données vierge <code>bd_gestion_des_notes</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-sql">root: <span style="color: #a020f0;">CREATE</span> DATABASE bd_gestion_des_notes;
+root: SHOW DATABASES;
+</pre>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgd78041a" class="outline-3">
+<h3 id="orgd78041a"><span class="section-number-3">4.3</span> CREATION d'un utilisateur 'gestionnaire'</h3>
+<div class="outline-text-3" id="text-4-3">
+<p>
+Utilisateur pouvant créer ou modifier des tables dans la base de données <code>bd_gestion_des_notes</code>
+</p>
+<div class="org-src-container">
+<pre class="src src-sql">root: <span style="color: #a020f0;">CREATE</span> <span style="color: #483d8b;">USER</span> <span style="color: #8b2252;">'user_gestionnaire'</span>@<span style="color: #8b2252;">'localhost'</span> IDENTIFIED <span style="color: #a020f0;">BY</span> <span style="color: #8b2252;">'gestionnaire'</span>;
+root: <span style="color: #a020f0;">GRANT</span> <span style="color: #a020f0;">ALL</span> <span style="color: #a020f0;">PRIVILEGES</span> <span style="color: #a020f0;">ON</span> bd_gestion_des_notes.* <span style="color: #a020f0;">TO</span> <span style="color: #8b2252;">'user_gestionnaire'</span>@<span style="color: #8b2252;">'localhost'</span>;
+root: quit
+</pre>
+</div>
+</div>
+</div>
+</div>
+
+<div id="outline-container-org08c1245" class="outline-2">
+<h2 id="org08c1245"><span class="section-number-2">5</span> Start the MySQL daemon</h2>
+<div class="outline-text-2" id="text-5">
 <p>
 (this should also be done if we restart the phone).
 </p>
@@ -324,9 +476,9 @@ Run it <span class="underline">and press Enter</span>.
 
 
 
-<div id="outline-container-orgdea9a79" class="outline-2">
-<h2 id="orgdea9a79"><span class="section-number-2">4</span> Stop MySQL/MariaDB process</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-orgf610ba4" class="outline-2">
+<h2 id="orgf610ba4"><span class="section-number-2">6</span> Stop MySQL/MariaDB process</h2>
+<div class="outline-text-2" id="text-6">
 <p>
 If you want to stop the process, find the ID from whichever process that has the word “mysql” using ps with grep, and then kill them with kill -9 [ID], the -9 is to send a KILL SIGNAL.
 </p>
@@ -351,9 +503,9 @@ When you have the IDs kill them:
 </div>
 </div>
 
-<div id="outline-container-org3e1d76d" class="outline-2">
-<h2 id="org3e1d76d"><span class="section-number-2">5</span> Sources</h2>
-<div class="outline-text-2" id="text-5">
+<div id="outline-container-org4f6c497" class="outline-2">
+<h2 id="org4f6c497"><span class="section-number-2">7</span> Sources</h2>
+<div class="outline-text-2" id="text-7">
 <p>
 <a href="https://wiki.termux.com/wiki/MariaDB">https://wiki.termux.com/wiki/MariaDB</a>
 </p>
@@ -366,7 +518,7 @@ When you have the IDs kill them:
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Raoul</p>
-<p class="date">Created: 2019-12-22 Sun 00:15</p>
+<p class="date">Created: 2019-12-22 Sun 02:25</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

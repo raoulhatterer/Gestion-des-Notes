@@ -1,60 +1,132 @@
 * Installer Termux
 
-https://termux.com
+  https://termux.com
 
 ** Afficher le clavier s'il a disparu
-Il y a un tiroir à gauche de l'écran que l'on peut afficher en le faisant glisser vers la droite.
-Dans le tiroir =Keyboard= permet d'afficher le clavier.
+   Il y a un tiroir à gauche de l'écran que l'on peut afficher en le faisant glisser vers la droite.
+   Dans le tiroir =Keyboard= permet d'afficher le clavier.
 ** Quitter une session Termux
-- Maintenir un appui sur l'écran.
-- More...
-- Kill process
+   - Maintenir un appui sur l'écran.
+   - More...
+   - Kill process
 
 * Installation de mariadb dans Termux
-In your Termux application execute:
+  In your Termux application execute:
 
-#+BEGIN_SRC shell
-apt update
-#+END_SRC
+  #+BEGIN_SRC shell
+    apt update
+  #+END_SRC
 
-And then:
+  And then:
 
-#+BEGIN_SRC shell
-apt upgrade
-pkg install mariadb
-#+END_SRC
+  #+BEGIN_SRC shell
+    apt upgrade
+    pkg install mariadb
+  #+END_SRC
+
+
+  The command shown above will also initialize the database with 2 all-privilege accounts.
+  The first one is "root" which is inaccessible and the second one with name of your Termux user (check with command =id -un= or =whoami=).
+
+
+* Enable access to root account
+  To enable access to root account, you need to login with your Termux user name
+
+
+  #+BEGIN_SRC shell
+    mysql -u $(whoami)
+  #+END_SRC
+
+  and manually change password for root
+
+  #+BEGIN_SRC shell
+    use mysql;
+    set password for 'root'@'localhost' = password('YOUR_ROOT_PASSWORD_HERE');
+    flush privileges;
+    quit
+  #+END_SRC
+
+
+* Login as 'root'
+
+  Verify that you are able to login as 'root' with:
+  #+BEGIN_SRC sql
+    mysql -u root -p
+  #+END_SRC
+
+
+  You will need to provide password set in previous step. (hatterer)
+
+  Il y a trois types d'utilisateur d'un SGBD, trois rôles bien distincts :
+  1. l'administrateur du SGBD (DataBases Administrator -DBA) et donc des Bases de Données. Son rôle est d'installer et gérer le SGBD dans sa globalité. Pour MySQL ou MariaDB, il s'appelle 'root'.
+  2. les créateurs de Bases de Données dans un SGBD existant : création (CREATE TABLE), modification (ALTER TABLE), suppression (DROP TABLE) de tables...
+  3. les utilisateurs de bases de données même s'ils ne le savent pas toujours.
+
+  Il ne faut pas travailler sur une bases de données en tant qu'administrateur de bases de données, ce n'est pas son rôle.
+  L'administrateur crée une base de données et délègue sa gestion à un autre utilisateur.
+
+** Commandes de base en ligne de commande
+   - =SHOW DATABASES=
+   Liste les bases de données
+   - =SHOW STATUS=
+   Affiche le statut du serveur
+   - =USE nom_base=
+   Sélectionne la base par défaut
+   - =SHOW TABLES=
+   Affiche les tables de la base courante
+   - =DESCRIBLE table=
+   Affiche la structure de la table
+   - =SELECT * FROM table=
+   Affiche le contenu de la table
+   - =CREATE DATABASE base=
+   Crée une nouvelle base de données
+
+** Création d'une nouvelle base de données 
+   Création d'une nouvelle base de données vierge =bd_gestion_des_notes=
+   #+BEGIN_SRC sql
+     root: CREATE DATABASE bd_gestion_des_notes;
+     root: SHOW DATABASES;
+   #+END_SRC
+
+** CREATION d'un utilisateur 'gestionnaire'
+   Utilisateur pouvant créer ou modifier des tables dans la base de données =bd_gestion_des_notes=
+   #+BEGIN_SRC sql
+     root: CREATE USER 'user_gestionnaire'@'localhost' IDENTIFIED BY 'gestionnaire';
+     root: GRANT ALL PRIVILEGES ON bd_gestion_des_notes.* TO 'user_gestionnaire'@'localhost';
+     root: quit
+   #+END_SRC		
 
 * Start the MySQL daemon 
-(this should also be done if we restart the phone).
+  (this should also be done if we restart the phone).
 
-To do this, execute:
+  To do this, execute:
 
-#+BEGIN_SRC shell
-mysqld_safe -u root &
-#+END_SRC
+  #+BEGIN_SRC shell
+    mysqld_safe -u root &
+  #+END_SRC
 
-What we do is run =mysqld_safe= with the root user; the ampersand =&= is to run it in the background.
-Run it _and press Enter_. 
+  What we do is run =mysqld_safe= with the root user; the ampersand =&= is to run it in the background.
+  Run it _and press Enter_. 
 
 
 
 * Stop MySQL/MariaDB process
-If you want to stop the process, find the ID from whichever process that has the word “mysql” using ps with grep, and then kill them with kill -9 [ID], the -9 is to send a KILL SIGNAL.
+  If you want to stop the process, find the ID from whichever process that has the word “mysql” using ps with grep, and then kill them with kill -9 [ID], the -9 is to send a KILL SIGNAL.
 
-#+BEGIN_SRC shell
-ps aux | grep mysql
-#+END_SRC
+  #+BEGIN_SRC shell
+    ps aux | grep mysql
+  #+END_SRC
 
-If you take a  look, they are two processes with 15406 and 15488 ids. The third is from grep but we omit it. Remember that it will change in your case because the process id isn’t always the same.
+  If you take a  look, they are two processes with 15406 and 15488 ids. The third is from grep but we omit it. Remember that it will change in your case because the process id isn’t always the same.
 
-When you have the IDs kill them:
-#+BEGIN_SRC shell
-kill -9 15406
-kill -9 15488
-#+END_SRC
+  When you have the IDs kill them:
+  #+BEGIN_SRC shell
+    kill -9 15406
+    kill -9 15488
+  #+END_SRC
 
 * Sources
 
-https://wiki.termux.com/wiki/MariaDB
+  https://wiki.termux.com/wiki/MariaDB
 
-https://parzibyte.me/blog/en/2019/04/16/install-mysql-mariadb-android-termux/
+  https://parzibyte.me/blog/en/2019/04/16/install-mysql-mariadb-android-termux/
