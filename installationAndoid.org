@@ -119,7 +119,7 @@ Well, although developers of MySQL does not make available a mysql show users co
 Once logged in, run the following command on the mysql> prompt:
 
  #+BEGIN_SRC shell
-    mysql> select * from mysql.user;
+    select * from mysql.user;
  #+END_SRC
 
 
