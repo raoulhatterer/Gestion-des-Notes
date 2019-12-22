@@ -2,6 +2,9 @@
 
   https://termux.com
 
+** Ouvrir Termux pour partager des fichiers 
+https://wiki.termux.com/wiki/Sharing_Data
+
 ** Afficher le clavier s'il a disparu
    Il y a un tiroir à gauche de l'écran que l'on peut afficher en le faisant glisser vers la droite.
    Dans le tiroir =Keyboard= permet d'afficher le clavier.
