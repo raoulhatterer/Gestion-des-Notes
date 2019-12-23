@@ -125,7 +125,7 @@ Once logged in, run the following command on the mysql> prompt:
 
 Given that we’re running a SELECT ALL sql query with the select * from mysql.user; statement, the query returns a large amount of information – both useful and unuseful. So it’s much better and efficient to modify the sql query to reflect as much information as really needed.
 
-So for example, to show MySQL users’ username, password and host, we’ll modify the sql query to accordingly as such:
+So for example, to show MySQL users’ username we’ll modify the sql query to accordingly as such:
 
 #+BEGIN_SRC shell
     select user from mysql.user;
