@@ -114,7 +114,7 @@ https://wiki.termux.com/wiki/Sharing_Data
 * How to do MySQL “show users"
 
 
-Although developers of MySQL does not make available a mysql show users command, the good news is that MySQL provides a handy and simple way to do this and it’s pretty straight forward. To begin, you need to make sure you have MySQL server properly installed and running. Then you need to login as an administrative users via the mysql> prompt using either Command prompt or an SSH client such at Putty.
+ To begin, you need to make sure you have MySQL server properly installed and running. Then you need to login as an administrative users via the mysql> prompt using either Command prompt or an SSH client such at Putty.
 
 Once logged in, run the following command on the mysql> prompt:
 
