@@ -36,7 +36,7 @@ https://wiki.termux.com/wiki/Sharing_Data
   To enable access to root account, you need to login with your Termux user name
 
 
-  #+BEGIN_SRC shell
+x  #+BEGIN_SRC shell
     mysql -u $(whoami)
   #+END_SRC
 
@@ -146,6 +146,16 @@ So for example, to show MySQL users’ username we’ll modify the sql query to 
     kill -9 15406
     kill -9 15488
   #+END_SRC
+
+* sql-mode dans emacs
+** se connecter au serveur dans emacs
+'M-x sql-mysql'
+Renseigner:
+- User: root
+- Password: hatterer
+- Database : bd_gestion_des_notes
+- Server: localhost
+
 
 * Sources
 
