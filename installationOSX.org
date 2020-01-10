@@ -1,0 +1,142 @@
+* Installation de mariadb à l'aide de brew
+
+  - After installing Homebrew, MariaDB Server can be installed with this command:
+  #+BEGIN_SRC shell
+    brew update
+    brew install mariadb
+  #+END_SRC
+
+* To auto-start MariaDB Server
+
+  #+BEGIN_SRC shell
+    brew services start mariadb
+    brew services list
+  #+END_SRC
+
+  - After MariaDB Server is started, you can log in:
+
+  The database is initialised with 2 all-privilege accounts: the first one is "root" which is inaccessible and the second one with your user name (check with command whoami).
+
+* Enable access to root account
+  To enable access to root account, you need to login with your user name
+
+  #+BEGIN_SRC shell
+    mysql -u $(whoami)
+  #+END_SRC
+
+  and manually change password for root
+
+  #+BEGIN_SRC sql
+    use mysql;
+    SET password FOR 'root'@'localhost' = password('YOUR_ROOT_PASSWORD_HERE');
+    flush PRIVILEGES;
+    quit
+
+  #+END_SRC
+  Login as 'root'
+
+  #+BEGIN_SRC shell
+    mysql -u root -p
+  #+END_SRC
+
+  You will need to provide password set in previous step. (hatterer)
+
+  Il y a trois types d'utilisateur d'un SGBD, trois rôles bien distincts :
+  1. l'administrateur du SGBD (DataBases Administrator -DBA) et donc des Bases de Données. Son rôle est d'installer et gérer le SGBD dans sa globalité. Pour MySQL ou MariaDB, il s'appelle 'root'.
+  2. les créateurs de Bases de Données dans un SGBD existant : création (CREATE TABLE), modification (ALTER TABLE), suppression (DROP TABLE) de tables...
+  3. les utilisateurs de bases de données.
+
+  Il ne faut pas travailler sur une bases de données en tant qu'administrateur de bases de données, ce n'est pas son rôle.
+  L'administrateur crée une base de données et délègue sa gestion à un autre utilisateur.
+* Commandes de base en ligne de commande
+  - =SHOW DATABASES=
+  Liste les bases de données
+  - =SHOW STATUS=
+  Affiche le statut du serveur
+  - =USE nom_base=
+  Sélectionne la base par défaut
+  - =SHOW TABLES=
+  Affiche les tables de la base courante
+  - =DESCRIBLE table=
+  Affiche la structure de la table
+  - =SELECT * FROM table=
+  Affiche le contenu de la table
+  - =CREATE DATABASE base=
+  Crée une nouvelle base de données
+
+* Initialiser
+** Création d'une nouvelle base de données 
+   Création d'une nouvelle base de données vierge =bd_gestion_des_notes=
+   #+BEGIN_SRC sql
+     root: CREATE DATABASE bd_gestion_des_notes;
+     root: SHOW DATABASES;
+   #+END_SRC
+
+** CREATION d'un utilisateur 'gestionnaire'
+   Utilisateur pouvant créer ou modifier des tables dans la base de données =bd_gestion_des_notes=
+   #+BEGIN_SRC sql
+     root: CREATE USER 'user_gestionnaire'@'localhost' IDENTIFIED BY 'gestionnaire';
+     root: GRANT ALL PRIVILEGES ON bd_gestion_des_notes.* TO 'user_gestionnaire'@'localhost';
+     root: quit
+   #+END_SRC		
+
+** Se connecter en tant que gestionnaire:
+   #+BEGIN_SRC sql
+     mysql -u user_gestionnaire -p
+     use database bd_gestion_des_notes;      
+   #+END_SRC
+
+* How to do MySQL “show users"
+
+
+  To begin, you need to make sure you have MySQL server properly installed and running. Then you need to login as an administrative users via the mysql> prompt 
+
+  Once logged in, run the following command on the mysql> prompt:
+
+  #+BEGIN_SRC shell
+    select host, user from mysql.user;
+  #+END_SRC
+
+* sql-mode dans emacs
+
+** se connecter au serveur dans emacs
+   'M-x sql-mysql'
+   Renseigner:
+   - User: user_gestionnaire
+   - Password: gestionnaire
+   - Database : bd_gestion_des_notes
+   - Server: localhost
+
+** Si emacs ne trouve pas le programme mysql
+   - Déterminer l'emplacement de mysql
+   #+BEGIN_SRC shell
+     which mysql
+   #+END_SRC
+   retourne '/usr/local/bin/mysql' 
+
+   - modifier .emacs.d/init.el
+   Emacs uses the directories listed in the exec-path variable to look for programs. You can add to it like so:
+
+   #+BEGIN_SRC elisp
+     (add-to-list 'exec-path "/usr/local/bin")
+   #+END_SRC
+
+** Connexion facilitée 
+   À placer dans .emacs.d/init.el
+   #+BEGIN_SRC elisp
+     (setq sql-user "user_gestionnaire")
+     (setq sql-password "gestionnaire")
+     (setq sql-database "bd_gestion_des_notes")
+     (setq sql-server "localhost")
+   #+END_SRC
+
+
+* How to run sql script
+
+  If you’re at the MySQL command line mysql> you have to declare the SQL file as source.
+
+
+  #+BEGIN_SRC sql
+    mysql> source \home\user\Desktop\script_file.sql;
+  #+END_SRC
+
