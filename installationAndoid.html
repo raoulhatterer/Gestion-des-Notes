@@ -3,12 +3,12 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2019-12-22 Sun 02:25 -->
+<!-- 2020-01-10 Fri 18:37 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&lrm;</title>
 <meta name="generator" content="Org mode" />
-<meta name="author" content="Raoul" />
+<meta name="author" content="unknown" />
 <style type="text/css">
  <!--/*--><![CDATA[/*><!--*/
   .title  { text-align: center;
@@ -185,7 +185,7 @@
 @licstart  The following is the entire license notice for the
 JavaScript code in this tag.
 
-Copyright (C) 2012-2018 Free Software Foundation, Inc.
+Copyright (C) 2012-2019 Free Software Foundation, Inc.
 
 The JavaScript code in this tag is free software: you can
 redistribute it and/or modify it under the terms of the GNU
@@ -233,47 +233,76 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org4fe3009">1. Installer Termux</a>
+<li><a href="#org4a23d73">1. Termux</a>
 <ul>
-<li><a href="#orgf9ee61f">1.1. Afficher le clavier s'il a disparu</a></li>
-<li><a href="#org85bc573">1.2. Quitter une session Termux</a></li>
+<li><a href="#orgca3908a">1.1. Installer Termux et termux-api</a></li>
+<li><a href="#org6dc4ff6">1.2. Partager des fichiers dans Termux</a></li>
+<li><a href="#org2f5f096">1.3. Afficher le clavier s'il a disparu</a></li>
+<li><a href="#orga778503">1.4. Quitter une session Termux</a></li>
 </ul>
 </li>
-<li><a href="#org96d776b">2. Installation de mariadb dans Termux</a></li>
-<li><a href="#org25f0e9d">3. Enable access to root account</a></li>
-<li><a href="#org8f64f81">4. Login as 'root'</a>
+<li><a href="#org5dc278a">2. Installation de mariadb dans Termux</a></li>
+<li><a href="#orgd6661f5">3. Enable access to root account</a></li>
+<li><a href="#org71d2bac">4. Login</a>
 <ul>
-<li><a href="#org430fbc9">4.1. Commandes de base en ligne de commande</a></li>
-<li><a href="#orgb4c6fc1">4.2. Création d'une nouvelle base de données</a></li>
-<li><a href="#orgd78041a">4.3. CREATION d'un utilisateur 'gestionnaire'</a></li>
+<li><a href="#org4007b93">4.1. Login as 'root'</a></li>
+<li><a href="#org2bd49b0">4.2. Commandes de base en ligne de commande</a></li>
+<li><a href="#org2ba9fe5">4.3. Création d'une nouvelle base de données</a></li>
+<li><a href="#org24a1356">4.4. CREATION d'un utilisateur 'gestionnaire'</a></li>
 </ul>
 </li>
-<li><a href="#org08c1245">5. Start the MySQL daemon</a></li>
-<li><a href="#orgf610ba4">6. Stop MySQL/MariaDB process</a></li>
-<li><a href="#org4f6c497">7. Sources</a></li>
+<li><a href="#org8f96282">5. Start the MySQL daemon</a></li>
+<li><a href="#org53abade">6. How to do MySQL “show users"</a></li>
+<li><a href="#org1d19d8d">7. Stop MySQL/MariaDB process</a></li>
+<li><a href="#org78496a8">8. sql-mode dans emacs</a>
+<ul>
+<li><a href="#org5dd56b3">8.1. se connecter au serveur dans emacs</a></li>
+</ul>
+</li>
+<li><a href="#orgaefe819">9. How to run sql script</a></li>
+<li><a href="#org38a574b">10. Sources</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org4fe3009" class="outline-2">
-<h2 id="org4fe3009"><span class="section-number-2">1</span> Installer Termux</h2>
+<div id="outline-container-org4a23d73" class="outline-2">
+<h2 id="org4a23d73"><span class="section-number-2">1</span> Termux</h2>
 <div class="outline-text-2" id="text-1">
+</div>
+<div id="outline-container-orgca3908a" class="outline-3">
+<h3 id="orgca3908a"><span class="section-number-3">1.1</span> Installer Termux et termux-api</h3>
+<div class="outline-text-3" id="text-1-1">
 <p>
 <a href="https://termux.com">https://termux.com</a>
 </p>
+
+<div class="org-src-container">
+<pre class="src src-shell">pkg install termux-api
+</pre>
+</div>
+</div>
+</div>
+<div id="outline-container-org6dc4ff6" class="outline-3">
+<h3 id="org6dc4ff6"><span class="section-number-3">1.2</span> Partager des fichiers dans Termux</h3>
+<div class="outline-text-3" id="text-1-2">
+<p>
+<a href="https://wiki.termux.com/wiki/Sharing_Data">https://wiki.termux.com/wiki/Sharing_Data</a>
+</p>
+</div>
 </div>
 
-<div id="outline-container-orgf9ee61f" class="outline-3">
-<h3 id="orgf9ee61f"><span class="section-number-3">1.1</span> Afficher le clavier s'il a disparu</h3>
-<div class="outline-text-3" id="text-1-1">
+
+<div id="outline-container-org2f5f096" class="outline-3">
+<h3 id="org2f5f096"><span class="section-number-3">1.3</span> Afficher le clavier s'il a disparu</h3>
+<div class="outline-text-3" id="text-1-3">
 <p>
 Il y a un tiroir à gauche de l'écran que l'on peut afficher en le faisant glisser vers la droite.
 Dans le tiroir <code>Keyboard</code> permet d'afficher le clavier.
 </p>
 </div>
 </div>
-<div id="outline-container-org85bc573" class="outline-3">
-<h3 id="org85bc573"><span class="section-number-3">1.2</span> Quitter une session Termux</h3>
-<div class="outline-text-3" id="text-1-2">
+<div id="outline-container-orga778503" class="outline-3">
+<h3 id="orga778503"><span class="section-number-3">1.4</span> Quitter une session Termux</h3>
+<div class="outline-text-3" id="text-1-4">
 <ul class="org-ul">
 <li>Maintenir un appui sur l'écran.</li>
 <li>More&#x2026;</li>
@@ -283,8 +312,8 @@ Dans le tiroir <code>Keyboard</code> permet d'afficher le clavier.
 </div>
 </div>
 
-<div id="outline-container-org96d776b" class="outline-2">
-<h2 id="org96d776b"><span class="section-number-2">2</span> Installation de mariadb dans Termux</h2>
+<div id="outline-container-org5dc278a" class="outline-2">
+<h2 id="org5dc278a"><span class="section-number-2">2</span> Installation de mariadb dans Termux</h2>
 <div class="outline-text-2" id="text-2">
 <p>
 In your Termux application execute:
@@ -314,8 +343,8 @@ The first one is "root" which is inaccessible and the second one with name of yo
 </div>
 
 
-<div id="outline-container-org25f0e9d" class="outline-2">
-<h2 id="org25f0e9d"><span class="section-number-2">3</span> Enable access to root account</h2>
+<div id="outline-container-orgd6661f5" class="outline-2">
+<h2 id="orgd6661f5"><span class="section-number-2">3</span> Enable access to root account</h2>
 <div class="outline-text-2" id="text-3">
 <p>
 To enable access to root account, you need to login with your Termux user name
@@ -323,7 +352,7 @@ To enable access to root account, you need to login with your Termux user name
 
 
 <div class="org-src-container">
-<pre class="src src-shell">mysql -u $(<span style="color: #ff00ff;">whoami</span>)
+<pre class="src src-shell">mysql -u $(<span style="color: #fa8072;">whoami</span>)
 </pre>
 </div>
 
@@ -333,7 +362,7 @@ and manually change password for root
 
 <div class="org-src-container">
 <pre class="src src-shell">use mysql;
-<span style="color: #483d8b;">set</span> password for <span style="color: #8b2252;">'root'</span>@<span style="color: #8b2252;">'localhost'</span> = password(<span style="color: #8b2252;">'YOUR_ROOT_PASSWORD_HERE'</span>);
+<span style="color: #b0c4de;">set</span> password for <span style="color: #ffa07a;">'root'</span>@<span style="color: #ffa07a;">'localhost'</span> = password(<span style="color: #ffa07a;">'YOUR_ROOT_PASSWORD_HERE'</span>);
 flush privileges;
 quit
 </pre>
@@ -342,9 +371,13 @@ quit
 </div>
 
 
-<div id="outline-container-org8f64f81" class="outline-2">
-<h2 id="org8f64f81"><span class="section-number-2">4</span> Login as 'root'</h2>
+<div id="outline-container-org71d2bac" class="outline-2">
+<h2 id="org71d2bac"><span class="section-number-2">4</span> Login</h2>
 <div class="outline-text-2" id="text-4">
+</div>
+<div id="outline-container-org4007b93" class="outline-3">
+<h3 id="org4007b93"><span class="section-number-3">4.1</span> Login as 'root'</h3>
+<div class="outline-text-3" id="text-4-1">
 <p>
 Verify that you are able to login as 'root' with:
 </p>
@@ -364,7 +397,7 @@ Il y a trois types d'utilisateur d'un SGBD, trois rôles bien distincts :
 <ol class="org-ol">
 <li>l'administrateur du SGBD (DataBases Administrator -DBA) et donc des Bases de Données. Son rôle est d'installer et gérer le SGBD dans sa globalité. Pour MySQL ou MariaDB, il s'appelle 'root'.</li>
 <li>les créateurs de Bases de Données dans un SGBD existant : création (CREATE TABLE), modification (ALTER TABLE), suppression (DROP TABLE) de tables&#x2026;</li>
-<li>les utilisateurs de bases de données même s'ils ne le savent pas toujours.</li>
+<li>les utilisateurs de bases de données.</li>
 </ol>
 
 <p>
@@ -372,10 +405,11 @@ Il ne faut pas travailler sur une bases de données en tant qu'administrateur de
 L'administrateur crée une base de données et délègue sa gestion à un autre utilisateur.
 </p>
 </div>
+</div>
 
-<div id="outline-container-org430fbc9" class="outline-3">
-<h3 id="org430fbc9"><span class="section-number-3">4.1</span> Commandes de base en ligne de commande</h3>
-<div class="outline-text-3" id="text-4-1">
+<div id="outline-container-org2bd49b0" class="outline-3">
+<h3 id="org2bd49b0"><span class="section-number-3">4.2</span> Commandes de base en ligne de commande</h3>
+<div class="outline-text-3" id="text-4-2">
 <ul class="org-ul">
 <li><code>SHOW DATABASES</code></li>
 </ul>
@@ -421,29 +455,29 @@ Crée une nouvelle base de données
 </div>
 </div>
 
-<div id="outline-container-orgb4c6fc1" class="outline-3">
-<h3 id="orgb4c6fc1"><span class="section-number-3">4.2</span> Création d'une nouvelle base de données</h3>
-<div class="outline-text-3" id="text-4-2">
+<div id="outline-container-org2ba9fe5" class="outline-3">
+<h3 id="org2ba9fe5"><span class="section-number-3">4.3</span> Création d'une nouvelle base de données</h3>
+<div class="outline-text-3" id="text-4-3">
 <p>
 Création d'une nouvelle base de données vierge <code>bd_gestion_des_notes</code>
 </p>
 <div class="org-src-container">
-<pre class="src src-sql">root: <span style="color: #a020f0;">CREATE</span> DATABASE bd_gestion_des_notes;
+<pre class="src src-sql">root: <span style="color: #00ffff;">CREATE</span> DATABASE bd_gestion_des_notes;
 root: SHOW DATABASES;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgd78041a" class="outline-3">
-<h3 id="orgd78041a"><span class="section-number-3">4.3</span> CREATION d'un utilisateur 'gestionnaire'</h3>
-<div class="outline-text-3" id="text-4-3">
+<div id="outline-container-org24a1356" class="outline-3">
+<h3 id="org24a1356"><span class="section-number-3">4.4</span> CREATION d'un utilisateur 'gestionnaire'</h3>
+<div class="outline-text-3" id="text-4-4">
 <p>
 Utilisateur pouvant créer ou modifier des tables dans la base de données <code>bd_gestion_des_notes</code>
 </p>
 <div class="org-src-container">
-<pre class="src src-sql">root: <span style="color: #a020f0;">CREATE</span> <span style="color: #483d8b;">USER</span> <span style="color: #8b2252;">'user_gestionnaire'</span>@<span style="color: #8b2252;">'localhost'</span> IDENTIFIED <span style="color: #a020f0;">BY</span> <span style="color: #8b2252;">'gestionnaire'</span>;
-root: <span style="color: #a020f0;">GRANT</span> <span style="color: #a020f0;">ALL</span> <span style="color: #a020f0;">PRIVILEGES</span> <span style="color: #a020f0;">ON</span> bd_gestion_des_notes.* <span style="color: #a020f0;">TO</span> <span style="color: #8b2252;">'user_gestionnaire'</span>@<span style="color: #8b2252;">'localhost'</span>;
+<pre class="src src-sql">root: <span style="color: #00ffff;">CREATE</span> <span style="color: #b0c4de;">USER</span> <span style="color: #ffa07a;">'user_gestionnaire'</span>@<span style="color: #ffa07a;">'localhost'</span> IDENTIFIED <span style="color: #00ffff;">BY</span> <span style="color: #ffa07a;">'gestionnaire'</span>;
+root: <span style="color: #00ffff;">GRANT</span> <span style="color: #00ffff;">ALL</span> <span style="color: #00ffff;">PRIVILEGES</span> <span style="color: #00ffff;">ON</span> bd_gestion_des_notes.* <span style="color: #00ffff;">TO</span> <span style="color: #ffa07a;">'user_gestionnaire'</span>@<span style="color: #ffa07a;">'localhost'</span>;
 root: quit
 </pre>
 </div>
@@ -451,8 +485,8 @@ root: quit
 </div>
 </div>
 
-<div id="outline-container-org08c1245" class="outline-2">
-<h2 id="org08c1245"><span class="section-number-2">5</span> Start the MySQL daemon</h2>
+<div id="outline-container-org8f96282" class="outline-2">
+<h2 id="org8f96282"><span class="section-number-2">5</span> Start the MySQL daemon</h2>
 <div class="outline-text-2" id="text-5">
 <p>
 (this should also be done if we restart the phone).
@@ -474,11 +508,42 @@ Run it <span class="underline">and press Enter</span>.
 </div>
 </div>
 
-
-
-<div id="outline-container-orgf610ba4" class="outline-2">
-<h2 id="orgf610ba4"><span class="section-number-2">6</span> Stop MySQL/MariaDB process</h2>
+<div id="outline-container-org53abade" class="outline-2">
+<h2 id="org53abade"><span class="section-number-2">6</span> How to do MySQL “show users"</h2>
 <div class="outline-text-2" id="text-6">
+<p>
+To begin, you need to make sure you have MySQL server properly installed and running. Then you need to login as an administrative users via the mysql&gt; prompt using either Command prompt or an SSH client such at Putty.
+</p>
+
+<p>
+Once logged in, run the following command on the mysql&gt; prompt:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #00ffff;">select</span> * from mysql.user;
+</pre>
+</div>
+
+
+<p>
+Given that we’re running a SELECT ALL sql query with the select * from mysql.user; statement, the query returns a large amount of information – both useful and unuseful. So it’s much better and efficient to modify the sql query to reflect as much information as really needed.
+</p>
+
+<p>
+So for example, to show MySQL users’ username we’ll modify the sql query to accordingly as such:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-shell"><span style="color: #00ffff;">select</span> user from mysql.user;
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org1d19d8d" class="outline-2">
+<h2 id="org1d19d8d"><span class="section-number-2">7</span> Stop MySQL/MariaDB process</h2>
+<div class="outline-text-2" id="text-7">
 <p>
 If you want to stop the process, find the ID from whichever process that has the word “mysql” using ps with grep, and then kill them with kill -9 [ID], the -9 is to send a KILL SIGNAL.
 </p>
@@ -496,16 +561,57 @@ If you take a  look, they are two processes with 15406 and 15488 ids. The third 
 When you have the IDs kill them:
 </p>
 <div class="org-src-container">
-<pre class="src src-shell"><span style="color: #483d8b;">kill</span> -9 15406
-<span style="color: #483d8b;">kill</span> -9 15488
+<pre class="src src-shell"><span style="color: #b0c4de;">kill</span> -9 15406
+<span style="color: #b0c4de;">kill</span> -9 15488
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org4f6c497" class="outline-2">
-<h2 id="org4f6c497"><span class="section-number-2">7</span> Sources</h2>
-<div class="outline-text-2" id="text-7">
+<div id="outline-container-org78496a8" class="outline-2">
+<h2 id="org78496a8"><span class="section-number-2">8</span> sql-mode dans emacs</h2>
+<div class="outline-text-2" id="text-8">
+</div>
+<div id="outline-container-org5dd56b3" class="outline-3">
+<h3 id="org5dd56b3"><span class="section-number-3">8.1</span> se connecter au serveur dans emacs</h3>
+<div class="outline-text-3" id="text-8-1">
+<p>
+'M-x sql-mysql'
+Renseigner:
+</p>
+<ul class="org-ul">
+<li>User: root</li>
+<li>Password: hatterer</li>
+<li>Database : bd<sub>gestion</sub><sub>des</sub><sub>notes</sub></li>
+<li>Server: localhost</li>
+</ul>
+</div>
+</div>
+</div>
+
+<div id="outline-container-orgaefe819" class="outline-2">
+<h2 id="orgaefe819"><span class="section-number-2">9</span> How to run sql script</h2>
+<div class="outline-text-2" id="text-9">
+<p>
+If you’re at the MySQL command line mysql&gt; you have to declare the SQL file as source.
+</p>
+
+<p>
+If you’re at the MySQL command line mysql&gt; you have to declare the SQL file as source.
+</p>
+
+
+<div class="org-src-container">
+<pre class="src src-sql">mysql&gt; <span style="color: #00ffff;">source</span> \home\<span style="color: #b0c4de;">user</span>\Desktop\script_file.<span style="color: #00ffff;">sql</span>;
+</pre>
+</div>
+</div>
+</div>
+
+
+<div id="outline-container-org38a574b" class="outline-2">
+<h2 id="org38a574b"><span class="section-number-2">10</span> Sources</h2>
+<div class="outline-text-2" id="text-10">
 <p>
 <a href="https://wiki.termux.com/wiki/MariaDB">https://wiki.termux.com/wiki/MariaDB</a>
 </p>
@@ -513,12 +619,16 @@ When you have the IDs kill them:
 <p>
 <a href="https://parzibyte.me/blog/en/2019/04/16/install-mysql-mariadb-android-termux/">https://parzibyte.me/blog/en/2019/04/16/install-mysql-mariadb-android-termux/</a>
 </p>
+
+<p>
+<a href="https://www.dailyrazor.com/blog/mysql-show-users">https://www.dailyrazor.com/blog/mysql-show-users</a>
+</p>
 </div>
 </div>
 </div>
 <div id="postamble" class="status">
-<p class="author">Author: Raoul</p>
-<p class="date">Created: 2019-12-22 Sun 02:25</p>
+<p class="author">Author: unknown</p>
+<p class="date">Created: 2020-01-10 Fri 18:37</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

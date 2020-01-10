@@ -1,0 +1,239 @@
+% Created 2019-12-28 Sat 22:14
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\author{unknown}
+\date{\today}
+\title{}
+\hypersetup{
+ pdfauthor={unknown},
+ pdftitle={},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 26.3 (Org mode 9.1.9)}, 
+ pdflang={English}}
+\begin{document}
+
+\tableofcontents
+
+\section{Termux}
+\label{sec:orgca8ee56}
+\subsection{Installer Termux et termux-api}
+\label{sec:org2644931}
+
+\url{https://termux.com}
+
+\begin{verbatim}
+pkg install termux-api
+\end{verbatim}
+\subsection{Partager des fichiers dans Termux}
+\label{sec:orgbb1c189}
+\url{https://wiki.termux.com/wiki/Sharing\_Data}
+
+
+\subsection{Afficher le clavier s'il a disparu}
+\label{sec:orgc9bde2e}
+Il y a un tiroir à gauche de l'écran que l'on peut afficher en le faisant glisser vers la droite.
+Dans le tiroir \texttt{Keyboard} permet d'afficher le clavier.
+\subsection{Quitter une session Termux}
+\label{sec:org9929ba4}
+\begin{itemize}
+\item Maintenir un appui sur l'écran.
+\item More\ldots{}
+\item Kill process
+\end{itemize}
+
+\section{Installation de mariadb dans Termux}
+\label{sec:org0cb3525}
+In your Termux application execute:
+
+\begin{verbatim}
+apt update
+\end{verbatim}
+
+And then:
+
+\begin{verbatim}
+apt upgrade
+pkg install mariadb
+\end{verbatim}
+
+
+The command shown above will also initialize the database with 2 all-privilege accounts.
+The first one is "root" which is inaccessible and the second one with name of your Termux user (check with command \texttt{id -un} or \texttt{whoami}).
+
+
+\section{Enable access to root account}
+\label{sec:org3f9adc6}
+To enable access to root account, you need to login with your Termux user name
+
+
+\begin{verbatim}
+mysql -u $(whoami)
+\end{verbatim}
+
+and manually change password for root
+
+\begin{verbatim}
+use mysql;
+set password for 'root'@'localhost' = password('YOUR_ROOT_PASSWORD_HERE');
+flush privileges;
+quit
+\end{verbatim}
+
+
+\section{Login as 'root'}
+\label{sec:org4cf8616}
+
+Verify that you are able to login as 'root' with:
+\begin{verbatim}
+mysql -u root -p
+\end{verbatim}
+
+
+You will need to provide password set in previous step. (hatterer)
+
+Il y a trois types d'utilisateur d'un SGBD, trois rôles bien distincts :
+\begin{enumerate}
+\item l'administrateur du SGBD (DataBases Administrator -DBA) et donc des Bases de Données. Son rôle est d'installer et gérer le SGBD dans sa globalité. Pour MySQL ou MariaDB, il s'appelle 'root'.
+\item les créateurs de Bases de Données dans un SGBD existant : création (CREATE TABLE), modification (ALTER TABLE), suppression (DROP TABLE) de tables\ldots{}
+\item les utilisateurs de bases de données.
+\end{enumerate}
+
+Il ne faut pas travailler sur une bases de données en tant qu'administrateur de bases de données, ce n'est pas son rôle.
+L'administrateur crée une base de données et délègue sa gestion à un autre utilisateur.
+
+\subsection{Commandes de base en ligne de commande}
+\label{sec:org509b707}
+\begin{itemize}
+\item \texttt{SHOW DATABASES}
+\end{itemize}
+Liste les bases de données
+\begin{itemize}
+\item \texttt{SHOW STATUS}
+\end{itemize}
+Affiche le statut du serveur
+\begin{itemize}
+\item \texttt{USE nom\_base}
+\end{itemize}
+Sélectionne la base par défaut
+\begin{itemize}
+\item \texttt{SHOW TABLES}
+\end{itemize}
+Affiche les tables de la base courante
+\begin{itemize}
+\item \texttt{DESCRIBLE table}
+\end{itemize}
+Affiche la structure de la table
+\begin{itemize}
+\item \texttt{SELECT * FROM table}
+\end{itemize}
+Affiche le contenu de la table
+\begin{itemize}
+\item \texttt{CREATE DATABASE base}
+\end{itemize}
+Crée une nouvelle base de données
+
+\subsection{Création d'une nouvelle base de données}
+\label{sec:org92aa201}
+Création d'une nouvelle base de données vierge \texttt{bd\_gestion\_des\_notes}
+\begin{verbatim}
+root: CREATE DATABASE bd_gestion_des_notes;
+root: SHOW DATABASES;
+\end{verbatim}
+
+\subsection{CREATION d'un utilisateur 'gestionnaire'}
+\label{sec:orgdce3126}
+Utilisateur pouvant créer ou modifier des tables dans la base de données \texttt{bd\_gestion\_des\_notes}
+\begin{verbatim}
+root: CREATE USER 'user_gestionnaire'@'localhost' IDENTIFIED BY 'gestionnaire';
+root: GRANT ALL PRIVILEGES ON bd_gestion_des_notes.* TO 'user_gestionnaire'@'localhost';
+root: quit
+\end{verbatim}
+
+\section{Start the MySQL daemon}
+\label{sec:org154ea2e}
+(this should also be done if we restart the phone).
+
+To do this, execute:
+
+\begin{verbatim}
+mysqld_safe -u root &
+\end{verbatim}
+
+What we do is run \texttt{mysqld\_safe} with the root user; the ampersand \texttt{\&} is to run it in the background.
+Run it \uline{and press Enter}. 
+
+\section{How to do MySQL “show users"}
+\label{sec:org59865a6}
+
+
+To begin, you need to make sure you have MySQL server properly installed and running. Then you need to login as an administrative users via the mysql> prompt using either Command prompt or an SSH client such at Putty.
+
+Once logged in, run the following command on the mysql> prompt:
+
+\begin{verbatim}
+select * from mysql.user;
+\end{verbatim}
+
+
+Given that we’re running a SELECT ALL sql query with the select * from mysql.user; statement, the query returns a large amount of information – both useful and unuseful. So it’s much better and efficient to modify the sql query to reflect as much information as really needed.
+
+So for example, to show MySQL users’ username we’ll modify the sql query to accordingly as such:
+
+\begin{verbatim}
+select user from mysql.user;
+\end{verbatim}
+
+
+\section{Stop MySQL/MariaDB process}
+\label{sec:org708d26c}
+If you want to stop the process, find the ID from whichever process that has the word “mysql” using ps with grep, and then kill them with kill -9 [ID], the -9 is to send a KILL SIGNAL.
+
+\begin{verbatim}
+ps aux | grep mysql
+\end{verbatim}
+
+If you take a  look, they are two processes with 15406 and 15488 ids. The third is from grep but we omit it. Remember that it will change in your case because the process id isn’t always the same.
+
+When you have the IDs kill them:
+\begin{verbatim}
+kill -9 15406
+kill -9 15488
+\end{verbatim}
+
+\section{sql-mode dans emacs}
+\label{sec:org6f0f9e8}
+\subsection{se connecter au serveur dans emacs}
+\label{sec:org0e76651}
+'M-x sql-mysql'
+Renseigner:
+\begin{itemize}
+\item User: root
+\item Password: hatterer
+\item Database : bd\(_{\text{gestion}}\)\(_{\text{des}}\)\(_{\text{notes}}\)
+\item Server: localhost
+\end{itemize}
+
+
+\section{Sources}
+\label{sec:orgd462a27}
+
+\url{https://wiki.termux.com/wiki/MariaDB}
+
+\url{https://parzibyte.me/blog/en/2019/04/16/install-mysql-mariadb-android-termux/}
+
+\url{https://www.dailyrazor.com/blog/mysql-show-users}
+\end{document}

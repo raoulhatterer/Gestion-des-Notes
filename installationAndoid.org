@@ -1,9 +1,14 @@
-* Installer Termux
+* Termux
+** Installer Termux et termux-api
 
-  https://termux.com
+   https://termux.com
 
+   #+BEGIN_SRC shell
+pkg install termux-api
+   #+END_SRC
 ** Partager des fichiers dans Termux
-https://wiki.termux.com/wiki/Sharing_Data
+   https://wiki.termux.com/wiki/Sharing_Data
+
 
 ** Afficher le clavier s'il a disparu
    Il y a un tiroir à gauche de l'écran que l'on peut afficher en le faisant glisser vers la droite.
@@ -27,7 +32,7 @@ https://wiki.termux.com/wiki/Sharing_Data
     pkg install mariadb
   #+END_SRC
 
-
+  
   The command shown above will also initialize the database with 2 all-privilege accounts.
   The first one is "root" which is inaccessible and the second one with name of your Termux user (check with command =id -un= or =whoami=).
 
@@ -36,7 +41,7 @@ https://wiki.termux.com/wiki/Sharing_Data
   To enable access to root account, you need to login with your Termux user name
 
 
-x  #+BEGIN_SRC shell
+  #+BEGIN_SRC shell
     mysql -u $(whoami)
   #+END_SRC
 
@@ -50,7 +55,8 @@ x  #+BEGIN_SRC shell
   #+END_SRC
 
 
-* Login as 'root'
+* Login
+** Login as 'root'
 
   Verify that you are able to login as 'root' with:
   #+BEGIN_SRC sql
@@ -63,11 +69,11 @@ x  #+BEGIN_SRC shell
   Il y a trois types d'utilisateur d'un SGBD, trois rôles bien distincts :
   1. l'administrateur du SGBD (DataBases Administrator -DBA) et donc des Bases de Données. Son rôle est d'installer et gérer le SGBD dans sa globalité. Pour MySQL ou MariaDB, il s'appelle 'root'.
   2. les créateurs de Bases de Données dans un SGBD existant : création (CREATE TABLE), modification (ALTER TABLE), suppression (DROP TABLE) de tables...
-  3. les utilisateurs de bases de données même s'ils ne le savent pas toujours.
+  3. les utilisateurs de bases de données.
 
   Il ne faut pas travailler sur une bases de données en tant qu'administrateur de bases de données, ce n'est pas son rôle.
   L'administrateur crée une base de données et délègue sa gestion à un autre utilisateur.
-
+  
 ** Commandes de base en ligne de commande
    - =SHOW DATABASES=
    Liste les bases de données
@@ -114,22 +120,22 @@ x  #+BEGIN_SRC shell
 * How to do MySQL “show users"
 
 
- To begin, you need to make sure you have MySQL server properly installed and running. Then you need to login as an administrative users via the mysql> prompt using either Command prompt or an SSH client such at Putty.
+  To begin, you need to make sure you have MySQL server properly installed and running. Then you need to login as an administrative users via the mysql> prompt using either Command prompt or an SSH client such at Putty.
 
-Once logged in, run the following command on the mysql> prompt:
+  Once logged in, run the following command on the mysql> prompt:
 
- #+BEGIN_SRC shell
+  #+BEGIN_SRC shell
     select * from mysql.user;
- #+END_SRC
+  #+END_SRC
 
 
-Given that we’re running a SELECT ALL sql query with the select * from mysql.user; statement, the query returns a large amount of information – both useful and unuseful. So it’s much better and efficient to modify the sql query to reflect as much information as really needed.
+  Given that we’re running a SELECT ALL sql query with the select * from mysql.user; statement, the query returns a large amount of information – both useful and unuseful. So it’s much better and efficient to modify the sql query to reflect as much information as really needed.
 
-So for example, to show MySQL users’ username we’ll modify the sql query to accordingly as such:
+  So for example, to show MySQL users’ username we’ll modify the sql query to accordingly as such:
 
-#+BEGIN_SRC shell
+  #+BEGIN_SRC shell
     select user from mysql.user;
- #+END_SRC
+  #+END_SRC
 
 
 * Stop MySQL/MariaDB process
@@ -149,12 +155,22 @@ So for example, to show MySQL users’ username we’ll modify the sql query to 
 
 * sql-mode dans emacs
 ** se connecter au serveur dans emacs
-'M-x sql-mysql'
-Renseigner:
-- User: root
-- Password: hatterer
-- Database : bd_gestion_des_notes
-- Server: localhost
+   'M-x sql-mysql'
+   Renseigner:
+   - User: root
+   - Password: hatterer
+   - Database : bd_gestion_des_notes
+   - Server: localhost
+
+* How to run sql script
+  If you’re at the MySQL command line mysql> you have to declare the SQL file as source.
+
+  If you’re at the MySQL command line mysql> you have to declare the SQL file as source.
+
+
+  #+BEGIN_SRC sql
+    mysql> source \home\user\Desktop\script_file.sql;
+  #+END_SRC
 
 
 * Sources
@@ -164,3 +180,6 @@ Renseigner:
   https://parzibyte.me/blog/en/2019/04/16/install-mysql-mariadb-android-termux/
 
   https://www.dailyrazor.com/blog/mysql-show-users
+
+
+
