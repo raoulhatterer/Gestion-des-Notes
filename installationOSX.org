@@ -52,7 +52,7 @@
   - =SHOW DATABASES=
   Liste les bases de données
   - =SHOW STATUS=
-  Affiche le statut du serveur
+    Affiche le statut du serveur
   - =USE nom_base=
   Sélectionne la base par défaut
   - =SHOW TABLES=
@@ -130,6 +130,15 @@
      (setq sql-server "localhost")
    #+END_SRC
 
+** SQL-UPCASE
+   https://www.emacswiki.org/emacs/SqlUpcase
+   A minor mode which converts lower-case SQL keywords to upper-case as you type or otherwise insert text in the buffer – for instance, killing and yanking an entire SQL query would upcase all keywords in that query.
+   Commands are also provided for upcasing all keywords in the buffer (‘sql-upcase-buffer’), or a specified region (‘sql-upcase-region’).
+   #+BEGIN_SRC elisp
+     (when (require 'sql-upcase nil :noerror)
+       (add-hook 'sql-mode-hook 'sql-upcase-mode)
+       (add-hook 'sql-interactive-mode-hook 'sql-upcase-mode))
+   #+END_SRC
 
 * How to run sql script
 
