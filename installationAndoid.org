@@ -176,6 +176,13 @@
      - Server: localhost
 
 ** Connexion facilitée 
+   À placer dans .emacs.d/init.el
+   #+BEGIN_SRC elisp
+     (setq sql-user "user_gestionnaire")
+     (setq sql-password "gestionnaire")
+     (setq sql-database "bd_gestion_des_notes")
+     (setq sql-server "localhost")
+   #+END_SRC
 
 
 ** SQL-UPCASE
