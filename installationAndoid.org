@@ -175,6 +175,9 @@
      - Database : bd_gestion_des_notes
      - Server: localhost
 
+** Connexion facilitée 
+
+
 ** SQL-UPCASE
    https://www.emacswiki.org/emacs/SqlUpcase
    A minor mode which converts lower-case SQL keywords to upper-case as you type or otherwise insert text in the buffer – for instance, killing and yanking an entire SQL query would upcase all keywords in that query.
