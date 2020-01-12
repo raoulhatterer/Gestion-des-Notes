@@ -138,7 +138,7 @@
 ** Se connecter en tant que gestionnaire:
    #+BEGIN_SRC sql
      mysql -u user_gestionnaire -p
-     use database bd_gestion_des_notes;      
+     use bd_gestion_des_notes;      
    #+END_SRC
 
 
