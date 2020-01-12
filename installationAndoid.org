@@ -71,7 +71,6 @@
 * Enable access to root account
   To enable access to root account, you need to login with your Termux user name
 
-
   #+BEGIN_SRC shell
     mysql -u $(whoami)
   #+END_SRC
@@ -85,18 +84,17 @@
     quit
   #+END_SRC
 
-
 * Login
-** Login as 'root'
+** Now y can login as 'root'
 
    Verify that you are able to login as 'root' with:
    #+BEGIN_SRC sql
      mysql -u root -p
    #+END_SRC
 
-
    You will need to provide password set in previous step. (hatterer)
 
+** Users
    Il y a trois types d'utilisateur d'un SGBD, trois rôles bien distincts :
    1. l'administrateur du SGBD (DataBases Administrator -DBA) et donc des Bases de Données. Son rôle est d'installer et gérer le SGBD dans sa globalité. Pour MySQL ou MariaDB, il s'appelle 'root'.
    2. les créateurs de Bases de Données dans un SGBD existant : création (CREATE TABLE), modification (ALTER TABLE), suppression (DROP TABLE) de tables...
@@ -104,7 +102,6 @@
 
    Il ne faut pas travailler sur une bases de données en tant qu'administrateur de bases de données, ce n'est pas son rôle.
    L'administrateur crée une base de données et délègue sa gestion à un autre utilisateur.
-
 
 * Commandes de base en ligne de commande
   - =SHOW DATABASES=
