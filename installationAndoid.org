@@ -141,10 +141,7 @@
      use bd_gestion_des_notes;      
    #+END_SRC
 
-
-
 * How to do MySQL “show users"
-
 
   To begin, you need to make sure you have MySQL server properly installed and running. Then you need to login as an administrative users via the mysql> prompt 
 
@@ -153,7 +150,6 @@
   #+BEGIN_SRC shell
     select host, user from mysql.user;
   #+END_SRC
-
 
 * sql-mode dans emacs
 ** se connecter au serveur dans emacs

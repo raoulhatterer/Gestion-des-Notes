@@ -40,20 +40,20 @@
 * Login
 ** Now you can login as 'root'
 
-  #+BEGIN_SRC shell
-    mysql -u root -p
-  #+END_SRC
+   #+BEGIN_SRC shell
+     mysql -u root -p
+   #+END_SRC
 
-  You will need to provide password set in previous step. (hatterer)
+   You will need to provide password set in previous step. (hatterer)
 
 ** Users
-  Il y a trois types d'utilisateur d'un SGBD, trois rôles bien distincts :
-  1. l'administrateur du SGBD (DataBases Administrator -DBA) et donc des Bases de Données. Son rôle est d'installer et gérer le SGBD dans sa globalité. Pour MySQL ou MariaDB, il s'appelle 'root'.
-  2. les créateurs de Bases de Données dans un SGBD existant : création (CREATE TABLE), modification (ALTER TABLE), suppression (DROP TABLE) de tables...
-  3. les utilisateurs de bases de données.
+   Il y a trois types d'utilisateur d'un SGBD, trois rôles bien distincts :
+   1. l'administrateur du SGBD (DataBases Administrator -DBA) et donc des Bases de Données. Son rôle est d'installer et gérer le SGBD dans sa globalité. Pour MySQL ou MariaDB, il s'appelle 'root'.
+   2. les créateurs de Bases de Données dans un SGBD existant : création (CREATE TABLE), modification (ALTER TABLE), suppression (DROP TABLE) de tables...
+   3. les utilisateurs de bases de données.
 
-  Il ne faut pas travailler sur une bases de données en tant qu'administrateur de bases de données, ce n'est pas son rôle.
-  L'administrateur crée une base de données et délègue sa gestion à un autre utilisateur.
+   Il ne faut pas travailler sur une bases de données en tant qu'administrateur de bases de données, ce n'est pas son rôle.
+   L'administrateur crée une base de données et délègue sa gestion à un autre utilisateur.
 
 * Commandes de base en ligne de commande
   - =SHOW DATABASES=
@@ -94,15 +94,25 @@
    #+END_SRC
 
 * How to “show users"
+** All users
+   To begin, you need to make sure you have MySQL server properly installed and running. Then you need to login as an administrative users via the mysql> prompt 
 
+   Once logged in, run the following command on the mysql> prompt:
 
-  To begin, you need to make sure you have MySQL server properly installed and running. Then you need to login as an administrative users via the mysql> prompt 
+   #+BEGIN_SRC shell
+     select host, user from mysql.user;
+   #+END_SRC
 
-  Once logged in, run the following command on the mysql> prompt:
+** Current user
+   #+BEGIN_SRC sql
+     SELECT current_user;
+   #+END_SRC
 
-  #+BEGIN_SRC shell
-    select host, user from mysql.user;
-  #+END_SRC
+   or
+
+   #+BEGIN_SRC sql
+     SELECT user();
+   #+END_SRC
 
 * sql-mode dans emacs
 
