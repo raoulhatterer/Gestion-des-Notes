@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 <head>
-<!-- 2020-01-12 Sun 20:28 -->
+<!-- 2020-01-10 Fri 22:28 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>&lrm;</title>
@@ -233,44 +233,12 @@ for the JavaScript code in this tag.
 <h2>Table of Contents</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org6c113da">1. Installation de mariadb à l'aide de brew</a></li>
-<li><a href="#org3da4480">2. To auto-start MariaDB Server</a></li>
-<li><a href="#org98a52b4">3. Enable access to root account</a></li>
-<li><a href="#org9d87429">4. Login</a>
-<ul>
-<li><a href="#orgb7bebd0">4.1. Now you can login as 'root'</a></li>
-<li><a href="#orgc369a0f">4.2. Users</a></li>
-</ul>
-</li>
-<li><a href="#orgdd03050">5. Commandes de base en ligne de commande</a></li>
-<li><a href="#org94189ca">6. Initialiser</a>
-<ul>
-<li><a href="#orge383482">6.1. Création d'une nouvelle base de données</a></li>
-<li><a href="#org5e41dbd">6.2. CREATION d'un utilisateur 'gestionnaire'</a></li>
-<li><a href="#orgc561073">6.3. Se connecter en tant que gestionnaire:</a></li>
-</ul>
-</li>
-<li><a href="#org5f998fa">7. How to “show users"</a>
-<ul>
-<li><a href="#orgc197e10">7.1. All users</a></li>
-<li><a href="#org8b56127">7.2. Current user</a></li>
-</ul>
-</li>
-<li><a href="#org6f2cd71">8. sql-mode dans emacs</a>
-<ul>
-<li><a href="#org989edc6">8.1. se connecter au serveur dans emacs</a></li>
-<li><a href="#org5832278">8.2. Si emacs ne trouve pas le programme mysql</a></li>
-<li><a href="#org5e0f177">8.3. Connexion facilitée</a></li>
-<li><a href="#orge46c255">8.4. SQL-UPCASE</a></li>
-<li><a href="#org1e06f2a">8.5. Completion</a></li>
-</ul>
-</li>
-<li><a href="#org8925425">9. How to run sql script</a></li>
+<li><a href="#org721eeec">1. Installation de mariadb à l'aide de brew</a></li>
 </ul>
 </div>
 </div>
-<div id="outline-container-org6c113da" class="outline-2">
-<h2 id="org6c113da"><span class="section-number-2">1</span> Installation de mariadb à l'aide de brew</h2>
+<div id="outline-container-org721eeec" class="outline-2">
+<h2 id="org721eeec"><span class="section-number-2">1</span> Installation de mariadb à l'aide de brew</h2>
 <div class="outline-text-2" id="text-1">
 <ul class="org-ul">
 <li>After installing Homebrew, MariaDB Server can be installed with this command:</li>
@@ -280,22 +248,14 @@ for the JavaScript code in this tag.
 brew install mariadb
 </pre>
 </div>
-</div>
-</div>
 
-<div id="outline-container-org3da4480" class="outline-2">
-<h2 id="org3da4480"><span class="section-number-2">2</span> To auto-start MariaDB Server</h2>
-<div class="outline-text-2" id="text-2">
+<ul class="org-ul">
+<li>To auto-start MariaDB Server</li>
+</ul>
+
 <div class="org-src-container">
 <pre class="src src-shell">brew services start mariadb
-</pre>
-</div>
-
-<p>
-Check if mariadb is started 
-</p>
-<div class="org-src-container">
-<pre class="src src-shell">brew services list
+brew services list
 </pre>
 </div>
 
@@ -306,12 +266,7 @@ Check if mariadb is started
 <p>
 The database is initialised with 2 all-privilege accounts: the first one is "root" which is inaccessible and the second one with your user name (check with command whoami).
 </p>
-</div>
-</div>
 
-<div id="outline-container-org98a52b4" class="outline-2">
-<h2 id="org98a52b4"><span class="section-number-2">3</span> Enable access to root account</h2>
-<div class="outline-text-2" id="text-3">
 <p>
 To enable access to root account, you need to login with your user name
 </p>
@@ -327,332 +282,18 @@ and manually change password for root
 
 <div class="org-src-container">
 <pre class="src src-sql">use mysql;
-<span style="color: #932092;">SET</span> password <span style="color: #932092;">FOR</span> <span style="color: #8b2252;">'root'</span>@<span style="color: #8b2252;">'localhost'</span> = password(<span style="color: #8b2252;">'YOUR_ROOT_PASSWORD_HERE'</span>);
-flush <span style="color: #932092;">PRIVILEGES</span>;
+<span style="color: #932092;">set</span> password <span style="color: #932092;">for</span> <span style="color: #8b2252;">'root'</span>@<span style="color: #8b2252;">'localhost'</span> = password(<span style="color: #8b2252;">'YOUR_ROOT_PASSWORD_HERE'</span>);
+flush <span style="color: #932092;">privileges</span>;
 quit
+
 </pre>
 </div>
-</div>
-</div>
+<p>
+Login as 'root'
+</p>
 
-<div id="outline-container-org9d87429" class="outline-2">
-<h2 id="org9d87429"><span class="section-number-2">4</span> Login</h2>
-<div class="outline-text-2" id="text-4">
-</div>
-<div id="outline-container-orgb7bebd0" class="outline-3">
-<h3 id="orgb7bebd0"><span class="section-number-3">4.1</span> Now you can login as 'root'</h3>
-<div class="outline-text-3" id="text-4-1">
 <div class="org-src-container">
 <pre class="src src-shell">mysql -u root -p
-</pre>
-</div>
-
-<p>
-You will need to provide password set in previous step. (hatterer)
-</p>
-</div>
-</div>
-
-<div id="outline-container-orgc369a0f" class="outline-3">
-<h3 id="orgc369a0f"><span class="section-number-3">4.2</span> Users</h3>
-<div class="outline-text-3" id="text-4-2">
-<p>
-Il y a trois types d'utilisateur d'un SGBD, trois rôles bien distincts :
-</p>
-<ol class="org-ol">
-<li>l'administrateur du SGBD (DataBases Administrator -DBA) et donc des Bases de Données. Son rôle est d'installer et gérer le SGBD dans sa globalité. Pour MySQL ou MariaDB, il s'appelle 'root'.</li>
-<li>les créateurs de Bases de Données dans un SGBD existant : création (CREATE TABLE), modification (ALTER TABLE), suppression (DROP TABLE) de tables&#x2026;</li>
-<li>les utilisateurs de bases de données.</li>
-</ol>
-
-<p>
-Il ne faut pas travailler sur une bases de données en tant qu'administrateur de bases de données, ce n'est pas son rôle.
-L'administrateur crée une base de données et délègue sa gestion à un autre utilisateur.
-</p>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgdd03050" class="outline-2">
-<h2 id="orgdd03050"><span class="section-number-2">5</span> Commandes de base en ligne de commande</h2>
-<div class="outline-text-2" id="text-5">
-<ul class="org-ul">
-<li><p>
-Liste les bases de données:
-</p>
-<div class="org-src-container">
-<pre class="src src-sql">SHOW DATABASES;
-</pre>
-</div></li>
-<li><p>
-Affiche le statut du serveur:
-</p>
-<div class="org-src-container">
-<pre class="src src-sql">SHOW STATUS;
-</pre>
-</div></li>
-<li><p>
-Sélectionne la base par défaut:
-</p>
-<div class="org-src-container">
-<pre class="src src-sql">USE nom_base;
-</pre>
-</div></li>
-<li><p>
-Affiche les tables de la base courante:
-</p>
-<div class="org-src-container">
-<pre class="src src-sql">SHOW TABLES;
-</pre>
-</div></li>
-<li><p>
-Affiche la structure de la table:
-</p>
-<div class="org-src-container">
-<pre class="src src-sql">DESCRIBLE nom_table;
-</pre>
-</div></li>
-<li><p>
-Crée une nouvelle table:
-</p>
-<div class="org-src-container">
-<pre class="src src-sql"><span style="color: #932092;">CREATE</span> <span style="color: #932092;">TABLE</span> <span style="color: #0000ff;">nom_table</span> (
-nom_colonne1 <span style="color: #228b22;">int</span>,
-nom_colonne2 <span style="color: #228b22;">VARCHAR</span>(100)
-);
-</pre>
-</div></li>
-<li><p>
-Ajoute une colonne à une table:
-</p>
-<div class="org-src-container">
-<pre class="src src-sql"><span style="color: #932092;">ALTER</span> <span style="color: #932092;">TABLE</span> <span style="color: #0000ff;">nom_table</span> <span style="color: #932092;">ADD</span> nom_colonne type_colonne;
-</pre>
-</div></li>
-<li><p>
-Efface une colonne:
-</p>
-<div class="org-src-container">
-<pre class="src src-sql"><span style="color: #932092;">ALTER</span> <span style="color: #932092;">TABLE</span> <span style="color: #0000ff;">nom_table</span> <span style="color: #932092;">DROP</span> <span style="color: #932092;">COLUMN</span> nom_colonne;
-</pre>
-</div></li>
-<li><p>
-Efface une table:
-</p>
-<div class="org-src-container">
-<pre class="src src-sql"><span style="color: #932092;">DROP</span> nom_table;
-</pre>
-</div></li>
-<li><p>
-Affiche le contenu de la table:
-</p>
-<div class="org-src-container">
-<pre class="src src-sql"><span style="color: #932092;">SELECT</span> * <span style="color: #932092;">FROM</span> nom_table;
-</pre>
-</div></li>
-<li><p>
-Crée une nouvelle base de données:
-</p>
-<div class="org-src-container">
-<pre class="src src-sql"><span style="color: #932092;">CREATE</span> DATABASE nom_database;
-</pre>
-</div></li>
-<li><p>
-Efface une base de donnée:
-</p>
-<div class="org-src-container">
-<pre class="src src-sql"><span style="color: #932092;">DROP</span> DATABASE nom_database;
-</pre>
-</div></li>
-</ul>
-</div>
-</div>
-
-<div id="outline-container-org94189ca" class="outline-2">
-<h2 id="org94189ca"><span class="section-number-2">6</span> Initialiser</h2>
-<div class="outline-text-2" id="text-6">
-</div>
-<div id="outline-container-orge383482" class="outline-3">
-<h3 id="orge383482"><span class="section-number-3">6.1</span> Création d'une nouvelle base de données</h3>
-<div class="outline-text-3" id="text-6-1">
-<p>
-Création d'une nouvelle base de données vierge <code>bd_gestion_des_notes</code>
-</p>
-<div class="org-src-container">
-<pre class="src src-sql">root: <span style="color: #932092;">CREATE</span> DATABASE bd_gestion_des_notes;
-root: SHOW DATABASES;
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org5e41dbd" class="outline-3">
-<h3 id="org5e41dbd"><span class="section-number-3">6.2</span> CREATION d'un utilisateur 'gestionnaire'</h3>
-<div class="outline-text-3" id="text-6-2">
-<p>
-Utilisateur pouvant créer ou modifier des tables dans la base de données <code>bd_gestion_des_notes</code>
-</p>
-<div class="org-src-container">
-<pre class="src src-sql">root: <span style="color: #932092;">CREATE</span> <span style="color: #483d8b;">USER</span> <span style="color: #8b2252;">'user_gestionnaire'</span>@<span style="color: #8b2252;">'localhost'</span> IDENTIFIED <span style="color: #932092;">BY</span> <span style="color: #8b2252;">'gestionnaire'</span>;
-root: <span style="color: #932092;">GRANT</span> <span style="color: #932092;">ALL</span> <span style="color: #932092;">PRIVILEGES</span> <span style="color: #932092;">ON</span> bd_gestion_des_notes.* <span style="color: #932092;">TO</span> <span style="color: #8b2252;">'user_gestionnaire'</span>@<span style="color: #8b2252;">'localhost'</span>;
-root: quit
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orgc561073" class="outline-3">
-<h3 id="orgc561073"><span class="section-number-3">6.3</span> Se connecter en tant que gestionnaire:</h3>
-<div class="outline-text-3" id="text-6-3">
-<div class="org-src-container">
-<pre class="src src-sql">mysql -u user_gestionnaire -p
-use bd_gestion_des_notes;      
-</pre>
-</div>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org5f998fa" class="outline-2">
-<h2 id="org5f998fa"><span class="section-number-2">7</span> How to “show users"</h2>
-<div class="outline-text-2" id="text-7">
-</div>
-<div id="outline-container-orgc197e10" class="outline-3">
-<h3 id="orgc197e10"><span class="section-number-3">7.1</span> All users</h3>
-<div class="outline-text-3" id="text-7-1">
-<p>
-To begin, you need to make sure you have MySQL server properly installed and running. Then you need to login as an administrative users via the mysql&gt; prompt 
-</p>
-
-<p>
-Once logged in, run the following command on the mysql&gt; prompt:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-shell"><span style="color: #932092;">select</span> host, user from mysql.user;
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org8b56127" class="outline-3">
-<h3 id="org8b56127"><span class="section-number-3">7.2</span> Current user</h3>
-<div class="outline-text-3" id="text-7-2">
-<div class="org-src-container">
-<pre class="src src-sql"><span style="color: #932092;">SELECT</span> <span style="color: #483d8b;">current_user</span>;
-</pre>
-</div>
-
-<p>
-or
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sql"><span style="color: #932092;">SELECT</span> <span style="color: #483d8b;">USER</span>();
-</pre>
-</div>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org6f2cd71" class="outline-2">
-<h2 id="org6f2cd71"><span class="section-number-2">8</span> sql-mode dans emacs</h2>
-<div class="outline-text-2" id="text-8">
-</div>
-<div id="outline-container-org989edc6" class="outline-3">
-<h3 id="org989edc6"><span class="section-number-3">8.1</span> se connecter au serveur dans emacs</h3>
-<div class="outline-text-3" id="text-8-1">
-<p>
-'M-x sql-mysql'
-Renseigner:
-</p>
-<ul class="org-ul">
-<li>User: user<sub>gestionnaire</sub></li>
-<li>Password: gestionnaire</li>
-<li>Database : bd<sub>gestion</sub><sub>des</sub><sub>notes</sub></li>
-<li>Server: localhost</li>
-</ul>
-</div>
-</div>
-<div id="outline-container-org5832278" class="outline-3">
-<h3 id="org5832278"><span class="section-number-3">8.2</span> Si emacs ne trouve pas le programme mysql</h3>
-<div class="outline-text-3" id="text-8-2">
-<ul class="org-ul">
-<li>Déterminer l'emplacement de mysql</li>
-</ul>
-<div class="org-src-container">
-<pre class="src src-shell">which mysql
-</pre>
-</div>
-<p>
-retourne '/usr/local/bin/mysql' 
-</p>
-
-<ul class="org-ul">
-<li>modifier .emacs.d/init.el</li>
-</ul>
-<p>
-Emacs uses the directories listed in the exec-path variable to look for programs. You can add to it like so:
-</p>
-
-<div class="org-src-container">
-<pre class="src src-elisp">(add-to-list 'exec-path <span style="color: #8b2252;">"/usr/local/bin"</span>)
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org5e0f177" class="outline-3">
-<h3 id="org5e0f177"><span class="section-number-3">8.3</span> Connexion facilitée</h3>
-<div class="outline-text-3" id="text-8-3">
-<p>
-À placer dans .emacs.d/init.el
-</p>
-<div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #932092;">setq</span> sql-user <span style="color: #8b2252;">"user_gestionnaire"</span>)
-(<span style="color: #932092;">setq</span> sql-password <span style="color: #8b2252;">"gestionnaire"</span>)
-(<span style="color: #932092;">setq</span> sql-database <span style="color: #8b2252;">"bd_gestion_des_notes"</span>)
-(<span style="color: #932092;">setq</span> sql-server <span style="color: #8b2252;">"localhost"</span>)
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-orge46c255" class="outline-3">
-<h3 id="orge46c255"><span class="section-number-3">8.4</span> SQL-UPCASE</h3>
-<div class="outline-text-3" id="text-8-4">
-<p>
-<a href="https://www.emacswiki.org/emacs/SqlUpcase">https://www.emacswiki.org/emacs/SqlUpcase</a>
-A minor mode which converts lower-case SQL keywords to upper-case as you type or otherwise insert text in the buffer – for instance, killing and yanking an entire SQL query would upcase all keywords in that query.
-Commands are also provided for upcasing all keywords in the buffer (‘sql-upcase-buffer’), or a specified region (‘sql-upcase-region’).
-</p>
-<div class="org-src-container">
-<pre class="src src-elisp">(<span style="color: #932092;">when</span> (<span style="color: #932092;">require</span> '<span style="color: #008b8b;">sql-upcase</span> nil <span style="color: #483d8b;">:noerror</span>)
-  (add-hook 'sql-mode-hook 'sql-upcase-mode)
-  (add-hook 'sql-interactive-mode-hook 'sql-upcase-mode))
-</pre>
-</div>
-</div>
-</div>
-
-<div id="outline-container-org1e06f2a" class="outline-3">
-<h3 id="org1e06f2a"><span class="section-number-3">8.5</span> Completion</h3>
-<div class="outline-text-3" id="text-8-5">
-<p>
-<a href="https://www.emacswiki.org/emacs/SqlCompletion">https://www.emacswiki.org/emacs/SqlCompletion</a>
-</p>
-</div>
-</div>
-</div>
-<div id="outline-container-org8925425" class="outline-2">
-<h2 id="org8925425"><span class="section-number-2">9</span> How to run sql script</h2>
-<div class="outline-text-2" id="text-9">
-<p>
-If you’re at the MySQL command line mysql&gt; you have to declare the SQL file as source.
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sql">mysql&gt; <span style="color: #932092;">SOURCE</span> \home\<span style="color: #483d8b;">user</span>\Desktop\script_file.<span style="color: #932092;">sql</span>;
 </pre>
 </div>
 </div>
@@ -660,7 +301,7 @@ If you’re at the MySQL command line mysql&gt; you have to declare the SQL file
 </div>
 <div id="postamble" class="status">
 <p class="author">Author: Raoul</p>
-<p class="date">Created: 2020-01-12 Sun 20:28</p>
+<p class="date">Created: 2020-01-10 Fri 22:28</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

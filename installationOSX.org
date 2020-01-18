@@ -56,57 +56,20 @@
    L'administrateur crée une base de données et délègue sa gestion à un autre utilisateur.
 
 * Commandes de base en ligne de commande
-  - Liste les bases de données (auxquelles l'utilisateur a accès):
-    #+BEGIN_SRC sql
-      SHOW DATABASES;
-    #+END_SRC
-  - Affiche le statut du serveur:
-    #+BEGIN_SRC sql
-      SHOW STATUS;
-    #+END_SRC
-  - Sélectionne la base par défaut:
-    #+BEGIN_SRC sql
-      USE nom_base;
-    #+END_SRC
-  - Affiche les tables de la base courante:
-    #+BEGIN_SRC sql
-      SHOW TABLES;
-    #+END_SRC
-  - Affiche la structure de la table:
-    #+BEGIN_SRC sql
-      DESCRIBLE nom_table;
-    #+END_SRC
-  - Crée une nouvelle table:
-    #+BEGIN_SRC sql
-      CREATE TABLE nom_table (
-      nom_colonne1 int,
-      nom_colonne2 VARCHAR(100)
-      );
-    #+END_SRC
-  - Ajoute une colonne à une table:
-    #+BEGIN_SRC sql
-      ALTER TABLE nom_table ADD nom_colonne type_colonne;
-    #+END_SRC
-  - Efface une colonne:
-    #+BEGIN_SRC sql 
-      ALTER TABLE nom_table DROP COLUMN nom_colonne;
-    #+END_SRC
-  - Efface une table:
-    #+BEGIN_SRC sql
-      DROP nom_table;
-    #+END_SRC
-  - Affiche le contenu de la table:
-    #+BEGIN_SRC sql
-      SELECT * FROM nom_table;
-    #+END_SRC
-  -  Crée une nouvelle base de données:
-    #+BEGIN_SRC sql
-      CREATE DATABASE nom_database;
-    #+END_SRC
-  -  Efface une base de donnée:
-    #+BEGIN_SRC sql
-      DROP DATABASE nom_database;
-    #+END_SRC
+  - =SHOW DATABASES=
+  Liste les bases de données
+  - =SHOW STATUS=
+    Affiche le statut du serveur
+  - =USE nom_base=
+  Sélectionne la base par défaut
+  - =SHOW TABLES=
+  Affiche les tables de la base courante
+  - =DESCRIBLE table=
+  Affiche la structure de la table
+  - =SELECT * FROM table=
+  Affiche le contenu de la table
+  - =CREATE DATABASE base=
+  Crée une nouvelle base de données
 
 * Initialiser
 ** Création d'une nouvelle base de données 
@@ -151,13 +114,8 @@
      SELECT user();
    #+END_SRC
 
-   or
-
-   #+BEGIN_SRC sql
-     \s
-   #+END_SRC
-
 * sql-mode dans emacs
+
 ** se connecter au serveur dans emacs
    'M-x sql-mysql'
    Renseigner:
@@ -165,6 +123,7 @@
    - Password: gestionnaire
    - Database : bd_gestion_des_notes
    - Server: localhost
+
 ** Si emacs ne trouve pas le programme mysql
    - Déterminer l'emplacement de mysql
    #+BEGIN_SRC shell
@@ -198,11 +157,10 @@
        (add-hook 'sql-interactive-mode-hook 'sql-upcase-mode))
    #+END_SRC
 
-** Completion
-   https://www.emacswiki.org/emacs/SqlCompletion
 * How to run sql script
 
   If you’re at the MySQL command line mysql> you have to declare the SQL file as source.
+
 
   #+BEGIN_SRC sql
     mysql> source \home\user\Desktop\script_file.sql;
