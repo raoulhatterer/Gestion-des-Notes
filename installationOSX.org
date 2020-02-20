@@ -103,11 +103,11 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
     #+NAME: setrootpwd
     #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t
     #+BEGIN_SRC sql
-      show databases;
-      use mysql;
+      SHOW databases;
+      USE mysql;
       SET password FOR 'root'@'localhost' = 
       password('YOUR_ROOT_PASSWORD_HERE');
-      flush PRIVILEGES;
+      FLUSH PRIVILEGES;
       quit
     #+END_SRC
 
@@ -235,7 +235,7 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
    Saisir le mot de passe précédemment défini. 
 
 
-** Lister les bases de données (auxquelles le gestionnaire a accès):
+** Lister les bases de données (auxquelles le gestionnaire a accès)
 
    #+NAME: showdatabases2
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
@@ -243,16 +243,16 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
      SHOW DATABASES;
    #+END_SRC
 
-** Choisir d'utiliser la base de donnée ~bd_gestion_des_notes~
+** Se connecter à une base de données
+   Pour utiliser la base de donnée ~bd_gestion_des_notes~:
  
    #+NAME: usebd_gestion_des_notes
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
    #+BEGIN_SRC sql
-     use bd_gestion_des_notes;      
+     USE bd_gestion_des_notes;      
    #+END_SRC
 
-
-** Afficher les tables de la base courante:
+** Afficher les tables de la base courante
 
    #+NAME: showtables
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
@@ -260,7 +260,7 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
      SHOW TABLES;
    #+END_SRC
 
-** Afficher la structure de la table:
+** Afficher la structure de la table
 
    #+NAME: describetable
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
@@ -268,7 +268,7 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
     DESCRIBLE nom_table;
   #+END_SRC
 
-** Créer une nouvelle table:
+** Créer une nouvelle table
 
    #+NAME: createtable
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
@@ -279,38 +279,33 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
      );
    #+END_SRC
  
-** Ajouter une colonne à une table:
+** Ajouter une colonne à une table
    #+NAME: addcolumn
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
    #+BEGIN_SRC sql
      ALTER TABLE nom_table ADD nom_colonne type_colonne;
    #+END_SRC
  
-** Effacer une colonne:
+** Effacer une colonne
    #+NAME: deletecolumn
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
    #+BEGIN_SRC sql 
      ALTER TABLE nom_table DROP COLUMN nom_colonne;
    #+END_SRC
  
-** Effacer une table:
+** Effacer une table
    #+NAME: deletetable
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
    #+BEGIN_SRC sql
      DROP nom_table;
    #+END_SRC
  
-** Afficher le contenu de la table:
+** Afficher le contenu de la table
    #+NAME: showtable
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
    #+BEGIN_SRC sql
      SELECT * FROM nom_table;
    #+END_SRC
-  
-
-
-
-
 
 * sql-mode dans emacs
 
