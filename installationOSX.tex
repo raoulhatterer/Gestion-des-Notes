@@ -1,0 +1,407 @@
+% Created 2020-02-20 Thu 01:30
+% Intended LaTeX compiler: pdflatex
+\documentclass[11pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{graphicx}
+\usepackage{grffile}
+\usepackage{longtable}
+\usepackage{wrapfig}
+\usepackage{rotating}
+\usepackage[normalem]{ulem}
+\usepackage{amsmath}
+\usepackage{textcomp}
+\usepackage{amssymb}
+\usepackage{capt-of}
+\usepackage{hyperref}
+\usepackage{minted}
+\usepackage[frenchb]{babel}
+\usepackage[x11names]{xcolor}
+\hypersetup{linktoc = all, colorlinks = true, urlcolor = DodgerBlue4, citecolor = PaleGreen1, linkcolor = black}
+\author{Raoul HATTERER}
+\date{\today}
+\title{Gestion des notes\\\medskip
+\large (Projet DIU)}
+\hypersetup{
+ pdfauthor={Raoul HATTERER},
+ pdftitle={Gestion des notes},
+ pdfkeywords={},
+ pdfsubject={},
+ pdfcreator={Emacs 26.3 (Org mode 9.1.9)}, 
+ pdflang={Frenchb}}
+\begin{document}
+
+\maketitle
+\setcounter{tocdepth}{2}
+\tableofcontents
+
+\newpage
+
+
+\section{Installations et paramétrages}
+\label{sec:orgb8900ab}
+\textbf{Remarque}: Certaines parties concernent plus spécifiquement mon utilisation personnelle avec \href{https://emacsformacosx.com}{emacs sous OSX}.
+
+\subsection{Installer Homebrew}
+\label{sec:org8a40175}
+
+Pour installer MariaDB, il faut disposer de \href{https://brew.sh/index\_fr}{Homebrew} (The Missing Package Manager for macOS).
+
+\subsection{Installer MariaDB}
+\label{sec:orgfbd4eea}
+
+MariaDB Server peut ensuite être installé grâce à cette commande:
+
+\begin{minted}[,frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t]{shell}
+brew update
+brew install mariadb
+\end{minted}
+
+\subsection{Démarrer MariaDB Server}
+\label{sec:org37d22bf}
+Après installation, on peut (mais on ne va pas le faire) démarrer le serveur avec la commande:
+\begin{minted}[,frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t]{shell}
+mysql.server start
+\end{minted}
+
+Il est plus commode d'activer le démarrage automatique du serveur:
+
+\begin{minted}[,frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t]{shell}
+brew services start mariadb
+\end{minted}
+
+\subsection{Vérifier que MariaDB a démarré}
+\label{sec:org6cf8bdd}
+
+\begin{minted}[,frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t]{shell}
+brew services list
+\end{minted}
+
+\subsection{Client-serveur}
+\label{sec:org7fe9b6e}
+
+Comme la plupart des SGBD ([S]ystème de [G]estion de [B]ase de [D]onnées), MariaDB est basée sur le \textbf{modèle client-serveur}. Cela implique que la base de données se trouve sur un \textbf{serveur} auquel nous n'avons pas accès directement. Il faut passer par un \textbf{client} qui fera la liaison entre nous et le serveur.
+
+Donc, maintenant que  MariaDB Server a démarré, on va s'y connecter en utilisant un logiciel client (nommé \texttt{mysql})\ldots{} mais sous quelle identité et avec quels droits?
+
+\subsection{Distinguer les utilisateurs}
+\label{sec:orgb7b8813}
+
+\subsubsection{Types d'utilisateurs}
+\label{sec:orgbcd1622}
+
+Il faut distinguer trois types d'utilisateur d'un SGBD ayant chacun des rôles bien distincts :
+\begin{enumerate}
+\item L'\textbf{administrateur} du SGBD et donc des Bases de Données. Il s'appelle \texttt{root}. Son rôle est d'installer et gérer le SGBD dans sa globalité. Chaque fois que l'administrateur crée une base de données, il délègue sa gestion à un autre utilisateur à qui il donne les droits nécessaires. \textbf{Remarque:}  Il ne faut pas travailler sur une bases de données en tant que \texttt{root}; ce n'est pas son rôle (\href{https://www.youtube.com/watch?v=oiQG6tP3940}{c'est mal}).
+\item Le \textbf{gestionnaire} de Bases de Données (dans un SGBD existant) qui doit connaître  \textbf{sql} (Structured Query Language) : création (CREATE TABLE), modification (ALTER TABLE), suppression (DROP TABLE) de tables\ldots{}
+\item L'\textbf{utilisateur} de bases de données (il va interagir avec la base de donnée à travers une application se voulant conviviale; il n'a pas à connaître \textbf{sql}).
+\end{enumerate}
+
+
+
+\subsubsection{À la création}
+\label{sec:orgf19e4ac}
+
+\textbf{À la création, la base de donnée est initialisée avec 2 comptes:} 
+\begin{itemize}
+\item le premier correspond au nom d'utilisateur actuel (checké avec la commande \texttt{whoami}); il ne nécessite pas de mot de passe;
+\item tandis que le second est le compte administrateur \texttt{root} ; il est inaccessible tant qu'on n'a pas défini de mot de passe.
+\end{itemize}
+
+On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (root) puis s'y connecter pour créer une base de données (\texttt{bd\_gestion\_des\_notes}) et un compte gestionnaire.  
+
+\subsubsection{Activer l'accès au compte \texttt{root}}
+\label{sec:org687c8f8}
+
+Pour cela, d'abord se connecter au client \textbf{mysql}  avec son nom d'utilisateur:
+
+\begin{minted}[,frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t]{shell}
+mysql -u $(whoami)
+\end{minted}
+
+Puis, grâce au commandes du client \textbf{mysql}, définir le mot de passe de \texttt{root}:
+
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t]{sql}
+show databases;
+use mysql;
+SET password FOR 'root'@'localhost' = 
+password('YOUR_ROOT_PASSWORD_HERE');
+flush PRIVILEGES;
+quit
+\end{minted}
+
+où \texttt{YOUR\_ROOT\_PASSWORD\_HERE} est à remplacer par le mot de passe souhaité.
+
+\subsection{Création d'une nouvelle base de données et d'un gestionnaire pour assurer sa gestion}
+\label{sec:org5429560}
+
+\subsubsection{Login en tant que \texttt{root}}
+\label{sec:orgabafa6a}
+
+Maintenant, nous pouvons nous connecter en tant que \texttt{root}:
+
+\begin{minted}[,frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t]{shell}
+mysql -u root -p
+\end{minted}
+
+Il faudra fournir le mot de passe renseigné à l'étape précédente.
+
+\subsubsection{Commandes de base à la disposition de l'administrateur}
+\label{sec:orge64b829}
+
+\begin{itemize}
+\item Afficher le statut du serveur:\\
+
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t]{sql}
+SHOW STATUS;
+\end{minted}
+
+\item Créer une nouvelle base de données:\\
+
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t]{sql}
+CREATE DATABASE nom_database;
+\end{minted}
+
+\item Lister les bases de données:\\
+
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t]{sql}
+SHOW DATABASES;
+\end{minted}
+
+\item Effacer une base de donnée:\\
+
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t]{sql}
+DROP DATABASE nom_database;
+\end{minted}
+\end{itemize}
+
+
+
+
+
+\subsubsection{Création de la nouvelle base de données \texttt{bd\_gestion\_des\_notes}:}
+\label{sec:orgaceb3a3}
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}},]{sql}
+CREATE DATABASE bd_gestion_des_notes;
+SHOW DATABASES;
+\end{minted}
+
+\subsubsection{Création d'un utilisateur \texttt{gestionnaire}}
+\label{sec:org3f6b739}
+Utilisateur à qui \texttt{root} va donner les droits nécessaires pour créer ou modifier des tables dans la base de données \texttt{bd\_gestion\_des\_notes} ou pour inscrire des utilisateurs
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}},]{sql}
+CREATE USER user_gestionnaire@localhost
+IDENTIFIED BY 'gestionnaire';
+GRANT ALL PRIVILEGES ON bd_gestion_des_notes.* 
+TO user_gestionnaire@localhost;
+quit
+\end{minted}
+
+\subsubsection{Effacer l'utilisateur \texttt{gestionnaire}}
+\label{sec:org6fb41f8}
+
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}},]{sql}
+DROP USER user_gestionnaire@localhost;
+\end{minted}
+
+
+\section{Afficher les utilisateurs}
+\label{sec:orgd7e5647}
+\subsection{Afficher tous les utilisateurs (en tant qu'administrateur)}
+\label{sec:orgf71ae18}
+
+Connecté en \texttt{root} saisir la commande:
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}},]{sql}
+select host, user from mysql.user;
+\end{minted}
+
+\subsection{Afficher l'utilisateur connecté}
+\label{sec:orgcb42eb0}
+
+Deux commandes possibles pour cela:
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}},]{sql}
+SELECT current_user;
+\end{minted}
+
+ou 
+
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}},]{sql}
+SELECT user();
+\end{minted}
+
+
+\section{Gestion de la base de données}
+\label{sec:org87aa770}
+
+\subsection{Se connecter au client \texttt{mysql} en tant que gestionnaire}
+\label{sec:org5ba62e6}
+
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}},]{sql}
+mysql -u user_gestionnaire -p
+\end{minted}
+
+Saisir le mot de passe précédemment défini. 
+
+
+\subsection{Lister les bases de données (auxquelles le gestionnaire a accès):}
+\label{sec:orge98eb96}
+
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}},]{sql}
+SHOW DATABASES;
+\end{minted}
+
+\subsection{Choisir d'utiliser la base de donnée \texttt{bd\_gestion\_des\_notes}}
+\label{sec:orgf05827b}
+
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}},]{sql}
+use bd_gestion_des_notes;      
+\end{minted}
+
+
+\subsection{Afficher les tables de la base courante:}
+\label{sec:org388e285}
+
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}},]{sql}
+SHOW TABLES;
+\end{minted}
+
+\subsection{Afficher la structure de la table:}
+\label{sec:org4d98a60}
+
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}},]{sql}
+DESCRIBLE nom_table;
+\end{minted}
+
+\subsection{Créer une nouvelle table:}
+\label{sec:orgf75a940}
+
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}},]{sql}
+CREATE TABLE nom_table (
+nom_colonne1 int,
+nom_colonne2 VARCHAR(100)
+);
+\end{minted}
+
+\subsection{Ajouter une colonne à une table:}
+\label{sec:orgdcd58c5}
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}},]{sql}
+ALTER TABLE nom_table ADD nom_colonne type_colonne;
+\end{minted}
+
+\subsection{Effacer une colonne:}
+\label{sec:org5a24125}
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}},]{sql}
+ALTER TABLE nom_table DROP COLUMN nom_colonne;
+\end{minted}
+
+\subsection{Effacer une table:}
+\label{sec:org15125f3}
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}},]{sql}
+DROP nom_table;
+\end{minted}
+
+\subsection{Afficher le contenu de la table:}
+\label{sec:org636b602}
+\begin{minted}[,frame=single, label = \textrm{\textbf{sql}},]{sql}
+SELECT * FROM nom_table;
+\end{minted}
+
+
+
+
+
+
+\section{sql-mode dans emacs}
+\label{sec:org6340d34}
+
+\subsection{Se connecter au serveur dans emacs}
+\label{sec:org5ffab25}
+
+\texttt{M-x sql-mysql}
+
+Renseigner:
+\begin{itemize}
+\item User: \texttt{user\_gestionnaire}
+\item Password: \texttt{gestionnaire}
+\item Database : \texttt{bd\_gestion\_des\_notes}
+\item Server: \texttt{localhost}
+\end{itemize}
+
+\subsection{Si emacs ne trouve pas le programme mysql}
+\label{sec:orga02b682}
+\begin{itemize}
+\item Déterminer l'emplacement de \texttt{mysql}
+\end{itemize}
+\begin{minted}[,frame=single, label = \textrm{\textbf{shell}},]{shell}
+which mysql
+\end{minted}
+retourne \texttt{/usr/local/bin/mysql}
+
+\begin{itemize}
+\item modifier \texttt{.emacs.d/init.el}
+\end{itemize}
+Emacs uses the directories listed in the exec-path variable to look for programs. You can add to it like so:
+
+\begin{minted}[,frame=single, label = \textrm{\textbf{elisp}},]{elisp}
+(add-to-list 'exec-path "/usr/local/bin")
+\end{minted}
+
+\subsection{Connexion facilitée}
+\label{sec:orgc8fa61e}
+À placer dans \texttt{.emacs.d/init.el}
+\begin{minted}[,frame=single, label = \textrm{\textbf{elisp}},]{elisp}
+(setq sql-user "user_gestionnaire")
+(setq sql-password "gestionnaire")
+(setq sql-database "bd_gestion_des_notes")
+(setq sql-server "localhost")
+\end{minted}
+
+\subsection{SQL-UPCASE}
+\label{sec:org1097cb0}
+\url{https://www.emacswiki.org/emacs/SqlUpcase}
+A minor mode which converts lower-case SQL keywords to upper-case as you type or otherwise insert text in the buffer – for instance, killing and yanking an entire SQL query would upcase all keywords in that query.
+Commands are also provided for upcasing all keywords in the buffer (‘sql-upcase-buffer’), or a specified region (‘sql-upcase-region’).
+\begin{minted}[]{elisp}
+(when (require 'sql-upcase nil :noerror)
+  (add-hook 'sql-mode-hook 'sql-upcase-mode)
+  (add-hook 'sql-interactive-mode-hook 'sql-upcase-mode))
+\end{minted}
+
+
+\section{How to run sql script}
+\label{sec:orgb12d894}
+
+If you’re at the MySQL command line mysql> you have to declare the SQL file as source.
+
+\begin{minted}[]{sql}
+mysql> source \path\to\the\script_file.sql;
+\end{minted}
+
+For example:
+
+\begin{minted}[]{sql}
+mysql> source \home\user\Desktop\script_file.sql;
+\end{minted}
+
+
+\section{Python tkinter table widget for displaying tabular data}
+\label{sec:org1a6b6a1}
+
+\subsection{installation}
+\label{sec:org2a6dd1e}
+\begin{minted}[]{shell}
+pip install tksheet
+\end{minted}
+
+\subsection{source}
+\label{sec:orge85f90b}
+\url{https://github.com/ragardner/tksheet}
+
+\subsection{paramètres}
+\label{sec:org11498f4}
+\url{https://github.com/ragardner/tksheet/blob/master/DOCUMENTATION.md}
+
+\subsection{fonctions}
+\label{sec:orgf4e994f}
+\url{https://github.com/ragardner/tksheet/blob/master/tksheet/\_tksheet.py}
+\end{document}

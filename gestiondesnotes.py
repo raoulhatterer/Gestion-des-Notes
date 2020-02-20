@@ -9,6 +9,13 @@ from tkinter import ttk
 # import pdb
 # pdb.set_trace()
 
+# activer l'environnement virtuel python3.8
+
+# Au préalable:
+# -------------
+# créer la base de données bd_cinema et l'utilisateur user_cinema
+# initialiser les tables de la BD grâce au script createdb_gestiondesnotes.sql avec
+# source createdb_gestiondesnotes.sql
 
 try:
     print("Try to connected to MySQL Server")
