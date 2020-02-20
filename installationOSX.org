@@ -307,29 +307,31 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
      SELECT * FROM nom_table;
    #+END_SRC
 
+
 * sql-mode dans emacs
 
-** Se connecter au serveur dans emacs
+** Se connecter au client ~mysql~ dans emacs
 
-   ~M-x sql-mysql~
+   Utiliser la commande: ~M-x sql-mysql~
 
    Renseigner:
    - User: ~user_gestionnaire~
    - Password: ~gestionnaire~
-   - Database : ~bd_gestion_des_notes~
+   - Database : (ne rien mettre)
    - Server: ~localhost~
 
 ** Si emacs ne trouve pas le programme mysql
-   - Déterminer l'emplacement de ~mysql~
+   - Déterminer l'emplacement de ~mysql~ avec la commande:
    #+NAME: whishsql
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, 
    #+BEGIN_SRC shell
      which mysql
    #+END_SRC
-   retourne ~/usr/local/bin/mysql~
+   qui retourne ~/usr/local/bin/mysql~
 
    - modifier ~.emacs.d/init.el~
-   Emacs uses the directories listed in the exec-path variable to look for programs. You can add to it like so:
+   
+   Emacs recherche les programmes dans les répertoires listés dans la variable ~exec-path~. On va ajouter  ~/usr/local/bin~ à cette variable.
 
    #+NAME: execpath
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{elisp}}, 
@@ -343,19 +345,28 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{elisp}}, 
    #+BEGIN_SRC elisp
      (setq sql-user "user_gestionnaire")
-     (setq sql-password "gestionnaire")
      (setq sql-database "bd_gestion_des_notes")
      (setq sql-server "localhost")
    #+END_SRC
 
-** SQL-UPCASE
-   https://www.emacswiki.org/emacs/SqlUpcase
-   A minor mode which converts lower-case SQL keywords to upper-case as you type or otherwise insert text in the buffer – for instance, killing and yanking an entire SQL query would upcase all keywords in that query.
-   Commands are also provided for upcasing all keywords in the buffer (‘sql-upcase-buffer’), or a specified region (‘sql-upcase-region’).
+   Connexion acilitée, toujours avec la commande ~M-x sql-mysql~ et dorénavant il ne reste plus qu'à saisir le mot de passe utilisateur (en l'occurrence: ~gestionnaire~); le reste étant renseigné à l'avance.
+
+** SQLUP-MODE
+
+   Capitalise les mots clés sql.
+
+   Les lignes suivantes sont  à placer dans le fichier ~init.el~:
+
+   #+NAME: sqlup
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{elisp}}, 
    #+BEGIN_SRC elisp
-     (when (require 'sql-upcase nil :noerror)
-       (add-hook 'sql-mode-hook 'sql-upcase-mode)
-       (add-hook 'sql-interactive-mode-hook 'sql-upcase-mode))
+     (use-package sqlup-mode
+       :ensure t
+       :config
+       (add-hook 'sql-mode-hook 'sqlup-mode)
+       (add-hook 'sql-interactive-mode-hook 'sqlup-mode)
+       (add-hook 'redis-mode-hook 'sqlup-mode)
+       )
    #+END_SRC
 
 
