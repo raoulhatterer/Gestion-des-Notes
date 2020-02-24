@@ -23,97 +23,97 @@
 
 * Installations et paramétrages
   *Remarque*: Certaines parties concernent plus spécifiquement mon utilisation personnelle avec [[https://emacsformacosx.com][emacs sous OSX]].
+** Prérequis
+*** Installer Homebrew
 
-** Installer Homebrew
+    Pour installer MariaDB, il faut disposer de [[https://brew.sh/index_fr][Homebrew]] (The Missing Package Manager for macOS).
 
-   Pour installer MariaDB, il faut disposer de [[https://brew.sh/index_fr][Homebrew]] (The Missing Package Manager for macOS).
+*** Installer MariaDB
 
-** Installer MariaDB
+    MariaDB Server peut ensuite être installé grâce à cette commande:
 
-   MariaDB Server peut ensuite être installé grâce à cette commande:
-
-   #+NAME: mariadbinstallation
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
-   #+BEGIN_SRC shell
-     brew update
-     brew install mariadb
-   #+END_SRC
-
-** Démarrer MariaDB Server
-   Après installation, on peut (mais on ne va pas le faire) démarrer le serveur avec la commande:
-   #+NAME: mariadbstart
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
-   #+BEGIN_SRC shell
-     mysql.server start
-   #+END_SRC
-   
-   Il est plus commode d'activer le démarrage automatique du serveur:
-
-   #+NAME: mariadbautostart
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
-   #+BEGIN_SRC shell
-     brew services start mariadb
-   #+END_SRC
-
-** Vérifier que MariaDB a démarré
-
-   #+NAME: serviceslist
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
-   #+BEGIN_SRC shell
-     brew services list
-   #+END_SRC
-
-** Client-serveur
-
-   Comme la plupart des SGBD ([S]ystème de [G]estion de [B]ase de [D]onnées), MariaDB est basée sur le *modèle client-serveur*. Cela implique que la base de données se trouve sur un *serveur* auquel nous n'avons pas accès directement. Il faut passer par un *client* qui fera la liaison entre nous et le serveur.
-
-   Donc, maintenant que  MariaDB Server a démarré, on va s'y connecter en utilisant un logiciel client (nommé ~mysql~)... mais sous quelle identité et avec quels droits?
-
-** Distinguer les utilisateurs
-
-*** Types d'utilisateurs
-
-    Il faut distinguer trois types d'utilisateur d'un SGBD ayant chacun des rôles bien distincts :
-    1. L'*administrateur* du SGBD et donc des Bases de Données. Il s'appelle ~root~. Son rôle est d'installer et gérer le SGBD dans sa globalité. Chaque fois que l'administrateur crée une base de données, il délègue sa gestion à un autre utilisateur à qui il donne les droits nécessaires. *Remarque:*  Il ne faut pas travailler sur une bases de données en tant que ~root~; ce n'est pas son rôle ([[https://www.youtube.com/watch?v=oiQG6tP3940][c'est mal]]).
-    2. Le *gestionnaire* de Bases de Données (dans un SGBD existant) qui doit connaître  *sql* (Structured Query Language) : création (CREATE TABLE), modification (ALTER TABLE), suppression (DROP TABLE) de tables...     
-    3. L'*utilisateur* de bases de données (il va interagir avec la base de donnée à travers une application se voulant conviviale; il n'a pas à connaître *sql*).
-
-
-
-*** À la création
-
-   *À la création, la base de donnée est initialisée avec 2 comptes:* 
-- le premier correspond au nom d'utilisateur actuel (checké avec la commande ~whoami~); il ne nécessite pas de mot de passe;
-- tandis que le second est le compte administrateur ~root~ ; il est inaccessible tant qu'on n'a pas défini de mot de passe.
-
-On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (root) puis s'y connecter pour créer une base de données (~bd_gestion_des_notes~) et un compte gestionnaire.  
-
-*** Activer l'accès au compte ~root~
-    
-    Pour cela, d'abord se connecter au client *mysql*  avec son nom d'utilisateur:
-
-    #+NAME: whoam
+    #+NAME: mariadbinstallation
     #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
     #+BEGIN_SRC shell
-      mysql -u $(whoami)
+      brew update
+      brew install mariadb
     #+END_SRC
+
+*** Démarrer MariaDB Server
+    Après installation, on peut (mais on ne va pas le faire) démarrer le serveur avec la commande:
+    #+NAME: mariadbstart
+    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
+    #+BEGIN_SRC shell
+      mysql.server start
+    #+END_SRC
+   
+    Il est plus commode d'activer le démarrage automatique du serveur:
+
+    #+NAME: mariadbautostart
+    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
+    #+BEGIN_SRC shell
+      brew services start mariadb
+    #+END_SRC
+
+*** Vérifier que MariaDB a démarré
+
+    #+NAME: serviceslist
+    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
+    #+BEGIN_SRC shell
+      brew services list
+    #+END_SRC
+
+*** Client-serveur
+
+    Comme la plupart des SGBD ([S]ystème de [G]estion de [B]ase de [D]onnées), MariaDB est basée sur le *modèle client-serveur*. Cela implique que la base de données se trouve sur un *serveur* auquel nous n'avons pas accès directement. Il faut passer par un *client* qui fera la liaison entre nous et le serveur.
+
+    Donc, maintenant que  MariaDB Server a démarré, on va s'y connecter en utilisant un logiciel client (nommé ~mysql~)... mais sous quelle identité et avec quels droits?
+
+*** Distinguer les utilisateurs
+
+**** Types d'utilisateurs
+
+     Il faut distinguer trois types d'utilisateur d'un SGBD ayant chacun des rôles bien distincts :
+     1. *L'administrateur* du SGBD et donc des Bases de Données. Il s'appelle ~root~. Son rôle est d'installer et gérer le SGBD dans sa globalité. Chaque fois que l'administrateur crée une base de données, il délègue sa gestion à un autre utilisateur à qui il donne les droits nécessaires. *Remarque:*  Il ne faut pas travailler sur une bases de données en tant que ~root~; ce n'est pas son rôle ([[https://www.youtube.com/watch?v=oiQG6tP3940][c'est mal]]).
+     2. *Le gestionnaire* de Bases de Données (dans un SGBD existant) qui doit connaître  *sql* (Structured Query Language) : création (CREATE TABLE), modification (ALTER TABLE), suppression (DROP TABLE) de tables...     
+     3. *L'utilisateur final* de la base de donnée. Il va interagir avec tout ou partie de la base de donnée à travers une application se voulant conviviale; il n'a pas à connaître *sql*.
+
+
+
+**** À la création
+
+    *À la création, la base de donnée est initialisée avec 2 comptes:* 
+ - le premier correspond au nom d'utilisateur actuel (checké avec la commande ~whoami~); il ne nécessite pas de mot de passe;
+ - tandis que le second est le compte administrateur ~root~ ; il est inaccessible tant qu'on n'a pas défini de mot de passe.
+
+ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (root) puis s'y connecter pour créer une base de données (~bd_gestion_des_notes~) et un compte gestionnaire.  
+
+**** Activer l'accès au compte ~root~
     
-    Puis, grâce au commandes du client *mysql*, définir le mot de passe de ~root~:
+     Pour cela, d'abord se connecter au client *mysql*  avec son nom d'utilisateur:
+
+     #+NAME: whoam
+     #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
+     #+BEGIN_SRC shell
+       mysql -u $(whoami)
+     #+END_SRC
+    
+     Puis, grâce au commandes du client *mysql*, définir le mot de passe de ~root~:
  
-    #+NAME: setrootpwd
-    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t
-    #+BEGIN_SRC sql
-      SHOW databases;
-      USE mysql;
-      SET password FOR 'root'@'localhost' = 
-      password('YOUR_ROOT_PASSWORD_HERE');
-      FLUSH PRIVILEGES;
-      quit
-    #+END_SRC
+     #+NAME: setrootpwd
+     #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t
+     #+BEGIN_SRC sql
+       SHOW databases;
+       USE mysql;
+       SET password FOR 'root'@'localhost' = 
+       password('YOUR_ROOT_PASSWORD_HERE');
+       FLUSH PRIVILEGES;
+       quit
+     #+END_SRC
 
-    où ~YOUR_ROOT_PASSWORD_HERE~ est à remplacer par le mot de passe souhaité.
+     où ~YOUR_ROOT_PASSWORD_HERE~ est à remplacer par le mot de passe souhaité.
 
-** Création d'une nouvelle base de données et d'un gestionnaire pour assurer sa gestion 
+** Création par ~root~ d'une nouvelle base de données et d'un gestionnaire pour assurer sa gestion 
 
 *** Login en tant que ~root~  
 
@@ -176,7 +176,7 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
 *** Création d'un utilisateur =gestionnaire=
     Utilisateur à qui ~root~ va donner les droits nécessaires pour créer ou modifier des tables dans la base de données =bd_gestion_des_notes= ou pour inscrire des utilisateurs
     #+NAME: createusergestionnaire
-    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
+    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
     #+BEGIN_SRC sql
       CREATE USER user_gestionnaire@localhost
       IDENTIFIED BY 'gestionnaire';
@@ -185,10 +185,10 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
       quit
     #+END_SRC		
 
-*** Effacer l'utilisateur =gestionnaire=
+*** Effacer (si besoin) l'utilisateur =gestionnaire=
 
-    #+NAME: createusergestionnaire
-    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
+    #+NAME: dropusergestionnaire
+    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
     #+BEGIN_SRC sql
       DROP USER user_gestionnaire@localhost;
     #+END_SRC		
@@ -199,7 +199,7 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
 
    Connecté en ~root~ saisir la commande:
    #+NAME: showallusers
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
    #+BEGIN_SRC sql
      select host, user from mysql.user;
    #+END_SRC
@@ -208,7 +208,7 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
 
    Deux commandes possibles pour cela:
    #+NAME: showcurrentuser
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
    #+BEGIN_SRC sql
      SELECT current_user;
    #+END_SRC
@@ -216,7 +216,7 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
    ou 
 
    #+NAME: showcurrentuser2
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
    #+BEGIN_SRC sql
      SELECT user();
    #+END_SRC
@@ -227,18 +227,17 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
 ** Se connecter au client ~mysql~ en tant que gestionnaire
 
    #+NAME: connectgestionnaire
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
    #+BEGIN_SRC sql
      mysql -u user_gestionnaire -p
    #+END_SRC
 
    Saisir le mot de passe précédemment défini. 
 
-
 ** Lister les bases de données (auxquelles le gestionnaire a accès)
 
    #+NAME: showdatabases2
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
    #+BEGIN_SRC sql
      SHOW DATABASES;
    #+END_SRC
@@ -247,7 +246,7 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
    Pour utiliser la base de donnée ~bd_gestion_des_notes~:
  
    #+NAME: usebd_gestion_des_notes
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
    #+BEGIN_SRC sql
      USE bd_gestion_des_notes;      
    #+END_SRC
@@ -255,7 +254,7 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
 ** Afficher les tables de la base courante
 
    #+NAME: showtables
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
    #+BEGIN_SRC sql
      SHOW TABLES;
    #+END_SRC
@@ -263,7 +262,7 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
 ** Afficher la structure de la table
 
    #+NAME: describetable
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
   #+BEGIN_SRC sql
     DESCRIBLE nom_table;
   #+END_SRC
@@ -271,7 +270,7 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
 ** Créer une nouvelle table
 
    #+NAME: createtable
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
    #+BEGIN_SRC sql
      CREATE TABLE nom_table (
      nom_colonne1 int,
@@ -281,34 +280,34 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
  
 ** Ajouter une colonne à une table
    #+NAME: addcolumn
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
    #+BEGIN_SRC sql
      ALTER TABLE nom_table ADD nom_colonne type_colonne;
    #+END_SRC
  
 ** Effacer une colonne
    #+NAME: deletecolumn
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
    #+BEGIN_SRC sql 
      ALTER TABLE nom_table DROP COLUMN nom_colonne;
    #+END_SRC
  
 ** Effacer une table
    #+NAME: deletetable
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
    #+BEGIN_SRC sql
      DROP nom_table;
    #+END_SRC
  
 ** Afficher le contenu de la table
    #+NAME: showtable
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
    #+BEGIN_SRC sql
      SELECT * FROM nom_table;
    #+END_SRC
 
 
-* sql-mode dans emacs
+* SQL avec emacs
 
 ** Se connecter au client ~mysql~ dans emacs
 
@@ -323,42 +322,49 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
 ** Si emacs ne trouve pas le programme mysql
    - Déterminer l'emplacement de ~mysql~ avec la commande:
    #+NAME: whishsql
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, 
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}},  labelposition = topline, samepage = t
    #+BEGIN_SRC shell
      which mysql
    #+END_SRC
    qui retourne ~/usr/local/bin/mysql~
 
    - modifier ~.emacs.d/init.el~
-   
-   Emacs recherche les programmes dans les répertoires listés dans la variable ~exec-path~. On va ajouter  ~/usr/local/bin~ à cette variable.
 
    #+NAME: execpath
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{elisp}}, 
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{elisp}},  labelposition = topline, samepage = t
    #+BEGIN_SRC elisp
      (add-to-list 'exec-path "/usr/local/bin")
    #+END_SRC
 
-** Connexion facilitée 
+   Emacs recherche les programmes dans les répertoires listés dans la variable ~exec-path~. On a ajouté  ~/usr/local/bin~ à cette variable.
+
+** Faciliter la connexion 
    À placer dans ~.emacs.d/init.el~
    #+NAME: connexionfacile
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{elisp}}, 
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{elisp}},  labelposition = topline, samepage = t
    #+BEGIN_SRC elisp
-     (setq sql-user "user_gestionnaire")
-     (setq sql-database "bd_gestion_des_notes")
-     (setq sql-server "localhost")
+     (use-package sql
+       :ensure t
+       :config
+       (sql-set-product-feature 'mysql :prompt-regexp 
+                      "^\\(MariaDB\\|MySQL\\) \\[[_a-zA-Z]*\\]> ")
+       (setq sql-user "user_gestionnaire")
+       (setq sql-database "bd_gestion_des_notes")
+       (setq sql-server "localhost")
+       (define-key comint-mode-map [mouse-3] 'comint-insert-input)
+       )
    #+END_SRC
 
    Connexion acilitée, toujours avec la commande ~M-x sql-mysql~ et dorénavant il ne reste plus qu'à saisir le mot de passe utilisateur (en l'occurrence: ~gestionnaire~); le reste étant renseigné à l'avance.
 
-** SQLUP-MODE
+** Mots clés automatiquement en majuscule
 
-   Capitalise les mots clés sql.
+   SQLUP-MODE permet d'écrire les mots clés SQL en majuscule.
 
    Les lignes suivantes sont  à placer dans le fichier ~init.el~:
 
    #+NAME: sqlup
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{elisp}}, 
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{elisp}},  labelposition = topline, samepage = t
    #+BEGIN_SRC elisp
      (use-package sqlup-mode
        :ensure t
@@ -369,19 +375,39 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
        )
    #+END_SRC
 
+** Autocompletion
 
-* How to run sql script
+   #+NAME: sqlup
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{elisp}},  labelposition = topline, samepage = t
+   #+BEGIN_SRC elisp
+     ;;; SQL COMPLETION
+     ;; put the root password in  ~/.emacs.d/lisp/mysql.el
+     (require 'sql-completion)
+     (setq sql-interactive-mode-hook
+           (lambda ()
+             (define-key sql-interactive-mode-map "\t"
+               'comint-dynamic-complete)
+             (sql-mysql-completion-init)))
 
-  If you’re at the MySQL command line mysql> you have to declare the SQL file as source.
+   #+END_SRC
 
+
+* Exécuter un script sql
+
+  Il faut déclarer le fichier SQL comme source:
+
+   #+NAME: source
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
   #+BEGIN_SRC sql
-    mysql> source \path\to\the\script_file.sql;
+    source path_to/the/script_file.sql
   #+END_SRC
 
-  For example:
+  Par exemple:
 
+  #+NAME: sourceexemple
+  #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
   #+BEGIN_SRC sql
-    mysql> source \home\user\Desktop\script_file.sql;
+    source SOURCE ./initdb_gestiondesnotes.SQL
   #+END_SRC
 
 

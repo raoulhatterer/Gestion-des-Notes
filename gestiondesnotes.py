@@ -20,9 +20,9 @@ from tkinter import ttk
 try:
     print("Try to connected to MySQL Server")
     connection = mysql.connector.connect(host='localhost',
-                                         database='bd_cinema',
-                                         user='user_cinema',
-                                         password='cinema')
+                                         database='bd_gestion_des_notes',
+                                         user='user_gestionnaire',
+                                         password='gestionnaire')
     db_Info = connection.get_server_info()
     print("Connected to MySQL Server version", db_Info)
     cursor = connection.cursor()
@@ -41,14 +41,14 @@ try:
     print("All tables: ", records)
 
     cursor = connection.cursor()
-    cursor.execute("desc Individu;")
+    cursor.execute("desc Professeurs;")
     records = cursor.fetchall()
     print("All attributes of Individu (", cursor.rowcount, "): ")
     for row in records:
         print("\t", row)
 
     cursor = connection.cursor()
-    cursor.execute("select * from individu;")
+    cursor.execute("select * from Professeurs;")
     records = cursor.fetchall()
     print("All individu of Individu (", cursor.rowcount, "): ")
     for row in records:
