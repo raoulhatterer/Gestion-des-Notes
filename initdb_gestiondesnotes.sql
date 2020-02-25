@@ -12,16 +12,14 @@ USE bd_gestion_des_notes;
 CREATE TABLE IF NOT EXISTS Fonctions(
 Func_Id  int(10),
 Func_Name varchar(20) COLLATE utf8_bin NOT NULL,
-Droit_Admin BOOLEAN,
 PRIMARY KEY (Func_Id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO Fonctions (Func_Id, Func_Name, Droit_Admin) VALUES
-(1, 'Proviseur', TRUE),
-(2, 'Proviseur-adjoint', TRUE),
-(3, 'Secrétaire de direction', TRUE),
-(4, 'STIL', TRUE);
-
+INSERT INTO Fonctions (Func_Id, Func_Name) VALUES
+(1, 'Proviseur'),
+(2, 'Proviseur-adjoint'),
+(3, 'Secrétaire de direction'),
+(4, 'STIL');
 
 -- ------------------------------------------------
 -- Création de la table du personnel
@@ -33,14 +31,15 @@ Func_Id int,
 Gender char DEFAULT NULL,
 Birthday date,
 Password varchar(20) COLLATE utf8_bin DEFAULT NULL,
+Droit_Admin BOOLEAN DEFAULT FALSE NOT NULL,
 PRIMARY KEY (Pers_Id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO Personnel(FirstName, LastName, Func_Id, Gender) VALUES
-('Lars', 'Ahlfors', 1, 'M'),
-('Jesse', 'Douglas', 2, 'M'),
-('Laurent', 'Schwartz', 3, 'M'),
-('Atle', 'Selberg', 4, 'M');
+INSERT INTO Personnel(FirstName, LastName, Func_Id, Gender, Droit_Admin, Password) VALUES
+('Lars', 'Ahlfors', 1, 'M', TRUE, 'Proviseur'),              
+('Jesse', 'Douglas', 2, 'M', TRUE, 'Proviseur-adjoint'),      
+('Laurent', 'Schwartz', 3, 'M', TRUE, 'Secrétaire de direction'),
+('Atle', 'Selberg', 4, 'M', TRUE, 'stil');
 
 -- ------------------------------------------------
 -- Création de la table professeurs
@@ -53,7 +52,7 @@ Gender char DEFAULT NULL,
 Birthday date,
 Grade_Id int DEFAULT NULL,
 Password varchar(20) COLLATE utf8_bin DEFAULT NULL,
-Droit_Admin BOOLEAN DEFAULT FALSE,
+Droit_Admin BOOLEAN DEFAULT FALSE NOT NULL,
 PRIMARY KEY (Prof_Id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -149,12 +148,16 @@ INSERT INTO Disciplines (Disc_Id, Disc_Name) VALUES
 
 
 -- ------------------------------------------------
--- Création des différents utilisateurs
+-- Création de différents utilisateurs
 CREATE OR REPLACE USER user_gestionnaire@localhost
 IDENTIFIED BY 'gestionnaire';
 GRANT ALL PRIVILEGES ON bd_gestion_des_notes.* 
 TO user_gestionnaire@localhost;
 
+CREATE OR replace USER  user_stil@localhost       
+IDENTIFIED BY 'stil';                 
+GRANT ALL PRIVILEGES ON bd_gestion_des_notes.*
+TO user_stil@localhost;
 
 -- ------------------------------------------------
 -- DESCRIPTIONS
@@ -174,6 +177,6 @@ DESCRIBE Professeurs;
 SELECT * FROM Professeurs;
 
 SELECT "UTILISATEURS";
-select host, user from mysql.user;
+select host, USER, password from mysql.user;
 
 
