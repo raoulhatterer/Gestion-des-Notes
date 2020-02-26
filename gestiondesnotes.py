@@ -115,16 +115,6 @@ try:
     for row in records:
         print("\t", row)
 
-    cursor = connection.cursor()
-    cursor.execute("select Disc_Name from Disciplines;")
-    records = cursor.fetchall()
-    print("All discipline of Disciplines (", cursor.rowcount, "): ")
-    disciplines = list()
-    for row in records:
-        print("\t", row)
-        disciplines.append(list(row))
-    print(disciplines)
-
 
         
 except Error as e:
@@ -136,18 +126,110 @@ finally:
         print("MySQL connection is closed")
 
 
+def charger_disciplines():
+    try:
+        print("Try to connected to MySQL Server")
+        connection = mysql.connector.connect(host='localhost',
+                                             database='bd_gestion_des_notes',
+                                             user='user_gestionnaire',
+                                             password='gestionnaire')
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        cursor = connection.cursor()
+        cursor.execute("select Disc_Id, Disc_Name from Disciplines ORDER BY Disc_Name ASC;")
+        records = cursor.fetchall()
+        print(records)
+        print("All discipline of Disciplines (", cursor.rowcount, "): ")
+        Disc_Id, Disc_Name = list(), list()
+        index = 0
+        for row in records:
+            print("\t", row)
+            Disc_Id += [[row[0]]]
+            Disc_Name += [[row[1]]]
+        print(Disc_Id)
+        print(Disc_Name)
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+    return (Disc_Id, Disc_Name)
 
+def afficher_disciplines():
+    global sheet_disciplines, Disc_Id, Disc_Name
+    Disc_Id, Disc_Name = charger_disciplines()
+    sheet_disciplines = Sheet(f1,
+                         data = Disc_Name, #to set sheet data at startup
+                         height = 600, 
+                         width = 800)
+    sheet_disciplines.grid(row = 0, column = 0, columnspan=2, sticky = "nswe")
+    sheet_disciplines.enable_bindings(("single_select", #"single_select" or "toggle_select"
+                                       "copy",
+                                       "cut",
+                                       "paste",
+                                       "delete",
+                                       "undo",
+                                       "edit_cell"))
+
+
+    
 
 def ajouter_discipline():
-    sheet_disciplines.insert_row() # an empty row at the end
-    sheet_disciplines.refresh()
+    global sheet_disciplines
+    #sheet_disciplines.insert_row() # an empty row at the end
+    #sheet_disciplines.refresh()
+    sql = "INSERT INTO Disciplines (Disc_Name) VALUES ('Nouvelle Discipline')"
+    try:
+        print("Try to connected to MySQL Server")
+        connection = mysql.connector.connect(host='localhost',
+                                             database='bd_gestion_des_notes',
+                                             user='user_gestionnaire',
+                                             password='gestionnaire')
+        cursor = connection.cursor()
+        cursor.execute(sql)
+        connection.commit()
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+    sheet_disciplines.destroy()
+    afficher_disciplines()
+
 
 def cell_select(self, response):
     print (response)
 
 def enregistrer_disciplines():
-    print(disciplines)
-    
+    try:
+        print("Try to connected to MySQL Server")
+        connection = mysql.connector.connect(host='localhost',
+                                             database='bd_gestion_des_notes',
+                                             user='user_gestionnaire',
+                                             password='gestionnaire')
+        cursor = connection.cursor()
+        for index in range(len(Disc_Name)):
+            sql = "UPDATE Disciplines SET Disc_Name = %s WHERE Disc_Id = %s"
+            discipline = (Disc_Name[index][0], Disc_Id[index][0])
+            print(discipline)
+            cursor.execute(sql, discipline)
+            connection.commit()
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+    sheet_disciplines.destroy()
+    afficher_disciplines()
+
+
+
 root = tk.Tk()
 root.title("Gestion des notes")
 root.resizable(False, False)
@@ -163,19 +245,8 @@ f4 = tk.Frame(notebook, width=800, height=600)
 
 
 
+afficher_disciplines()
 
-
-sheet_disciplines = Sheet(f1,
-                         data = disciplines, #to set sheet data at startup
-                         height = 600, 
-                         width = 800) 
-sheet_disciplines.enable_bindings(("single_select", #"single_select" or "toggle_select"
-                                         "copy",
-                                         "cut",
-                                         "paste",
-                                         "delete",
-                                         "undo",
-                                         "edit_cell"))
 
 #sheet_disciplines.hide("row_index")
 sheet_disciplines.hide("top_left")
@@ -199,7 +270,7 @@ notebook.grid(row=0, column=0, sticky="nw")
 # f1.columnconfigure(1, weight =1)
 # f1.columnconfigure(2, weight =0)
 # sheet_disciplines.grid(row=1, column=1)
-sheet_disciplines.grid(row = 0, column = 0, columnspan=2, sticky = "nswe")
+
 button_add_discipline.grid(row=1, column=0)
 button_save_disciplines.grid(row=1, column=1)
 root.mainloop()

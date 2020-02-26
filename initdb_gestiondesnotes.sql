@@ -134,17 +134,17 @@ INSERT INTO Professeurs (FirstName, LastName, Disc_Id, Gender) VALUES
 
 -- ------------------------------------------------
 -- Création de la table disciplines
-CREATE TABLE IF NOT EXISTS Disciplines (
-Disc_Id  int(10),
+CREATE or replace TABLE Disciplines (
+Disc_Id int NOT NULL AUTO_INCREMENT,
 Disc_Name varchar(20) COLLATE utf8_bin NOT NULL,
 PRIMARY KEY (Disc_Id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO Disciplines (Disc_Id, Disc_Name) VALUES
-(1, 'mathématiques'),
-(2, 'physique-chimie'),
-(3, 'français'),
-(4, 'NSI');
+INSERT INTO Disciplines (Disc_Name) VALUES
+('FRANÇAIS'),
+('MATHÉMATIQUES'),
+('NSI'),
+('PHYSIQUE-CHIMIE');
 
 
 -- ------------------------------------------------
