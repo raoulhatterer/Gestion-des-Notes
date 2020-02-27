@@ -22,10 +22,18 @@ from tksheet import Sheet
 # par la commande
 # source ./initdb_gestiondesnotes.SQL
 
+# ------------------------------------------------------------------------------
+# MariaDB
+# ------------------------------------------------------------------------------
+GN_host = 'localhost'
+GN_database = 'bd_gestion_des_notes'
+GN_user = 'user_gestionnaire'
+GN_password = 'gestionnaire'
 
 # ------------------------------------------------------------------------------
 # DISCIPLINES
 # ------------------------------------------------------------------------------
+
 
 def _charger_disciplines():
     """
@@ -39,10 +47,10 @@ def _charger_disciplines():
     """
     try:
         print("Try to connected to MySQL Server")
-        connection = mysql.connector.connect(host='localhost',
-                                             database='bd_gestion_des_notes',
-                                             user='user_gestionnaire',
-                                             password='gestionnaire')
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server version", db_Info)
         cursor = connection.cursor()
@@ -88,6 +96,7 @@ def afficher_disciplines():
                                        "undo",
                                        "edit_cell"))
 
+
 def enregistrer_disciplines():
     """
     Met à jour la base de donnée en y ajoutant d'éventuelles nouvelles
@@ -95,10 +104,10 @@ def enregistrer_disciplines():
     """
     try:
         print("Try to connected to MySQL Server")
-        connection = mysql.connector.connect(host='localhost',
-                                             database='bd_gestion_des_notes',
-                                             user='user_gestionnaire',
-                                             password='gestionnaire')
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
         cursor = connection.cursor()
         for index in range(len(disc_Name)):
             sql = "UPDATE Disciplines SET Disc_Name = %s WHERE Disc_Id = %s"
@@ -128,10 +137,10 @@ def ajouter_discipline():
     sql = "INSERT INTO Disciplines (Disc_Name) VALUES ('Nouvelle Discipline')"
     try:
         print("Try to connected to MySQL Server")
-        connection = mysql.connector.connect(host='localhost',
-                                             database='bd_gestion_des_notes',
-                                             user='user_gestionnaire',
-                                             password='gestionnaire')
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
         cursor = connection.cursor()
         cursor.execute(sql)
         connection.commit()
@@ -163,27 +172,29 @@ def _charger_professeurs():
     """
     try:
         print("Try to connected to MySQL Server")
-        connection = mysql.connector.connect(host='localhost',
-                                             database='bd_gestion_des_notes',
-                                             user='user_gestionnaire',
-                                             password='gestionnaire')
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server version", db_Info)
         cursor = connection.cursor()
-        cursor.execute("select Prof_Id, FirstName, LastName, Disc_Id, Gender from Professeurs ORDER BY LastName ASC;")
+        cursor.execute("select Prof_Id, FirstName, LastName, Disc_Id, Gender 
+                        FROM Professeurs ORDER BY LastName ASC;")
         records = cursor.fetchall()
         print(records)
         print("All discipline of Professeurs (", cursor.rowcount, "): ")
-        prof_id, prof_print = list(), list()
+        prof_Id, prof_Print, prof_Name = list(), list(), list()
         for row in records:
             print("\t", row)
-            prof_id += [row[0]]
+            prof_Id += [row[0]]
+            prof_Name += [row[2]]
             if row[4] == 'M':
-                prof_print += [['M', row[1], row[2], row[3]]]
+                prof_Print += [['M', row[1], row[2], row[3]]]
             elif row[4] == 'F':
-                prof_print += [['Mme', row[1], row[2], row[3]]]
+                prof_Print += [['Mme', row[1], row[2], row[3]]]
             else:
-                prof_print += [['?', row[1], row[2], row[3]]]                
+                prof_Print += [['M ou Mme', row[1], row[2], row[3]]]
     except Error as e:
         print("Error while connecting to MySQL", e)
     finally:
@@ -191,17 +202,17 @@ def _charger_professeurs():
             cursor.close()
             connection.close()
             print("MySQL connection is closed")
-    return (prof_id, prof_print)
+    return (prof_Id, prof_Name, prof_Print)
 
 
 def afficher_professeurs():
     """
     Affiche un tableau de type tableur avec toutes les professeurs
     """
-    global sheet_professeurs, prof_Id, prof_print
-    prof_Id, prof_print = _charger_professeurs()
+    global sheet_professeurs, prof_Id, prof_Name, prof_Print
+    prof_Id, prof_Name, prof_Print = _charger_professeurs()
     sheet_professeurs = Sheet(f2,
-                              data=prof_print,  # to set sheet data at startup
+                              data=prof_Print,  # to set sheet data at startup
                               height=600,
                               width=800)
     # sheet_professeurs.hide("row_index")
@@ -224,17 +235,32 @@ def enregistrer_professeurs():
     """
     try:
         print("Try to connected to MySQL Server")
-        connection = mysql.connector.connect(host='localhost',
-                                             database='bd_gestion_des_notes',
-                                             user='user_gestionnaire',
-                                             password='gestionnaire')
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
         cursor = connection.cursor()
         for index in range(len(disc_Name)):
-            sql = "UPDATE Professeurs SET FirstName=%s, LastName=%s, Disc_Id=%s, Gender=%s WHERE Prof_Id = %s"
-            if prof_print[index][0] in ['M', 'M.']:
-                professeur = (prof_print[index][1], prof_print[index][2], prof_print[index][3], 'M', prof_Id[index])
+            sql = "UPDATE Professeurs SET FirstName=%s, LastName=%s, Disc_Id=%s, Gender=%s 
+                   WHERE Prof_Id = %s"
+            if prof_Print[index][0] in ['M', 'M.']:
+                professeur = (prof_Print[index][1],
+                              prof_Print[index][2],
+                              prof_Print[index][3],
+                              'M',
+                              prof_Id[index])
+            elif prof_Print[index][0] in ['Mme', 'Mme.']:
+                professeur = (prof_Print[index][1],
+                              prof_Print[index][2],
+                              prof_Print[index][3],
+                              'F',
+                              prof_Id[index])
             else:
-                professeur = (prof_print[index][1], prof_print[index][2], prof_print[index][3], 'F', prof_Id[index])                
+                professeur = (prof_Print[index][1],
+                              prof_Print[index][2],
+                              prof_Print[index][3],
+                              None,
+                              prof_Id[index])
             print(professeur)
             cursor.execute(sql, professeur)
             connection.commit()
@@ -258,13 +284,14 @@ def ajouter_professeur():
     """
     enregistrer_professeurs()
     global sheet_professeurs
-    sql = "INSERT INTO Professeurs (FirstName, LastName) VALUES ('Prénom ?', 'Nom ?')"
+    sql = "INSERT INTO Professeurs (FirstName, LastName) 
+           VALUES ('* Prénom ? *', '* Nom ? *')"
     try:
         print("Try to connected to MySQL Server")
-        connection = mysql.connector.connect(host='localhost',
-                                             database='bd_gestion_des_notes',
-                                             user='user_gestionnaire',
-                                             password='gestionnaire')
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
         cursor = connection.cursor()
         cursor.execute(sql)
         connection.commit()
@@ -277,20 +304,15 @@ def ajouter_professeur():
             print("MySQL connection is closed")
     sheet_professeurs.destroy()
     afficher_professeurs()
-#    sheet_professeurs.select_row(prof_print.index(['Nouvel Enseignant']))
+    row_index = prof_Name.index('* Nom ? *')
+    sheet_professeurs.select_row(row_index)
 
 
-
-
-
-
-    
 def cell_select(self, response):
     print(response)
 
 
-
-root=tk.Tk()
+root = tk.Tk()
 root.title("Gestion des notes")
 root.resizable(False, False)
 style = ttk.Style(root)
@@ -311,9 +333,9 @@ button_add_discipline = tk.Button(f1, text='Ajouter',
 button_save_disciplines = tk.Button(f1, text='Enregistrer',
                                     command=enregistrer_disciplines)
 button_add_prof = tk.Button(f2, text='Ajouter',
-                                  command=ajouter_professeur)
+                            command=ajouter_professeur)
 button_save_profs = tk.Button(f2, text='Enregistrer',
-                                    command=enregistrer_professeurs)
+                              command=enregistrer_professeurs)
 
 notebook.add(f1, text="Disciplines")
 notebook.add(f2, text="Enseignants")
