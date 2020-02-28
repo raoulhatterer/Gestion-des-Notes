@@ -8,6 +8,9 @@ import tkinter as tk
 from tkinter import ttk
 # installer tksheet avec pip
 from tksheet import Sheet
+from tkinter import messagebox
+
+
 
 # pour debugger
 # import pdb
@@ -46,7 +49,7 @@ def _charger_disciplines():
     'bd_gestion_des_notes'.
     """
     try:
-        print("Try to connected to MySQL Server")
+        # print("Try to connected to MySQL Server")
         connection = mysql.connector.connect(host=GN_host,
                                              database=GN_database,
                                              user=GN_user,
@@ -56,13 +59,13 @@ def _charger_disciplines():
         cursor = connection.cursor()
         cursor.execute("select Disc_Id, Disc_Name from Disciplines ORDER BY Disc_Name ASC;")
         records = cursor.fetchall()
-        print(records)
+        # print(records)
         print("All discipline of Disciplines (", cursor.rowcount, "): ")
         disc_Id, disc_Name = list(), list()
         for row in records:
-            print("\t", row)
-            disc_Id += [[row[0]]]
-            disc_Name += [[row[1]]]
+            # print("\t", row)
+            disc_Id += [row[0]]
+            disc_Name += [[row[1]]]  # liste de liste requise pour un affichage modifiable avec tksheet
     except Error as e:
         print("Error while connecting to MySQL", e)
     finally:
@@ -103,7 +106,7 @@ def enregistrer_disciplines():
     disciplines.
     """
     try:
-        print("Try to connected to MySQL Server")
+        # print("Try to connected to MySQL Server")
         connection = mysql.connector.connect(host=GN_host,
                                              database=GN_database,
                                              user=GN_user,
@@ -111,7 +114,7 @@ def enregistrer_disciplines():
         cursor = connection.cursor()
         for index in range(len(disc_Name)):
             sql = "UPDATE Disciplines SET Disc_Name = %s WHERE Disc_Id = %s"
-            discipline = (disc_Name[index][0], disc_Id[index][0])
+            discipline = (disc_Name[index][0], disc_Id[index])
             cursor.execute(sql, discipline)
             connection.commit()
     except Error as e:
@@ -127,16 +130,16 @@ def enregistrer_disciplines():
 
 def ajouter_discipline():
     """
-    Ajoute une 'Nouvelle discipline' dans le tableau des disciplines (et dans
+    Ajoute une 'À définir' dans le tableau des disciplines (et dans
     la base de donnée) et sélectionne la ligne. Commence par enregistrer
     l'état précédent du tableau dans la base de donnée dans le cas où
     l'utilisateur enchaîne les ajouts.
     """
     enregistrer_disciplines()
     global sheet_disciplines
-    sql = "INSERT INTO Disciplines (Disc_Name) VALUES ('Nouvelle Discipline')"
+    sql = "INSERT INTO Disciplines (Disc_Name) VALUES ('À définir')"
     try:
-        print("Try to connected to MySQL Server")
+        # print("Try to connected to MySQL Server")
         connection = mysql.connector.connect(host=GN_host,
                                              database=GN_database,
                                              user=GN_user,
@@ -153,7 +156,7 @@ def ajouter_discipline():
             print("MySQL connection is closed")
     sheet_disciplines.destroy()
     afficher_disciplines()
-    sheet_disciplines.select_row(disc_Name.index(['Nouvelle Discipline']))
+    sheet_disciplines.select_row(disc_Name.index(['À définir']))
 
 
 # ------------------------------------------------------------------------------
@@ -171,7 +174,7 @@ def _charger_professeurs():
     'bd_gestion_des_notes'.
     """
     try:
-        print("Try to connected to MySQL Server")
+        # print("Try to connected to MySQL Server")
         connection = mysql.connector.connect(host=GN_host,
                                              database=GN_database,
                                              user=GN_user,
@@ -179,14 +182,13 @@ def _charger_professeurs():
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server version", db_Info)
         cursor = connection.cursor()
-        cursor.execute("select Prof_Id, FirstName, LastName, Disc_Id, Gender 
-                        FROM Professeurs ORDER BY LastName ASC;")
+        cursor.execute("select Prof_Id, FirstName, LastName, Disc_Name, Gender FROM Professeurs INNER JOIN Disciplines WHERE Professeurs.Disc_Id = Disciplines.Disc_Id ORDER BY LastName ASC")        
         records = cursor.fetchall()
-        print(records)
-        print("All discipline of Professeurs (", cursor.rowcount, "): ")
+        # print(records)
+        print("All professeur of Professeurs (", cursor.rowcount, "): ")
         prof_Id, prof_Print, prof_Name = list(), list(), list()
         for row in records:
-            print("\t", row)
+            # print("\t", row)
             prof_Id += [row[0]]
             prof_Name += [row[2]]
             if row[4] == 'M':
@@ -234,36 +236,38 @@ def enregistrer_professeurs():
     Met à jour la base de donnée en y ajoutant d'éventuelles modifications.
     """
     try:
-        print("Try to connected to MySQL Server")
+        # print("Try to connected to MySQL Server")
         connection = mysql.connector.connect(host=GN_host,
                                              database=GN_database,
                                              user=GN_user,
                                              password=GN_password)
         cursor = connection.cursor()
-        for index in range(len(disc_Name)):
-            sql = "UPDATE Professeurs SET FirstName=%s, LastName=%s, Disc_Id=%s, Gender=%s 
-                   WHERE Prof_Id = %s"
-            if prof_Print[index][0] in ['M', 'M.']:
-                professeur = (prof_Print[index][1],
-                              prof_Print[index][2],
-                              prof_Print[index][3],
-                              'M',
-                              prof_Id[index])
-            elif prof_Print[index][0] in ['Mme', 'Mme.']:
-                professeur = (prof_Print[index][1],
-                              prof_Print[index][2],
-                              prof_Print[index][3],
-                              'F',
-                              prof_Id[index])
+        for index in range(len(prof_Name)):
+            if [prof_Print[index][3]] not in disc_Name:
+                messagebox.showerror("Erreur", "Cette discipline n'est pas enregistrée: {}".format(prof_Print[index][3]))
             else:
-                professeur = (prof_Print[index][1],
-                              prof_Print[index][2],
-                              prof_Print[index][3],
-                              None,
-                              prof_Id[index])
-            print(professeur)
-            cursor.execute(sql, professeur)
-            connection.commit()
+                sql = "UPDATE Professeurs SET FirstName=%s, LastName=%s, Disc_Id=%s, Gender=%s WHERE Prof_Id = %s"
+                if prof_Print[index][0] in ['M', 'M.']:
+                    professeur = (prof_Print[index][1],  # FirstName
+                                  prof_Print[index][2],  # LastName
+                                  disc_Id[disc_Name.index([prof_Print[index][3]])],  # from Disc_Name to Disc_Id
+                                  'M',
+                                  prof_Id[index])
+                elif prof_Print[index][0] in ['Mme', 'Mme.']:
+                    professeur = (prof_Print[index][1],  # FirstName 
+                                  prof_Print[index][2],  # LastName  
+                                  disc_Id[disc_Name.index([prof_Print[index][3]])],  # from Disc_Name to Disc_Id
+                                  'F',
+                                  prof_Id[index])
+                else:
+                    professeur = (prof_Print[index][1],  # FirstName 
+                                  prof_Print[index][2],  # LastName  
+                                  disc_Id[disc_Name.index([prof_Print[index][3]])],  # from Disc_Name to Disc_Id
+                                  None,
+                                  prof_Id[index])
+                # print(professeur)
+                cursor.execute(sql, professeur)
+                connection.commit()
     except Error as e:
         print("Error while connecting to MySQL", e)
     finally:
@@ -283,17 +287,19 @@ def ajouter_professeur():
     l'utilisateur enchaîne les ajouts.
     """
     enregistrer_professeurs()
-    global sheet_professeurs
-    sql = "INSERT INTO Professeurs (FirstName, LastName) 
-           VALUES ('* Prénom ? *', '* Nom ? *')"
+    global sheet_professeurs, disc_Name, disc_Id
+    if ['À définir'] not in disc_Name:
+        ajouter_discipline()
+    sql = "INSERT INTO Professeurs (FirstName, LastName, Disc_Id) VALUES (%s, %s, %s)"
+    prof_nouveau = ('* Prénom ? *', '* Nom ? *', disc_Id[disc_Name.index(['À définir'])])
     try:
-        print("Try to connected to MySQL Server")
+        # print("Try to connected to MySQL Server")
         connection = mysql.connector.connect(host=GN_host,
                                              database=GN_database,
                                              user=GN_user,
                                              password=GN_password)
         cursor = connection.cursor()
-        cursor.execute(sql)
+        cursor.execute(sql, prof_nouveau)
         connection.commit()
     except Error as e:
         print("Error while connecting to MySQL", e)
