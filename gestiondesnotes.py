@@ -43,7 +43,7 @@ def _charger_disciplines():
     Fonction appelée par 'afficher_disciplines()'
     Retourne un tupple conteant 'disc_Id' et 'disc_Name'.
     disc_Id : liste contenant tous les index générés de façon automatique de
-    la table Discipline de la base de donnée 'bd_gestion_des_notes'.
+    la table Discipline de la base de données 'bd_gestion_des_notes'.
     disc_Name : liste contenant tous les noms des disciplines (dans l'ordre
     alphabétique) contenus dans la table Discipline de la base de données
     'bd_gestion_des_notes'.
@@ -102,7 +102,7 @@ def afficher_disciplines():
 
 def enregistrer_disciplines():
     """
-    Met à jour la base de donnée en y ajoutant d'éventuelles nouvelles
+    Met à jour la base de données en y ajoutant d'éventuelles nouvelles
     disciplines.
     """
     try:
@@ -131,8 +131,8 @@ def enregistrer_disciplines():
 def ajouter_discipline():
     """
     Ajoute une 'À définir' dans le tableau des disciplines (et dans
-    la base de donnée) et sélectionne la ligne. Commence par enregistrer
-    l'état précédent du tableau dans la base de donnée dans le cas où
+    la base de données) et sélectionne la ligne. Commence par enregistrer
+    l'état précédent du tableau dans la base de données dans le cas où
     l'utilisateur enchaîne les ajouts.
     """
     enregistrer_disciplines()
@@ -168,7 +168,7 @@ def _charger_professeurs():
     Fonction appelée par 'afficher_professeurs()'
     Retourne un tupple conteant: 'prof_Id', 'prof_Name', 'prof_Print'.
     prof_Id : liste contenant tous les index générés de façon automatique de
-    la table 'Professeurs' de la base de donnée 'bd_gestion_des_notes'.
+    la table 'Professeurs' de la base de données 'bd_gestion_des_notes'.
     prof_Name : liste contenant tous les noms des professeurs (dans l'ordre
     alphabétique) contenus dans la table Discipline de la base de données
     'bd_gestion_des_notes'.
@@ -234,7 +234,7 @@ def afficher_professeurs():
 
 def enregistrer_professeurs():
     """
-    Met à jour la base de donnée en y ajoutant d'éventuelles modifications.
+    Met à jour la base de données en y ajoutant d'éventuelles modifications.
     """
     try:
         # print("Try to connected to MySQL Server")
@@ -283,8 +283,8 @@ def enregistrer_professeurs():
 def ajouter_professeur():
     """
     Ajoute un nouveau professeur dans le tableau des professeurs (et dans
-    la base de donnée) et sélectionne la ligne. Commence par enregistrer
-    l'état précédent du tableau dans la base de donnée dans le cas où
+    la base de données) et sélectionne la ligne. Commence par enregistrer
+    l'état précédent du tableau dans la base de données dans le cas où
     l'utilisateur enchaîne les ajouts.
     """
     enregistrer_professeurs()
@@ -323,7 +323,7 @@ def _charger_eleves():
     Fonction appelée par 'afficher_eleves()'
     Retourne un tupple conteant 'eleves_Id', 'eleves_Name', eleves_Print.
     eleves_Id : liste contenant tous les index générés de façon automatique de
-    la table 'Eleves' de la base de donnée 'bd_gestion_des_notes'.
+    la table 'Eleves' de la base de données 'bd_gestion_des_notes'.
     eleves_Name : liste contenant tous les noms des élèves (dans l'ordre
     alphabétique) contenus dans la table 'Eleves' de la base de données
     'eleves_Print': liste affichée dans l'onglet élèves sous forme de tableau
@@ -383,7 +383,7 @@ def afficher_eleves():
 
 def enregistrer_eleves():
     """
-    Met à jour la base de donnée en y ajoutant d'éventuelles modifications.
+    Met à jour la base de données en y ajoutant d'éventuelles modifications.
     """
     try:
         # print("Try to connected to MySQL Server")
@@ -416,8 +416,8 @@ def enregistrer_eleves():
 def ajouter_eleve():
     """
     Ajoute un nouvel élève dans le tableau des élèves (et dans
-    la base de donnée) et sélectionne la ligne. Commence par enregistrer
-    l'état précédent du tableau dans la base de donnée dans le cas où
+    la base de données) et sélectionne la ligne. Commence par enregistrer
+    l'état précédent du tableau dans la base de données dans le cas où
     l'utilisateur enchaîne les ajouts.
     """
     enregistrer_eleves()
@@ -445,6 +445,136 @@ def ajouter_eleve():
     row_index = eleves_Name.index('* Nom ? *')
     sheet_eleves.select_row(row_index)
 
+# ------------------------------------------------------------------------------
+# CLASSES
+# ------------------------------------------------------------------------------
+
+def _charger_classes():
+    """
+    Fonction appelée par 'afficher_classes()'
+    Retourne un tupple conteant 'classe_Id' et 'classe_Name'.
+    classe_Id : liste contenant tous les index générés de façon automatique de
+    la table Classes de la base de données 'bd_gestion_des_notes'.
+    classe_Name : liste contenant tous les noms des classes (dans l'ordre
+    alphabétique) contenus dans la table Classes de la base de données
+    'bd_gestion_des_notes'.
+    classe_Print :liste affichée dans l'onglet classes sous forme de tableau
+    """
+    try:
+        # print("Try to connected to MySQL Server")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        cursor = connection.cursor()
+        cursor.execute("select Classe_Id, Classe_Name, Classe_Date from Classes ORDER BY Classe_Name ASC;")
+        records = cursor.fetchall()
+        # print(records)
+        print("All classe of Classes (", cursor.rowcount, "): ")
+        classe_Id, classe_Name, classe_Print = list(), list(), list()
+        for row in records:
+            # print("\t", row)
+            classe_Id += [row[0]]
+            classe_Name += [row[1]]
+            classe_Print += [[row[1], row[2]]]  # liste de liste requise pour un affichage modifiable avec tksheet
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+    return (classe_Id, classe_Name, classe_Print)
+
+def afficher_classes():
+    """
+    Affiche un tableau de type tableur avec toutes les classes
+    """
+    global sheet_classes, classe_Id, classe_Name, classe_Print
+    classe_Id, classe_Name, classe_Print = _charger_classes()
+    sheet_classes = Sheet(f4,
+                          data=classe_Print,  # to set sheet data at startup
+                          height=600,
+                          width=800)
+    # sheet_classes.hide("row_index")
+    sheet_classes.hide("top_left")
+    sheet_classes.hide("header")
+    sheet_classes.grid(row=0, column=0, columnspan=2, sticky="nswe")
+    sheet_classes.enable_bindings(("single_select",  # "single_select" or "toggle_select"
+                                   "arrowkeys",
+                                   "copy",
+                                   "cut",
+                                   "paste",
+                                   "delete",
+                                   "undo",
+                                   "edit_cell"))
+
+
+def enregistrer_classe():
+    """
+    Met à jour la base de données en y ajoutant d'éventuelles nouvelles
+    classes.
+    """
+    try:
+        # print("Try to connected to MySQL Server")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        cursor = connection.cursor()
+        for index in range(len(classe_Name)):
+            sql = "UPDATE Classes SET Classe_Name = %s, Classe_Date = %s WHERE Classe_Id = %s"
+            classe = (classe_Print[index][0], classe_Print[index][1], classe_Id[index])
+            cursor.execute(sql, classe)
+            connection.commit()
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+    sheet_classes.destroy()
+    afficher_classes()
+
+
+def ajouter_classe():
+    """
+    Ajoute une 'À définir' dans le tableau des disciplines (et dans
+    la base de données) et sélectionne la ligne. Commence par enregistrer
+    l'état précédent du tableau dans la base de données dans le cas où
+    l'utilisateur enchaîne les ajouts.
+    """
+    enregistrer_classe()
+    global sheet_classes
+    sql = "INSERT INTO Classes (Classe_Name) VALUES ('À définir')"
+    try:
+        # print("Try to connected to MySQL Server")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        cursor = connection.cursor()
+        cursor.execute(sql)
+        connection.commit()
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+    sheet_classes.destroy()
+    afficher_classes()
+    sheet_classes.select_row(classe_Name.index('À définir'))
+
+
+
+
+
+    
 def cell_select(self, response):
     print(response)
 
@@ -465,6 +595,7 @@ f4 = tk.Frame(notebook, width=800, height=600)
 afficher_disciplines()
 afficher_professeurs()
 afficher_eleves()
+afficher_classes()
 
 button_add_discipline = tk.Button(f1, text='Ajouter',
                                   command=ajouter_discipline)
@@ -478,6 +609,10 @@ button_add_eleve = tk.Button(f3, text='Ajouter',
                              command=ajouter_eleve)
 button_save_eleves = tk.Button(f3, text='Enregistrer',
                                command=enregistrer_eleves)
+button_add_classe = tk.Button(f4, text='Ajouter',
+                              command=ajouter_classe)
+button_save_classes = tk.Button(f4, text='Enregistrer',
+                               command=enregistrer_eleves)
 
 notebook.add(f1, text="Disciplines")
 notebook.add(f2, text="Enseignants")
@@ -485,18 +620,12 @@ notebook.add(f3, text="Élèves")
 notebook.add(f4, text="Classes")
 
 notebook.grid(row=0, column=0, sticky="nw")
-# f1.rowconfigure(0, weight =0)
-# f1.rowconfigure(1, weight =1)
-# f1.rowconfigure(2, weight =0)
-# f1.columnconfigure(0, weight =0)
-# f1.columnconfigure(1, weight =1)
-# f1.columnconfigure(2, weight =0)
-# sheet_disciplines.grid(row=1, column=1)
-
 button_add_discipline.grid(row=1, column=0)
 button_save_disciplines.grid(row=1, column=1)
 button_add_prof.grid(row=1, column=0)
 button_save_profs.grid(row=1, column=1)
 button_add_eleve.grid(row=1, column=0)
 button_save_eleves.grid(row=1, column=1)
+button_add_classe.grid(row=1, column=0)
+button_save_classes.grid(row=1, column=1)
 root.mainloop()

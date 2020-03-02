@@ -370,6 +370,20 @@ IDENTIFIED BY 'stil';
 GRANT ALL PRIVILEGES ON bd_gestion_des_notes.*
 TO user_stil@localhost;
 
+
+
+-- ------------------------------------------------
+-- Création de la table Classes
+CREATE or replace TABLE Classes (
+Classe_Id int NOT NULL AUTO_INCREMENT,
+Classe_Name varchar(20) COLLATE utf8_bin NOT NULL,
+Classe_date varchar(20) COLLATE utf8_bin DEFAULT NULL,
+PRIMARY KEY (Classe_Id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+INSERT INTO Classes (Classe_Name, Classe_date) VALUES
+('À définir', '2019-2020');
+
 -- ------------------------------------------------
 -- DESCRIPTIONS
 SELECT "TABLES";
@@ -389,7 +403,9 @@ SELECT * FROM Professeurs;
 SELECT "Description de la TABLE Eleves";
 DESCRIBE Eleves;
 SELECT * FROM Eleves;
-
+SELECT "Description de la TABLE Classes";
+DESCRIBE Classes;
+SELECT * FROM Classes;
 SELECT "UTILISATEURS";
 select host, USER, password from mysql.user;
 
