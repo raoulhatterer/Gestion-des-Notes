@@ -166,12 +166,13 @@ def ajouter_discipline():
 def _charger_professeurs():
     """
     Fonction appelée par 'afficher_professeurs()'
-    Retourne un tupple conteant 'disc_Id' et 'disc_Name'.
-    disc_Id : liste contenant tous les index générés de façon automatique de
-    la table Discipline de la base de donnée 'bd_gestion_des_notes'.
-    disc_Name : liste contenant tous les noms des professeurs (dans l'ordre
+    Retourne un tupple conteant: 'prof_Id', 'prof_Name', 'prof_Print'.
+    prof_Id : liste contenant tous les index générés de façon automatique de
+    la table 'Professeurs' de la base de donnée 'bd_gestion_des_notes'.
+    prof_Name : liste contenant tous les noms des professeurs (dans l'ordre
     alphabétique) contenus dans la table Discipline de la base de données
     'bd_gestion_des_notes'.
+    'prof_Print': liste affichée dans l'onglet Professeurs
     """
     try:
         # print("Try to connected to MySQL Server")
@@ -281,7 +282,7 @@ def enregistrer_professeurs():
 
 def ajouter_professeur():
     """
-    Ajoute une 'Nouvelle discipline' dans le tableau des professeurs (et dans
+    Ajoute un nouveau professeur dans le tableau des professeurs (et dans
     la base de donnée) et sélectionne la ligne. Commence par enregistrer
     l'état précédent du tableau dans la base de donnée dans le cas où
     l'utilisateur enchaîne les ajouts.
@@ -313,6 +314,136 @@ def ajouter_professeur():
     row_index = prof_Name.index('* Nom ? *')
     sheet_professeurs.select_row(row_index)
 
+# ------------------------------------------------------------------------------
+# ELEVES
+# ------------------------------------------------------------------------------
+
+def _charger_eleves():
+    """
+    Fonction appelée par 'afficher_eleves()'
+    Retourne un tupple conteant 'eleves_Id', 'eleves_Name', eleves_Print.
+    eleves_Id : liste contenant tous les index générés de façon automatique de
+    la table 'Eleves' de la base de donnée 'bd_gestion_des_notes'.
+    eleves_Name : liste contenant tous les noms des élèves (dans l'ordre
+    alphabétique) contenus dans la table 'Eleves' de la base de données
+    'eleves_Print': liste affichée dans l'onglet élèves sous forme de tableau
+    """
+    try:
+        # print("Try to connected to MySQL Server")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        cursor = connection.cursor()
+        cursor.execute("select Eleve_Id, FirstName, LastName, Gender, Classe_Id FROM Eleves ORDER BY LastName ASC")        
+        records = cursor.fetchall()
+        # print(records)
+        print("All eleve of Eleves (", cursor.rowcount, "): ")
+        eleves_Id, eleves_Print, eleves_Name = list(), list(), list()
+        for row in records:
+            # print("\t", row)
+            eleves_Id += [row[0]]
+            eleves_Name += [row[2]]
+            eleves_Print += [[row[2], row[1], row[3], row[4]]]  # LastName, FirstName, Gender, Classe_Id
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+    return (eleves_Id, eleves_Name, eleves_Print)
+
+
+def afficher_eleves():
+    """
+    Affiche un tableau de type tableur avec toutes les eleves
+    """
+    global sheet_eleves, eleves_Id, eleves_Name, eleves_Print
+    eleves_Id, eleves_Name, eleves_Print = _charger_eleves()
+    sheet_eleves = Sheet(f3,
+                              data=eleves_Print,  # to set sheet data at startup
+                              height=600,
+                              width=800)
+    # sheet_eleves.hide("row_index")
+    sheet_eleves.hide("top_left")
+    sheet_eleves.hide("header")
+    sheet_eleves.grid(row=0, column=0, columnspan=2, sticky="nswe")
+    sheet_eleves.enable_bindings(("single_select",  # "single_select" or "toggle_select"
+                                       "arrowkeys",
+                                       "copy",
+                                       "cut",
+                                       "paste",
+                                       "delete",
+                                       "undo",
+                                       "edit_cell"))
+
+
+def enregistrer_eleves():
+    """
+    Met à jour la base de donnée en y ajoutant d'éventuelles modifications.
+    """
+    try:
+        # print("Try to connected to MySQL Server")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        cursor = connection.cursor()
+        for index in range(len(eleves_Name)):
+            sql = "UPDATE Eleves SET FirstName=%s, LastName=%s, Gender=%s, Classe_Id=%s WHERE Eleve_Id = %s"
+            eleve = (eleves_Print[index][1],  # FirstName
+                     eleves_Print[index][0],  # LastName
+                     eleves_Print[index][2],  # Gender
+                     eleves_Print[index][3],  # Classe_Id
+                     eleves_Id[index])
+            # print(eleve)
+            cursor.execute(sql, eleve)
+            connection.commit()
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+    sheet_eleves.destroy()
+    afficher_eleves()
+
+
+def ajouter_eleve():
+    """
+    Ajoute un nouvel élève dans le tableau des élèves (et dans
+    la base de donnée) et sélectionne la ligne. Commence par enregistrer
+    l'état précédent du tableau dans la base de donnée dans le cas où
+    l'utilisateur enchaîne les ajouts.
+    """
+    enregistrer_eleves()
+    global sheet_eleves, disc_Name, disc_Id
+    sql = "INSERT INTO Eleves (FirstName, LastName, Gender) VALUES (%s, %s, %s)"
+    eleve_nouveau = ('* Prénom ? *', '* Nom ? *', 'M ou F')
+    try:
+        # print("Try to connected to MySQL Server")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        cursor = connection.cursor()
+        cursor.execute(sql, eleve_nouveau)
+        connection.commit()
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+    sheet_eleves.destroy()
+    afficher_eleves()
+    row_index = eleves_Name.index('* Nom ? *')
+    sheet_eleves.select_row(row_index)
 
 def cell_select(self, response):
     print(response)
@@ -333,6 +464,7 @@ f4 = tk.Frame(notebook, width=800, height=600)
 
 afficher_disciplines()
 afficher_professeurs()
+afficher_eleves()
 
 button_add_discipline = tk.Button(f1, text='Ajouter',
                                   command=ajouter_discipline)
@@ -342,6 +474,10 @@ button_add_prof = tk.Button(f2, text='Ajouter',
                             command=ajouter_professeur)
 button_save_profs = tk.Button(f2, text='Enregistrer',
                               command=enregistrer_professeurs)
+button_add_eleve = tk.Button(f3, text='Ajouter',
+                             command=ajouter_eleve)
+button_save_eleves = tk.Button(f3, text='Enregistrer',
+                               command=enregistrer_eleves)
 
 notebook.add(f1, text="Disciplines")
 notebook.add(f2, text="Enseignants")
@@ -361,4 +497,6 @@ button_add_discipline.grid(row=1, column=0)
 button_save_disciplines.grid(row=1, column=1)
 button_add_prof.grid(row=1, column=0)
 button_save_profs.grid(row=1, column=1)
+button_add_eleve.grid(row=1, column=0)
+button_save_eleves.grid(row=1, column=1)
 root.mainloop()
