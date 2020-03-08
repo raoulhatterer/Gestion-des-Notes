@@ -33,6 +33,72 @@ GN_database = 'bd_gestion_des_notes'
 GN_user = 'user_gestionnaire'
 GN_password = 'gestionnaire'
 
+
+
+# ------------------------------------------------------------------------------
+# MON COMPTE
+# ------------------------------------------------------------------------------
+
+
+def connection():
+    """
+    Tente la connexion à la base de donnée avec les identifiants saisis par l'utilisateur
+    """
+    GN_user = user_entry_text.get()
+    GN_password = pwd_entry_text.get()
+    try:
+        # print("Try to connected to MySQL Server")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        cursor = connection.cursor()
+        cursor.execute("select Disc_Id, Disc_Name from Disciplines ORDER BY Disc_Name ASC;")
+        records = cursor.fetchall()
+        # print(records)
+        print("All discipline of Disciplines (", cursor.rowcount, "): ")
+        disc_Id, disc_Name = list(), list()
+        for row in records:
+            # print("\t", row)
+            disc_Id += [row[0]]
+            disc_Name += [[row[1]]]  # liste de liste requise pour un affichage modifiable avec tksheet
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+    
+def afficher_moncompte():
+    """
+    Affiche la page de connexion 
+"""
+    global user_entry_text, pwd_entry_text
+    f0.columnconfigure(0, weight=0)
+    f0.columnconfigure(1, weight=1)
+    f0.columnconfigure(2, weight=0)
+    f0.rowconfigure(0, weight=0)
+    f0.rowconfigure(1, weight=1)
+    f0.rowconfigure(2, weight=0)    
+    loginFrame = tk.Frame(f0)
+    loginFrame.grid(row=1, column=1)
+
+    user_entry_text = tk.StringVar()
+    user_entry_text.set("Utilisateur")
+    user = tk.Entry(loginFrame, textvariable=user_entry_text, fg="grey")
+    pwd_entry_text = tk.StringVar()
+    pwd_entry_text.set("Mot de passe")
+    pwd = tk.Entry(loginFrame, textvariable=pwd_entry_text, fg="grey")
+    user.grid(row=0)
+    pwd.grid(row=1)
+    loginFrame.grid_rowconfigure(2, minsize=12)
+    button_login = tk.Button(loginFrame, text='Se connecter',
+                             command=connection)
+    button_login.grid(row=3)
+
 # ------------------------------------------------------------------------------
 # DISCIPLINES
 # ------------------------------------------------------------------------------
@@ -587,15 +653,18 @@ style.configure("lefttab.TNotebook", tabposition="n")
 
 notebook = ttk.Notebook(root, style="lefttab.TNotebook")
 
+f0 = tk.Frame(notebook, width=800, height=600)
 f1 = tk.Frame(notebook, width=800, height=600)
 f2 = tk.Frame(notebook, width=800, height=600)
 f3 = tk.Frame(notebook, width=800, height=600)
 f4 = tk.Frame(notebook, width=800, height=600)
 
+afficher_moncompte()
 afficher_disciplines()
 afficher_professeurs()
 afficher_eleves()
 afficher_classes()
+
 
 button_add_discipline = tk.Button(f1, text='Ajouter',
                                   command=ajouter_discipline)
@@ -613,13 +682,14 @@ button_add_classe = tk.Button(f4, text='Ajouter',
                               command=ajouter_classe)
 button_save_classes = tk.Button(f4, text='Enregistrer',
                                command=enregistrer_eleves)
-
+notebook.add(f0, text="Mon compte")
 notebook.add(f1, text="Disciplines")
 notebook.add(f2, text="Enseignants")
 notebook.add(f3, text="Élèves")
 notebook.add(f4, text="Classes")
 
 notebook.grid(row=0, column=0, sticky="nw")
+
 button_add_discipline.grid(row=1, column=0)
 button_save_disciplines.grid(row=1, column=1)
 button_add_prof.grid(row=1, column=0)
