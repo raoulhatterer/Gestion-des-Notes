@@ -382,6 +382,7 @@ PRIMARY KEY (Classe_Id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 INSERT INTO Classes (Classe_Name, Classe_date) VALUES
+('S1', '2019-2020'),
 ('À définir', '2019-2020');
 
 -- ------------------------------------------------

@@ -55,15 +55,15 @@ def connection():
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server version", db_Info)
         cursor = connection.cursor()
-        cursor.execute("select Disc_Id, Disc_Name from Disciplines ORDER BY Disc_Name ASC;")
+        cursor.execute("select Login, FirstName, LastName from Personnel ORDER BY LastName ASC;")
         records = cursor.fetchall()
-        # print(records)
-        print("All discipline of Disciplines (", cursor.rowcount, "): ")
-        disc_Id, disc_Name = list(), list()
+        print(records)
+        print("All personne of Personnel (", cursor.rowcount, "): ")
+        #disc_Id, disc_Name = list(), list()
         for row in records:
-            # print("\t", row)
-            disc_Id += [row[0]]
-            disc_Name += [[row[1]]]  # liste de liste requise pour un affichage modifiable avec tksheet
+            print("\t", row)
+            #disc_Id += [row[0]]
+            #disc_Name += [[row[1]]]  # liste de liste requise pour un affichage modifiable avec tksheet
     except Error as e:
         print("Error while connecting to MySQL", e)
     finally:
@@ -71,33 +71,52 @@ def connection():
             cursor.close()
             connection.close()
             print("MySQL connection is closed")
-    
+
+def sel():
+    print(user_mode.get())
+            
 def afficher_moncompte():
     """
     Affiche la page de connexion 
 """
-    global user_entry_text, pwd_entry_text
+    global user_entry_text, pwd_entry_text, user_mode
+    bullet = "●"
     f0.columnconfigure(0, weight=0)
     f0.columnconfigure(1, weight=1)
     f0.columnconfigure(2, weight=0)
-    f0.rowconfigure(0, weight=0)
-    f0.rowconfigure(1, weight=1)
-    f0.rowconfigure(2, weight=0)    
+    # row0
+    f0.grid_rowconfigure(0, minsize=200)
+    # row1
+    mode_frame = tk.LabelFrame(f0, text='Mode')
+    mode_frame.grid(row=1, column=1)
+    MODES = [
+        ("Admnistratif", 1),
+        ("Enseignant", 2),
+    ]
+    user_mode = tk.IntVar()
+    user_mode.set(1) # initialize    
+    for text, mode in MODES:
+        b = tk.Radiobutton(mode_frame, text=text,
+                           variable=user_mode, value=mode, command=sel)
+        b.grid(sticky="nw")
+    # row2
+    f0.grid_rowconfigure(2, minsize=30)
+    # row3
     loginFrame = tk.Frame(f0)
-    loginFrame.grid(row=1, column=1)
-
+    loginFrame.grid(row=3, column=1)
     user_entry_text = tk.StringVar()
     user_entry_text.set("Utilisateur")
     user = tk.Entry(loginFrame, textvariable=user_entry_text, fg="grey")
     pwd_entry_text = tk.StringVar()
-    pwd_entry_text.set("Mot de passe")
-    pwd = tk.Entry(loginFrame, textvariable=pwd_entry_text, fg="grey")
+    pwd_entry_text.set("")
+    pwd = tk.Entry(loginFrame, show=bullet, textvariable=pwd_entry_text, fg="grey")
     user.grid(row=0)
     pwd.grid(row=1)
-    loginFrame.grid_rowconfigure(2, minsize=12)
+    loginFrame.grid_rowconfigure(3, minsize=12)
     button_login = tk.Button(loginFrame, text='Se connecter',
                              command=connection)
-    button_login.grid(row=3)
+    button_login.grid(row=4)
+    
 
 # ------------------------------------------------------------------------------
 # DISCIPLINES
