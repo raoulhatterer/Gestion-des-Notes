@@ -30,8 +30,8 @@ from tkinter import messagebox
 # ------------------------------------------------------------------------------
 GN_host = 'localhost'
 GN_database = 'bd_gestion_des_notes'
-GN_user = 'user_gestionnaire'
-GN_password = 'gestionnaire'
+GN_user = 'user_stil'
+GN_password = 'stil'
 
 
 
@@ -40,12 +40,15 @@ GN_password = 'gestionnaire'
 # ------------------------------------------------------------------------------
 
 
-def connection():
+def connexion():
     """
     Tente la connexion à la base de donnée avec les identifiants saisis par l'utilisateur
     """
-    GN_user = user_entry_text.get()
-    GN_password = pwd_entry_text.get()
+    # GN_user = user_entry_text.get()
+    # GN_password = pwd_entry_text.get()
+    GN_user = 'first_connection'
+    GN_password = 'first_connection'
+    
     try:
         # print("Try to connected to MySQL Server")
         connection = mysql.connector.connect(host=GN_host,
@@ -54,6 +57,10 @@ def connection():
                                              password=GN_password)
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server version", db_Info)
+        frame_connexion.destroy()
+        print(user_entry_text.get())
+        print(pwd_entry_text.get())
+
         cursor = connection.cursor()
         cursor.execute("select Login, FirstName, LastName from Personnel ORDER BY LastName ASC;")
         records = cursor.fetchall()
@@ -66,28 +73,31 @@ def connection():
             #disc_Name += [[row[1]]]  # liste de liste requise pour un affichage modifiable avec tksheet
     except Error as e:
         print("Error while connecting to MySQL", e)
+        messagebox.showwarning("Erreur de connexion", "Il semblerait que l'initialisation de la base de données (en exécutant le script initdb_gestiondesnotes.sql) n'a pas été faite.")
     finally:
         if (connection.is_connected()):
             cursor.close()
             connection.close()
             print("MySQL connection is closed")
 
-def sel():
+def selection_mode():
+    """
+    Fonction exécutée au changement de mode dans l'IHM
+    """
     print(user_mode.get())
             
-def afficher_moncompte():
+def afficher_IHM_connexion():
     """
-    Affiche la page de connexion 
+    Affiche la page de connexion (IHM) 
 """
-    global user_entry_text, pwd_entry_text, user_mode
+    global user_entry_text, pwd_entry_text, user_mode, frame_connexion
     bullet = "●"
-    f0.columnconfigure(0, weight=0)
-    f0.columnconfigure(1, weight=1)
-    f0.columnconfigure(2, weight=0)
-    # row0
-    f0.grid_rowconfigure(0, minsize=200)
+    frame_connexion = tk.Frame(f0)
+     # row0 column0
+    frame_connexion.grid_rowconfigure(0, minsize=200)
+    frame_connexion.grid_columnconfigure(0, minsize=300)    
     # row1
-    mode_frame = tk.LabelFrame(f0, text='Mode')
+    mode_frame = tk.LabelFrame(frame_connexion, text='Mode')
     mode_frame.grid(row=1, column=1)
     MODES = [
         ("Admnistratif", 1),
@@ -97,12 +107,12 @@ def afficher_moncompte():
     user_mode.set(1) # initialize    
     for text, mode in MODES:
         b = tk.Radiobutton(mode_frame, text=text,
-                           variable=user_mode, value=mode, command=sel)
+                           variable=user_mode, value=mode, command=selection_mode)
         b.grid(sticky="nw")
     # row2
-    f0.grid_rowconfigure(2, minsize=30)
+    frame_connexion.grid_rowconfigure(2, minsize=30)
     # row3
-    loginFrame = tk.Frame(f0)
+    loginFrame = tk.Frame(frame_connexion)
     loginFrame.grid(row=3, column=1)
     user_entry_text = tk.StringVar()
     user_entry_text.set("Utilisateur")
@@ -114,8 +124,11 @@ def afficher_moncompte():
     pwd.grid(row=1)
     loginFrame.grid_rowconfigure(3, minsize=12)
     button_login = tk.Button(loginFrame, text='Se connecter',
-                             command=connection)
+                             command=connexion)
     button_login.grid(row=4)
+    frame_connexion.grid_rowconfigure(4, minsize=200)
+    frame_connexion.grid_columnconfigure(2, minsize=300)    
+    frame_connexion.grid()
     
 
 # ------------------------------------------------------------------------------
@@ -330,7 +343,7 @@ def enregistrer_professeurs():
         cursor = connection.cursor()
         for index in range(len(prof_Name)):
             if [prof_Print[index][3]] not in disc_Name:
-                messagebox.showerror("Erreur", "Cette discipline n'est pas enregistrée: {}".format(prof_Print[index][3]))
+                messagebox.showerror("Erreur", f"Cette discipline n'est pas enregistrée: {prof_Print[index][3]}")
             else:
                 sql = "UPDATE Professeurs SET FirstName=%s, LastName=%s, Disc_Id=%s, Gender=%s WHERE Prof_Id = %s"
                 if prof_Print[index][0] in ['M', 'M.']:
@@ -678,7 +691,7 @@ f2 = tk.Frame(notebook, width=800, height=600)
 f3 = tk.Frame(notebook, width=800, height=600)
 f4 = tk.Frame(notebook, width=800, height=600)
 
-afficher_moncompte()
+afficher_IHM_connexion()
 afficher_disciplines()
 afficher_professeurs()
 afficher_eleves()

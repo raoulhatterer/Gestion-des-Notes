@@ -10,8 +10,8 @@ USE bd_gestion_des_notes;
 -- Création de la table des fonctions
 -- des gestionnaires de la base de données
 CREATE TABLE IF NOT EXISTS Fonctions(
-Func_Id varchar(5) COLLATE utf8_bin NOT NULL,
-Func_Name varchar(20) COLLATE utf8_bin NOT NULL,
+Func_Id varchar(10) COLLATE utf8_bin NOT NULL,
+Func_Name varchar(30) COLLATE utf8_bin NOT NULL,
 PRIMARY KEY (Func_Id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -26,27 +26,28 @@ INSERT INTO Fonctions (Func_Id, Func_Name) VALUES
 ('A', 'Agent'),
 ('C', 'CPE');
 
+show warnings;
 -- ------------------------------------------------
 -- Création de la table du personnel non enseignant
 CREATE TABLE IF NOT EXISTS Personnel(
 Pers_Id int NOT NULL AUTO_INCREMENT,
-FirstName varchar(20) COLLATE utf8_bin DEFAULT NULL,
-LastName varchar(20) COLLATE utf8_bin DEFAULT NULL,
+FirstName varchar(30) COLLATE utf8_bin DEFAULT NULL,
+LastName varchar(30) COLLATE utf8_bin DEFAULT NULL,
 Func_Id varchar(5) COLLATE utf8_bin NOT NULL,
 Gender char DEFAULT NULL,
 Birthday DATE,
-Login varchar(20) COLLATE utf8_bin DEFAULT NULL,
-Password varchar(20) COLLATE utf8_bin DEFAULT NULL,
+Login varchar(30) COLLATE utf8_bin DEFAULT NULL,
 Droit_Admin BOOLEAN DEFAULT FALSE NOT NULL,
 PRIMARY KEY (Pers_Id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO Personnel(FirstName, LastName, Func_Id, Gender, Login, Password, Droit_Admin) VALUES
-('Lars', 'Ahlfors', 'P1', 'M', 'Proviseur', 'Proviseur', TRUE),
-('Jesse', 'Douglas', 'P2', 'M', 'Proviseur-adjoint', 'Proviseur-adjoint', TRUE),
-('Laurent', 'Schwartz', 'S', 'M', 'Secrétaire de direction', 'Secrétaire de direction', TRUE),
-('Atle', 'Selberg', 'ST', 'M', 'stil', 'stil', TRUE);
+INSERT INTO Personnel(FirstName, LastName, Func_Id, Gender, Login, Droit_Admin) VALUES
+('Lars', 'Ahlfors', 'P1', 'M', 'Proviseur', TRUE),
+('Jesse', 'Douglas', 'P2', 'M', 'Proviseur-adjoint', TRUE),
+('Laurent', 'Schwartz', 'S', 'M', 'Secrétaire de direction', TRUE),
+('Atle', 'Selberg', 'ST', 'M', 'stil', TRUE);
 
+show warnings;
 -- ------------------------------------------------
 -- Création de la table professeurs
 CREATE TABLE IF NOT EXISTS Professeurs (
@@ -58,7 +59,6 @@ Gender char DEFAULT NULL,
 Birthday date,
 Grade_Id varchar(10) DEFAULT NULL,
 Login varchar(20) COLLATE utf8_bin DEFAULT NULL,
-Password varchar(20) COLLATE utf8_bin DEFAULT NULL,
 Droit_Admin BOOLEAN DEFAULT FALSE NOT NULL,
 PRIMARY KEY (Prof_Id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
@@ -137,6 +137,10 @@ INSERT INTO Professeurs (FirstName, LastName, Disc_Id, Gender) VALUES
 ('May-Britt', 'Moser', 5, 'F'),
 ('Youyou', 'Tu', 2, 'F');
 
+show warnings;
+
+UPDATE Professeurs SET Login = concat(FirstName,".",LastName);
+
 
 
 -- ------------------------------------------------
@@ -154,7 +158,7 @@ INSERT INTO Disciplines (Disc_Name) VALUES
 ('NSI'),
 ('Physique-Chimie');
 
-
+show warnings;
 
 -- ------------------------------------------------
 -- Création de la table élèves
@@ -166,8 +170,6 @@ Gender varchar(10) COLLATE utf8_bin DEFAULT NULL,
 Classe_Id varchar(10) COLLATE utf8_bin DEFAULT NULL,
 Birthday date,
 Login varchar(20) COLLATE utf8_bin DEFAULT NULL,
-Password varchar(20) COLLATE utf8_bin DEFAULT NULL,
-Droit_Admin BOOLEAN DEFAULT FALSE NOT NULL,
 PRIMARY KEY (Eleve_Id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
@@ -358,19 +360,45 @@ INSERT INTO Eleves (FirstName, LastName, Gender) VALUES
 ('Elise', 'Reynaud', 'F'),
 ('Eliane', 'Antoine', 'F');
 
+show warnings;
+-- ------------------------------------------------
+-- Création de différents rôles
+CREATE OR replace ROLE role_gestionnaire;
+GRANT ALL 
+ON bd_gestion_des_notes.* 
+TO role_gestionnaire;
+
+-- CREATE ROLE role_personnel;
+-- GRANT CREATE TABLE, CREATE VIEW
+-- TO user_personnel;
+
+-- CREATE ROLE role_professeur;
+-- GRANT CREATE VIEW
+-- TO role_professeur;
+
+-- CREATE ROLE role_eleve;
+-- GRANT CREATE VIEW
+-- TO role_eleve;
+
 -- ------------------------------------------------
 -- Création de différents utilisateurs
-CREATE OR REPLACE USER user_gestionnaire@localhost
-IDENTIFIED BY 'gestionnaire';
-GRANT ALL PRIVILEGES ON bd_gestion_des_notes.* 
-TO user_gestionnaire@localhost;
 
-CREATE OR replace USER  user_stil@localhost       
-IDENTIFIED BY 'stil';                 
-GRANT ALL PRIVILEGES ON bd_gestion_des_notes.*
+CREATE OR replace USER  user_stil@localhost IDENTIFIED BY 'stil';                 
+GRANT role_gestionnaire
 TO user_stil@localhost;
+SET DEFAULT ROLE role_gestionnaire FOR user_stil@localhost;
+
+CREATE OR replace USER  first_connection@localhost       
+IDENTIFIED BY 'first_connection';                 
+GRANT SELECT ON Personnel
+TO first_connection@localhost;
+GRANT SELECT ON Professeurs
+TO first_connection@localhost;
+GRANT SELECT ON Eleves
+TO first_connection@localhost;
 
 
+-- FLUSH PRIVILEGES;
 
 -- ------------------------------------------------
 -- Création de la table Classes
