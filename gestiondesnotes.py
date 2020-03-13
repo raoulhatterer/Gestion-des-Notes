@@ -30,8 +30,8 @@ from tkinter import messagebox
 # ------------------------------------------------------------------------------
 GN_host = 'localhost'
 GN_database = 'bd_gestion_des_notes'
-GN_user = 'user_stil'
-GN_password = 'stil'
+GN_user = 'stil'
+GN_password = 'stilstil'
 
 
 
@@ -44,10 +44,10 @@ def connexion():
     """
     Tente la connexion à la base de donnée avec les identifiants saisis par l'utilisateur
     """
-    # GN_user = user_entry_text.get()
-    # GN_password = pwd_entry_text.get()
-    GN_user = 'first_connection'
-    GN_password = 'first_connection'
+    GN_user = user_entry_text.get()
+    GN_password = pwd_entry_text.get()
+    # GN_user = 'first_connection'
+    # GN_password = 'first_connection'
     
     try:
         # print("Try to connected to MySQL Server")
@@ -57,20 +57,23 @@ def connexion():
                                              password=GN_password)
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server version", db_Info)
-        frame_connexion.destroy()
-        print(user_entry_text.get())
-        print(pwd_entry_text.get())
 
         cursor = connection.cursor()
-        cursor.execute("select Login, FirstName, LastName from Personnel ORDER BY LastName ASC;")
+        sql = "CREATE OR REPLACE SQL SECURITY INVOKER VIEW membres_lycee AS SELECT Login, 'Professeur' AS status FROM Professeurs UNION select Login, 'Admin' AS status FROM Administrateurs UNION select Login, 'Eleve' AS status FROM Eleves;"
+        cursor.execute(sql)
+        sql = "select * from membres_lycee WHERE Login=%s;"
+        tuple_login =  (GN_user,)
+        cursor.execute(sql, tuple_login)
         records = cursor.fetchall()
         print(records)
-        print("All personne of Personnel (", cursor.rowcount, "): ")
-        #disc_Id, disc_Name = list(), list()
-        for row in records:
-            print("\t", row)
-            #disc_Id += [row[0]]
-            #disc_Name += [[row[1]]]  # liste de liste requise pour un affichage modifiable avec tksheet
+        # print("All personne of Personnel (", cursor.rowcount, "): ")
+        # #disc_Id, disc_Name = list(), list()
+        # for row in records:
+        #     print("\t", row)
+        #     #disc_Id += [row[0]]
+        #     #disc_Name += [[row[1]]]  # liste de liste requise pour un affichage modifiable avec tksheet
+        # frame_connexion.destroy()
+
     except Error as e:
         print("Error while connecting to MySQL", e)
         messagebox.showwarning("Erreur de connexion", "Il semblerait que l'initialisation de la base de données (en exécutant le script initdb_gestiondesnotes.sql) n'a pas été faite.")
@@ -97,26 +100,28 @@ def afficher_IHM_connexion():
     frame_connexion.grid_rowconfigure(0, minsize=200)
     frame_connexion.grid_columnconfigure(0, minsize=300)    
     # row1
-    mode_frame = tk.LabelFrame(frame_connexion, text='Mode')
-    mode_frame.grid(row=1, column=1)
-    MODES = [
-        ("Admnistratif", 1),
-        ("Enseignant", 2),
-    ]
-    user_mode = tk.IntVar()
-    user_mode.set(1) # initialize    
-    for text, mode in MODES:
-        b = tk.Radiobutton(mode_frame, text=text,
-                           variable=user_mode, value=mode, command=selection_mode)
-        b.grid(sticky="nw")
+    # mode_frame = tk.LabelFrame(frame_connexion, text='Mode')
+    # mode_frame.grid(row=1, column=1)
+    # MODES = [
+    #     ("Admnistratif", 1),
+    #     ("Enseignant", 2),
+    # ]
+    # user_mode = tk.IntVar()
+    # user_mode.set(1) # initialize    
+    # for text, mode in MODES:
+    #     b = tk.Radiobutton(mode_frame, text=text,
+    #                        variable=user_mode, value=mode, command=selection_mode)
+    #     b.grid(sticky="nw")
     # row2
-    frame_connexion.grid_rowconfigure(2, minsize=30)
+    # frame_connexion.grid_rowconfigure(2, minsize=30)
     # row3
     loginFrame = tk.Frame(frame_connexion)
     loginFrame.grid(row=3, column=1)
     user_entry_text = tk.StringVar()
     user_entry_text.set("Utilisateur")
     user = tk.Entry(loginFrame, textvariable=user_entry_text, fg="grey")
+    user.focus()
+    user.selection_range(0, tk.END)
     pwd_entry_text = tk.StringVar()
     pwd_entry_text.set("")
     pwd = tk.Entry(loginFrame, show=bullet, textvariable=pwd_entry_text, fg="grey")

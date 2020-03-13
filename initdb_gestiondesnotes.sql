@@ -29,36 +29,32 @@ INSERT INTO Fonctions (Func_Id, Func_Name) VALUES
 show warnings;
 -- ------------------------------------------------
 -- Création de la table du personnel non enseignant
-CREATE TABLE IF NOT EXISTS Personnel(
-Pers_Id int NOT NULL AUTO_INCREMENT,
+CREATE TABLE IF NOT EXISTS Administrateurs(
+Admin_Id int NOT NULL AUTO_INCREMENT,
 FirstName varchar(30) COLLATE utf8_bin DEFAULT NULL,
 LastName varchar(30) COLLATE utf8_bin DEFAULT NULL,
 Func_Id varchar(5) COLLATE utf8_bin NOT NULL,
 Gender char DEFAULT NULL,
 Birthday DATE,
 Login varchar(30) COLLATE utf8_bin DEFAULT NULL,
-Droit_Admin BOOLEAN DEFAULT FALSE NOT NULL,
-PRIMARY KEY (Pers_Id)
+PRIMARY KEY (Admin_Id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO Personnel(FirstName, LastName, Func_Id, Gender, Login, Droit_Admin) VALUES
-('Lars', 'Ahlfors', 'P1', 'M', 'Proviseur', TRUE),
-('Jesse', 'Douglas', 'P2', 'M', 'Proviseur-adjoint', TRUE),
-('Laurent', 'Schwartz', 'S', 'M', 'Secrétaire de direction', TRUE),
-('Atle', 'Selberg', 'ST', 'M', 'stil', TRUE);
+INSERT INTO Administrateurs(FirstName, LastName, Func_Id, Gender, Login) VALUES
+('Raoul', 'Hatterer', 'ST', 'M', 'stil');
 
 show warnings;
 -- ------------------------------------------------
 -- Création de la table professeurs
 CREATE TABLE IF NOT EXISTS Professeurs (
 Prof_Id int NOT NULL AUTO_INCREMENT,
-FirstName varchar(20) COLLATE utf8_bin NOT NULL,
-LastName varchar(20) COLLATE utf8_bin NOT NULL,
+FirstName varchar(30) COLLATE utf8_bin NOT NULL,
+LastName varchar(30) COLLATE utf8_bin NOT NULL,
 Disc_Id int,
 Gender char DEFAULT NULL,
 Birthday date,
-Grade_Id varchar(10) DEFAULT NULL,
-Login varchar(20) COLLATE utf8_bin DEFAULT NULL,
+Grade_Id varchar(30) DEFAULT NULL,
+Login varchar(30) COLLATE utf8_bin DEFAULT NULL,
 Droit_Admin BOOLEAN DEFAULT FALSE NOT NULL,
 PRIMARY KEY (Prof_Id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
@@ -141,7 +137,7 @@ show warnings;
 
 UPDATE Professeurs SET Login = concat(FirstName,".",LastName);
 
-
+show warnings;
 
 -- ------------------------------------------------
 -- Création de la table disciplines
@@ -383,14 +379,14 @@ TO role_gestionnaire;
 -- ------------------------------------------------
 -- Création de différents utilisateurs
 
-CREATE OR replace USER  user_stil@localhost IDENTIFIED BY 'stil';                 
+CREATE OR replace USER  stil@localhost IDENTIFIED BY 'stilstil';                 
 GRANT role_gestionnaire
-TO user_stil@localhost;
-SET DEFAULT ROLE role_gestionnaire FOR user_stil@localhost;
+TO stil@localhost;
+SET DEFAULT ROLE role_gestionnaire FOR stil@localhost;
 
 CREATE OR replace USER  first_connection@localhost       
 IDENTIFIED BY 'first_connection';                 
-GRANT SELECT ON Personnel
+GRANT SELECT ON Administrateurs
 TO first_connection@localhost;
 GRANT SELECT ON Professeurs
 TO first_connection@localhost;
@@ -423,9 +419,9 @@ SELECT * FROM Disciplines;
 SELECT "Description de la TABLE des Fonctions du personnel";
 DESCRIBE Fonctions;
 SELECT * FROM Fonctions;
-SELECT "Description de la TABLE du personnel";
-DESCRIBE Personnel;
-SELECT * FROM Personnel;
+SELECT "Description de la TABLE Administrateurs";
+DESCRIBE Administrateurs;
+SELECT * FROM Administrateurs;
 SELECT "Description de la TABLE Professeurs";
 DESCRIBE Professeurs;
 SELECT * FROM Professeurs;
