@@ -70,7 +70,7 @@ def verif_base_accesible():
 # MON COMPTE
 # ------------------------------------------------------------------------------
 
-def connexion():
+def connexion(event=None):
     """
     Tente la connexion à la base de donnée avec les identifiants saisis par l'utilisateur dans l'IHM
     """
@@ -149,6 +149,7 @@ def afficher_IHM_connexion():
     pwd_entry_text = tk.StringVar()
     pwd_entry_text.set("")
     pwd = tk.Entry(loginFrame, show=bullet, textvariable=pwd_entry_text, fg="grey")
+    pwd.bind('<Return>', connexion)
     user.grid(row=0)
     pwd.grid(row=1)
     loginFrame.grid_rowconfigure(3, minsize=12)
