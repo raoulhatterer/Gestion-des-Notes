@@ -32,22 +32,19 @@ GN_host = 'localhost'
 GN_database = 'bd_gestion_des_notes'
 GN_user = 'stil'
 GN_password = 'stilstil'
-
+valid_user = False 
 
 
 # ------------------------------------------------------------------------------
-# MON COMPTE
+# VÉRIFICATION de l'ACCESSIBILITÉ de la BASE DE DONNÉES
 # ------------------------------------------------------------------------------
 
-
-def connexion():
+def verif_base_accesible():
     """
-    Tente la connexion à la base de donnée avec les identifiants saisis par l'utilisateur
+    Tente la connexion à la base de donnée avec un compte à droits resteints 
     """
-    GN_user = user_entry_text.get()
-    GN_password = pwd_entry_text.get()
-    # GN_user = 'first_connection'
-    # GN_password = 'first_connection'
+    GN_user = 'first_connection'
+    GN_password = 'first_connection'
     
     try:
         # print("Try to connected to MySQL Server")
@@ -57,23 +54,9 @@ def connexion():
                                              password=GN_password)
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server version", db_Info)
-
         cursor = connection.cursor()
         sql = "CREATE OR REPLACE SQL SECURITY INVOKER VIEW membres_lycee AS SELECT Login, 'Professeur' AS status FROM Professeurs UNION select Login, 'Admin' AS status FROM Administrateurs UNION select Login, 'Eleve' AS status FROM Eleves;"
         cursor.execute(sql)
-        sql = "select * from membres_lycee WHERE Login=%s;"
-        tuple_login =  (GN_user,)
-        cursor.execute(sql, tuple_login)
-        records = cursor.fetchall()
-        print(records)
-        # print("All personne of Personnel (", cursor.rowcount, "): ")
-        # #disc_Id, disc_Name = list(), list()
-        # for row in records:
-        #     print("\t", row)
-        #     #disc_Id += [row[0]]
-        #     #disc_Name += [[row[1]]]  # liste de liste requise pour un affichage modifiable avec tksheet
-        # frame_connexion.destroy()
-
     except Error as e:
         print("Error while connecting to MySQL", e)
         messagebox.showwarning("Erreur de connexion", "Il semblerait que l'initialisation de la base de données (en exécutant le script initdb_gestiondesnotes.sql) n'a pas été faite.")
@@ -82,6 +65,61 @@ def connexion():
             cursor.close()
             connection.close()
             print("MySQL connection is closed")
+
+# ------------------------------------------------------------------------------
+# MON COMPTE
+# ------------------------------------------------------------------------------
+
+def connexion():
+    """
+    Tente la connexion à la base de donnée avec les identifiants saisis par l'utilisateur dans l'IHM
+    """
+    global cursor
+    GN_user = user_entry_text.get()
+    GN_password = pwd_entry_text.get()
+    valid_user = False 
+    try:
+        # print("Try to connected to MySQL Server")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        cursor = connection.cursor()
+        sql = "CREATE OR REPLACE SQL SECURITY INVOKER VIEW membres_lycee AS SELECT Login, 'Professeur' AS status FROM Professeurs UNION select Login, 'Admin' AS status FROM Administrateurs UNION select Login, 'Eleve' AS status FROM Eleves;"
+        cursor.execute(sql)
+        sql = "SELECT * FROM membres_lycee WHERE Login=%s;"
+        tuple_login =  (GN_user,)
+        cursor.execute(sql, tuple_login)
+        records = cursor.fetchall()
+        print(records)
+        valid_user = True
+        frame_connexion.destroy()
+        if records[0][1]=='Admin':
+            affiche_compte_admin()
+        else:
+            print(records[0][1])
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+        messagebox.showwarning("Erreur de connexion", "Identifiant ou mot de passe non valide")
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closedFF")
+
+
+def affiche_compte_admin():
+    """
+    Affiche le compte administrateur
+    """
+    sql = "SELECT FirstName, LastName, Gender ,Birthday , Func_Name, Login FROM Administrateurs INNER JOIN Fonctions WHERE Administrateurs.Func_Id=Fonctions.Func_Id;"
+    cursor.execute(sql)
+    records = cursor.fetchall()
+    print(records)
+    
+
 
 def selection_mode():
     """
@@ -95,28 +133,14 @@ def afficher_IHM_connexion():
 """
     global user_entry_text, pwd_entry_text, user_mode, frame_connexion
     bullet = "●"
+
     frame_connexion = tk.Frame(f0)
      # row0 column0
     frame_connexion.grid_rowconfigure(0, minsize=200)
     frame_connexion.grid_columnconfigure(0, minsize=300)    
     # row1
-    # mode_frame = tk.LabelFrame(frame_connexion, text='Mode')
-    # mode_frame.grid(row=1, column=1)
-    # MODES = [
-    #     ("Admnistratif", 1),
-    #     ("Enseignant", 2),
-    # ]
-    # user_mode = tk.IntVar()
-    # user_mode.set(1) # initialize    
-    # for text, mode in MODES:
-    #     b = tk.Radiobutton(mode_frame, text=text,
-    #                        variable=user_mode, value=mode, command=selection_mode)
-    #     b.grid(sticky="nw")
-    # row2
-    # frame_connexion.grid_rowconfigure(2, minsize=30)
-    # row3
     loginFrame = tk.Frame(frame_connexion)
-    loginFrame.grid(row=3, column=1)
+    loginFrame.grid(row=1, column=1)
     user_entry_text = tk.StringVar()
     user_entry_text.set("Utilisateur")
     user = tk.Entry(loginFrame, textvariable=user_entry_text, fg="grey")
@@ -131,7 +155,8 @@ def afficher_IHM_connexion():
     button_login = tk.Button(loginFrame, text='Se connecter',
                              command=connexion)
     button_login.grid(row=4)
-    frame_connexion.grid_rowconfigure(4, minsize=200)
+    # raw2
+    frame_connexion.grid_rowconfigure(2, minsize=200)
     frame_connexion.grid_columnconfigure(2, minsize=300)    
     frame_connexion.grid()
     
@@ -696,6 +721,7 @@ f2 = tk.Frame(notebook, width=800, height=600)
 f3 = tk.Frame(notebook, width=800, height=600)
 f4 = tk.Frame(notebook, width=800, height=600)
 
+verif_base_accesible()
 afficher_IHM_connexion()
 afficher_disciplines()
 afficher_professeurs()

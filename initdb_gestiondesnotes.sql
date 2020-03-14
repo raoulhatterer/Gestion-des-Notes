@@ -392,6 +392,10 @@ GRANT SELECT ON Professeurs
 TO first_connection@localhost;
 GRANT SELECT ON Eleves
 TO first_connection@localhost;
+GRANT CREATE VIEW ON bd_gestion_des_notes.*
+TO first_connection@localhost;
+GRANT DROP ON bd_gestion_des_notes.*
+TO first_connection@localhost;
 
 
 -- FLUSH PRIVILEGES;
