@@ -174,10 +174,17 @@ def affiche_compte_admin():
     entry_fonction = tk.Entry(frame_compte, textvariable=fonction_entry_text)
     entry_fonction.grid(row=6, column=2, sticky=tk.W)
 
-
-
+    frame_compte.grid_rowconfigure(7, minsize=20)    
+    button_save = tk.Button(frame_compte, text='Enregistrer',
+                             command=save_compte_admin)
+    button_save.grid(row=8,column=2, sticky=tk.W)
     frame_compte.grid()
 
+
+def save_compte_admin():
+    pass
+
+    
 def selection_mode():
     """
     Fonction exécutée au changement de mode dans l'IHM
