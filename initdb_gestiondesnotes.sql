@@ -40,8 +40,8 @@ Login varchar(30) COLLATE utf8_bin DEFAULT NULL,
 PRIMARY KEY (Admin_Id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO Administrateurs(FirstName, LastName, Func_Id, Gender, Login) VALUES
-('Raoul', 'Hatterer', 'ST', 'M', 'stil');
+INSERT INTO Administrateurs(FirstName, LastName, Func_Id, Gender, Birthday, Login) VALUES
+('Raoul', 'Hatterer', 'ST', 'M', '1966-04-20',  'stil');
 
 show warnings;
 -- ------------------------------------------------

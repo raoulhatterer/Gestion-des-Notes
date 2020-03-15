@@ -4,12 +4,17 @@
 
 import mysql.connector
 from mysql.connector import Error
+from datetime import datetime
 import tkinter as tk
+from tkinter import messagebox
 from tkinter import ttk
 # installer tksheet avec pip
 from tksheet import Sheet
-from tkinter import messagebox
 
+now = datetime.now()
+print(now)
+formatted_date = now.strftime('%d/%m/%Y')
+print(formatted_date)
 
 
 # pour debugger
@@ -118,8 +123,60 @@ def affiche_compte_admin():
     cursor.execute(sql)
     records = cursor.fetchall()
     print(records)
-    
+    frame_compte = tk.Frame(f0)
+     # row0 column0
+    frame_compte.grid_rowconfigure(0, minsize=200)
+    frame_compte.grid_columnconfigure(0, minsize=200)    
+    # column1
+    lbl_login = tk.Label(frame_compte, text="Login")
+    lbl_login.grid(row=1, column=1, sticky=tk.E)
+    lbl_prenom = tk.Label(frame_compte, text="Prénom")
+    lbl_prenom.grid(row=2, column=1, sticky=tk.E)
+    lbl_nom = tk.Label(frame_compte, text="Nom")
+    lbl_nom.grid(row=3, column=1, sticky=tk.E)
+    lbl_genre = tk.Label(frame_compte, text="Genre")
+    lbl_genre.grid(row=4, column=1, sticky=tk.E)
+    lbl_naissance = tk.Label(frame_compte, text="Date de naissance")
+    lbl_naissance.grid(row=5, column=1, sticky=tk.E)
+    lbl_fonction = tk.Label(frame_compte, text="Fonction")
+    lbl_fonction.grid(row=6, column=1, sticky=tk.E)
 
+    # column2
+    login_entry_text = tk.StringVar()
+    login_entry_text.set(records[0][5])
+    entry_login = tk.Entry(frame_compte, textvariable=login_entry_text)
+    entry_login.grid(row=1, column=2, sticky=tk.W)
+
+    prenom_entry_text = tk.StringVar()
+    prenom_entry_text.set(records[0][0])
+    entry_prenom = tk.Entry(frame_compte, textvariable=prenom_entry_text)
+    entry_prenom.grid(row=2, column=2, sticky=tk.W)
+
+    nom_entry_text = tk.StringVar()
+    nom_entry_text.set(records[0][1])
+    entry_nom = tk.Entry(frame_compte, textvariable=nom_entry_text)
+    entry_nom.grid(row=3, column=2, sticky=tk.W)
+
+    combobox_genre = ttk.Combobox(frame_compte, values=['M','F'], width=4)
+    if records[0][2]=="M":
+        combobox_genre.current(0)
+    else:
+        combobox_genre.current(1)        
+    combobox_genre.grid(row=4, column=2, sticky=tk.W)
+
+    naissance_entry_text = tk.StringVar()
+    naissance_entry_text.set(records[0][3].strftime("%d/%m/%Y"))
+    entry_naissance = tk.Entry(frame_compte, textvariable=naissance_entry_text)
+    entry_naissance.grid(row=5, column=2, sticky=tk.W)
+
+    fonction_entry_text = tk.StringVar()
+    fonction_entry_text.set(records[0][4])
+    entry_fonction = tk.Entry(frame_compte, textvariable=fonction_entry_text)
+    entry_fonction.grid(row=6, column=2, sticky=tk.W)
+
+
+
+    frame_compte.grid()
 
 def selection_mode():
     """
