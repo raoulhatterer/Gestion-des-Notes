@@ -11,12 +11,6 @@ from tkinter import ttk
 # installer tksheet avec pip
 from tksheet import Sheet
 
-now = datetime.now()
-print(now)
-formatted_date = now.strftime('%d/%m/%Y')
-print(formatted_date)
-
-
 # pour debugger
 # import pdb
 # pdb.set_trace()
@@ -35,8 +29,8 @@ print(formatted_date)
 # ------------------------------------------------------------------------------
 GN_host = 'localhost'
 GN_database = 'bd_gestion_des_notes'
-GN_user = 'stil'
-GN_password = 'stilstil'
+GN_user='stil'###############################
+GN_password='stilstil'########################
 valid_user = False 
 
 
@@ -79,7 +73,7 @@ def connexion(event=None):
     """
     Tente la connexion à la base de donnée avec les identifiants saisis par l'utilisateur dans l'IHM
     """
-    global cursor
+    global cursor, GN_user, GN_password
     GN_user = user_entry_text.get()
     GN_password = pwd_entry_text.get()
     valid_user = False 
@@ -119,8 +113,10 @@ def affiche_compte_admin():
     """
     Affiche le compte administrateur
     """
-    sql = "SELECT FirstName, LastName, Gender ,Birthday , Func_Name, Login FROM Administrateurs INNER JOIN Fonctions WHERE Administrateurs.Func_Id=Fonctions.Func_Id;"
-    cursor.execute(sql)
+    global prenom_entry_text, nom_entry_text, combobox_genre, naissance_entry_text, login_entry_text, frame_compte
+    sql = "SELECT FirstName, LastName, Gender ,Birthday , Func_Name, Login FROM Administrateurs INNER JOIN Fonctions WHERE Administrateurs.Func_Id=Fonctions.Func_Id AND Login=%s;"
+    tuple_login =  (GN_user,)
+    cursor.execute(sql, tuple_login)
     records = cursor.fetchall()
     print(records)
     frame_compte = tk.Frame(f0)
@@ -128,62 +124,87 @@ def affiche_compte_admin():
     frame_compte.grid_rowconfigure(0, minsize=200)
     frame_compte.grid_columnconfigure(0, minsize=200)    
     # column1
+    button_deconnect = tk.Button(frame_compte, text='Déconnexion',
+                                 command=deconnexion)
+    button_deconnect.grid(row=1,column=2, sticky=tk.W)
+    frame_compte.grid_rowconfigure(2, minsize=20)    
     lbl_login = tk.Label(frame_compte, text="Login")
-    lbl_login.grid(row=1, column=1, sticky=tk.E)
+    lbl_login.grid(row=3, column=1, sticky=tk.E)
     lbl_prenom = tk.Label(frame_compte, text="Prénom")
-    lbl_prenom.grid(row=2, column=1, sticky=tk.E)
+    lbl_prenom.grid(row=4, column=1, sticky=tk.E)
     lbl_nom = tk.Label(frame_compte, text="Nom")
-    lbl_nom.grid(row=3, column=1, sticky=tk.E)
+    lbl_nom.grid(row=5, column=1, sticky=tk.E)
     lbl_genre = tk.Label(frame_compte, text="Genre")
-    lbl_genre.grid(row=4, column=1, sticky=tk.E)
+    lbl_genre.grid(row=6, column=1, sticky=tk.E)
     lbl_naissance = tk.Label(frame_compte, text="Date de naissance")
-    lbl_naissance.grid(row=5, column=1, sticky=tk.E)
+    lbl_naissance.grid(row=7, column=1, sticky=tk.E)
     lbl_fonction = tk.Label(frame_compte, text="Fonction")
-    lbl_fonction.grid(row=6, column=1, sticky=tk.E)
+    lbl_fonction.grid(row=8, column=1, sticky=tk.E)
 
     # column2
     login_entry_text = tk.StringVar()
     login_entry_text.set(records[0][5])
-    entry_login = tk.Entry(frame_compte, textvariable=login_entry_text)
-    entry_login.grid(row=1, column=2, sticky=tk.W)
+    entry_login = tk.Entry(frame_compte, textvariable=login_entry_text, state='disabled')
+    entry_login.grid(row=3, column=2, sticky=tk.W)
 
     prenom_entry_text = tk.StringVar()
     prenom_entry_text.set(records[0][0])
     entry_prenom = tk.Entry(frame_compte, textvariable=prenom_entry_text)
-    entry_prenom.grid(row=2, column=2, sticky=tk.W)
+    entry_prenom.grid(row=4, column=2, sticky=tk.W)
 
     nom_entry_text = tk.StringVar()
     nom_entry_text.set(records[0][1])
     entry_nom = tk.Entry(frame_compte, textvariable=nom_entry_text)
-    entry_nom.grid(row=3, column=2, sticky=tk.W)
+    entry_nom.grid(row=5, column=2, sticky=tk.W)
 
     combobox_genre = ttk.Combobox(frame_compte, values=['M','F'], width=4)
     if records[0][2]=="M":
         combobox_genre.current(0)
     else:
         combobox_genre.current(1)        
-    combobox_genre.grid(row=4, column=2, sticky=tk.W)
+    combobox_genre.grid(row=6, column=2, sticky=tk.W)
 
     naissance_entry_text = tk.StringVar()
     naissance_entry_text.set(records[0][3].strftime("%d/%m/%Y"))
     entry_naissance = tk.Entry(frame_compte, textvariable=naissance_entry_text)
-    entry_naissance.grid(row=5, column=2, sticky=tk.W)
+    entry_naissance.grid(row=7, column=2, sticky=tk.W)
 
     fonction_entry_text = tk.StringVar()
     fonction_entry_text.set(records[0][4])
     entry_fonction = tk.Entry(frame_compte, textvariable=fonction_entry_text)
-    entry_fonction.grid(row=6, column=2, sticky=tk.W)
+    entry_fonction.grid(row=8, column=2, sticky=tk.W)
 
-    frame_compte.grid_rowconfigure(7, minsize=20)    
+    frame_compte.grid_rowconfigure(9, minsize=20)    
     button_save = tk.Button(frame_compte, text='Enregistrer',
                              command=save_compte_admin)
-    button_save.grid(row=8,column=2, sticky=tk.W)
+    button_save.grid(row=10,column=2, sticky=tk.W)
     frame_compte.grid()
 
 
 def save_compte_admin():
-    pass
-
+    try:
+        # print("Try to connected to MySQL Server")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        cursor = connection.cursor()
+        sql = "UPDATE Administrateurs SET FirstName=%s, LastName=%s, Gender=%s, Birthday=%s WHERE Login=%s "
+        date = datetime.strptime(naissance_entry_text.get(),'%d/%m/%Y').strftime('%Y-%m-%d')
+        administrateur = (prenom_entry_text.get(), nom_entry_text.get(), combobox_genre.get(), date, login_entry_text.get())
+        print(administrateur)
+        cursor.execute(sql, administrateur)
+        connection.commit()        
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+    finally:
+        if (connection.is_connected()):
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+        
     
 def selection_mode():
     """
@@ -191,10 +212,17 @@ def selection_mode():
     """
     print(user_mode.get())
             
+def deconnexion():
+    """
+    Déconnexion du compte et retour à l'IHM de connexion 
+    """
+    frame_compte.destroy()
+    afficher_IHM_connexion()
+
 def afficher_IHM_connexion():
     """
     Affiche la page de connexion (IHM) 
-"""
+    """
     global user_entry_text, pwd_entry_text, user_mode, frame_connexion
     bullet = "●"
 

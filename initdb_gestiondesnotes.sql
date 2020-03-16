@@ -41,6 +41,7 @@ PRIMARY KEY (Admin_Id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 INSERT INTO Administrateurs(FirstName, LastName, Func_Id, Gender, Birthday, Login) VALUES
+('Prénom', 'Nom', 'P1', 'M', '1966-04-20',  'proviseur'),
 ('Raoul', 'Hatterer', 'ST', 'M', '1966-04-20',  'stil');
 
 show warnings;
@@ -383,6 +384,11 @@ CREATE OR replace USER  stil@localhost IDENTIFIED BY 'stilstil';
 GRANT role_gestionnaire
 TO stil@localhost;
 SET DEFAULT ROLE role_gestionnaire FOR stil@localhost;
+
+CREATE OR replace USER  proviseur@localhost IDENTIFIED BY 'propro';                 
+GRANT role_gestionnaire
+TO proviseur@localhost;
+SET DEFAULT ROLE role_gestionnaire FOR proviseur@localhost;
 
 CREATE OR replace USER  first_connection@localhost       
 IDENTIFIED BY 'first_connection';                 
