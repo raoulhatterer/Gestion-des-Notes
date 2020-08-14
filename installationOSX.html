@@ -3,7 +3,7 @@
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" lang="fr" xml:lang="fr">
 <head>
-<!-- 2020-02-23 Sun 19:41 -->
+<!-- 2020-08-14 Fri 02:59 -->
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Gestion des notes</title>
@@ -237,48 +237,65 @@ for the JavaScript code in this tag.
 <h2>Table des matières</h2>
 <div id="text-table-of-contents">
 <ul>
-<li><a href="#org3449f06">1. Installations et paramétrages</a>
+<li><a href="#orgb64c2c6">1. Installation et démarrage du serveur MariaDB</a>
 <ul>
-<li><a href="#orgd39d07e">1.1. Prérequis</a></li>
-<li><a href="#org62b559b">1.2. Création par <code>root</code> d'une nouvelle base de données et d'un gestionnaire pour assurer sa gestion</a></li>
+<li><a href="#org829e033">1.1. Installer Homebrew</a></li>
+<li><a href="#orgae9a23a">1.2. Installer MariaDB</a></li>
+<li><a href="#orgd487206">1.3. Démarrer MariaDB Server</a></li>
+<li><a href="#orgb9a860e">1.4. Vérifier que MariaDB a démarré</a></li>
 </ul>
 </li>
-<li><a href="#orgcd71ab8">2. Afficher les utilisateurs</a>
+<li><a href="#org47f8e00">2. Connexion au serveur à travers le client <code>mysql</code></a>
 <ul>
-<li><a href="#org7656225">2.1. Afficher tous les utilisateurs (en tant qu'administrateur)</a></li>
-<li><a href="#orgf75b7b4">2.2. Afficher l'utilisateur connecté</a></li>
+<li><a href="#org89d1141">2.1. Client-serveur</a></li>
+<li><a href="#org22eeeed">2.2. À la création, la base de donnée est initialisée avec 2 comptes</a></li>
+<li><a href="#orga6b83b8">2.3. Activer l'accès au compte <code>root</code></a></li>
 </ul>
 </li>
-<li><a href="#org7772318">3. Gestion de la base de données</a>
+<li><a href="#orgdba4e06">3. Création par <code>root</code> d'une nouvelle base de données et d'un gestionnaire pour assurer sa gestion</a>
 <ul>
-<li><a href="#org7d8683c">3.1. Se connecter au client <code>mysql</code> en tant que gestionnaire</a></li>
-<li><a href="#org012fc60">3.2. Lister les bases de données (auxquelles le gestionnaire a accès)</a></li>
-<li><a href="#org1e97ed8">3.3. Se connecter à une base de données</a></li>
-<li><a href="#org7bcc479">3.4. Afficher les tables de la base courante</a></li>
-<li><a href="#orgb37a861">3.5. Afficher la structure de la table</a></li>
-<li><a href="#org9a5a53f">3.6. Créer une nouvelle table</a></li>
-<li><a href="#org40e6c70">3.7. Ajouter une colonne à une table</a></li>
-<li><a href="#org452c536">3.8. Effacer une colonne</a></li>
-<li><a href="#orgc4e4d3b">3.9. Effacer une table</a></li>
-<li><a href="#org33eceeb">3.10. Afficher le contenu de la table</a></li>
+<li><a href="#org6981492">3.1. Login en tant que <code>root</code></a></li>
+<li><a href="#org8e4bdf3">3.2. Création de la nouvelle base de données <code>bd_gestion_des_notes</code>:</a></li>
+<li><a href="#orgc1ee736">3.3. Types d'utilisateurs d'un SGBP</a></li>
+<li><a href="#org2877d0a">3.4. Création d'un utilisateur <code>gestionnaire</code></a></li>
+<li><a href="#org7dd4ab1">3.5. Mot de passe et sécurité</a></li>
 </ul>
 </li>
-<li><a href="#orgd3fefb4">4. SQL avec emacs</a>
+<li><a href="#org2c3b1d3">4. Afficher les utilisateurs</a>
 <ul>
-<li><a href="#orgbd4e58c">4.1. Se connecter au client <code>mysql</code> dans emacs</a></li>
-<li><a href="#org059f3c6">4.2. Si emacs ne trouve pas le programme mysql</a></li>
-<li><a href="#org6ea7fef">4.3. Faciliter la connexion</a></li>
-<li><a href="#org8be5c1d">4.4. Mots clés automatiquement en majuscule</a></li>
-<li><a href="#orgfeb7f94">4.5. Autocompletion</a></li>
+<li><a href="#orgd1df373">4.1. Afficher tous les utilisateurs (en tant qu'administrateur)</a></li>
+<li><a href="#org8f6f440">4.2. Afficher l'utilisateur connecté</a></li>
 </ul>
 </li>
-<li><a href="#orgef86cda">5. Exécuter un script sql</a></li>
-<li><a href="#orgc4a8acb">6. Python tkinter table widget for displaying tabular data</a>
+<li><a href="#orgb228306">5. Gestion de la base de données</a>
 <ul>
-<li><a href="#org1d82e6f">6.1. installation</a></li>
-<li><a href="#org24f34fb">6.2. source</a></li>
-<li><a href="#orgedb4f43">6.3. paramètres</a></li>
-<li><a href="#org1cf9d14">6.4. fonctions</a></li>
+<li><a href="#org241aff1">5.1. Lister les bases de données (auxquelles le gestionnaire a accès)</a></li>
+<li><a href="#orga56034a">5.2. Se connecter à une base de données</a></li>
+<li><a href="#org4699113">5.3. Afficher les tables de la base courante</a></li>
+<li><a href="#org6db4e5c">5.4. Afficher la structure de la table</a></li>
+<li><a href="#orgdf90818">5.5. Créer une nouvelle table</a></li>
+<li><a href="#org68a4d85">5.6. Ajouter une colonne à une table</a></li>
+<li><a href="#org1184f8b">5.7. Effacer une colonne</a></li>
+<li><a href="#org1a88367">5.8. Effacer une table</a></li>
+<li><a href="#org137b847">5.9. Afficher le contenu de la table</a></li>
+</ul>
+</li>
+<li><a href="#orgc9554af">6. SQL avec emacs</a>
+<ul>
+<li><a href="#orgc29d149">6.1. Se connecter au client <code>mysql</code> dans emacs</a></li>
+<li><a href="#org4da99ca">6.2. Si emacs ne trouve pas le programme mysql</a></li>
+<li><a href="#org5eb79b1">6.3. Faciliter la connexion</a></li>
+<li><a href="#orga37cd60">6.4. Mots clés automatiquement en majuscule</a></li>
+<li><a href="#org1ff37f0">6.5. Autocompletion</a></li>
+</ul>
+</li>
+<li><a href="#org825fd2d">7. Exécuter un script sql</a></li>
+<li><a href="#org9eea2b2">8. Python tkinter table widget for displaying tabular data</a>
+<ul>
+<li><a href="#orgd16070f">8.1. installation</a></li>
+<li><a href="#org75d02e3">8.2. source</a></li>
+<li><a href="#org05f0fef">8.3. paramètres</a></li>
+<li><a href="#org0ad1288">8.4. fonctions</a></li>
 </ul>
 </li>
 </ul>
@@ -286,49 +303,46 @@ for the JavaScript code in this tag.
 </div>
 
 
-<div id="outline-container-org3449f06" class="outline-2">
-<h2 id="org3449f06"><span class="section-number-2">1</span> Installations et paramétrages</h2>
+<div id="outline-container-orgb64c2c6" class="outline-2">
+<h2 id="orgb64c2c6"><span class="section-number-2">1</span> Installation et démarrage du serveur MariaDB</h2>
 <div class="outline-text-2" id="text-1">
 <p>
 <b>Remarque</b>: Certaines parties concernent plus spécifiquement mon utilisation personnelle avec <a href="https://emacsformacosx.com">emacs sous OSX</a>.
 </p>
 </div>
-<div id="outline-container-orgd39d07e" class="outline-3">
-<h3 id="orgd39d07e"><span class="section-number-3">1.1</span> Prérequis</h3>
+
+<div id="outline-container-org829e033" class="outline-3">
+<h3 id="org829e033"><span class="section-number-3">1.1</span> Installer Homebrew</h3>
 <div class="outline-text-3" id="text-1-1">
-</div>
-<div id="outline-container-orga4f6572" class="outline-4">
-<h4 id="orga4f6572"><span class="section-number-4">1.1.1</span> Installer Homebrew</h4>
-<div class="outline-text-4" id="text-1-1-1">
 <p>
 Pour installer MariaDB, il faut disposer de <a href="https://brew.sh/index_fr">Homebrew</a> (The Missing Package Manager for macOS).
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgedf5752" class="outline-4">
-<h4 id="orgedf5752"><span class="section-number-4">1.1.2</span> Installer MariaDB</h4>
-<div class="outline-text-4" id="text-1-1-2">
+<div id="outline-container-orgae9a23a" class="outline-3">
+<h3 id="orgae9a23a"><span class="section-number-3">1.2</span> Installer MariaDB</h3>
+<div class="outline-text-3" id="text-1-2">
 <p>
-MariaDB Server peut ensuite être installé grâce à cette commande:
+MariaDB Server peut ensuite être installé grâce à cette commande (à taper dans le <code>Terminal</code>):
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell" id="org1ad513d">brew update
+<pre class="src src-shell" id="org489316d">brew update
 brew install mariadb
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org29d8a4d" class="outline-4">
-<h4 id="org29d8a4d"><span class="section-number-4">1.1.3</span> Démarrer MariaDB Server</h4>
-<div class="outline-text-4" id="text-1-1-3">
+<div id="outline-container-orgd487206" class="outline-3">
+<h3 id="orgd487206"><span class="section-number-3">1.3</span> Démarrer MariaDB Server</h3>
+<div class="outline-text-3" id="text-1-3">
 <p>
 Après installation, on peut (mais on ne va pas le faire) démarrer le serveur avec la commande:
 </p>
 <div class="org-src-container">
-<pre class="src src-shell" id="org7146f3b">mysql.server start
+<pre class="src src-shell" id="org7acc9d4">mysql.server start
 </pre>
 </div>
 
@@ -337,25 +351,35 @@ Il est plus commode d'activer le démarrage automatique du serveur:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell" id="org567d88f">brew services start mariadb
+<pre class="src src-shell" id="org61e143c">brew services start mariadb
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org3168a84" class="outline-4">
-<h4 id="org3168a84"><span class="section-number-4">1.1.4</span> Vérifier que MariaDB a démarré</h4>
-<div class="outline-text-4" id="text-1-1-4">
+<div id="outline-container-orgb9a860e" class="outline-3">
+<h3 id="orgb9a860e"><span class="section-number-3">1.4</span> Vérifier que MariaDB a démarré</h3>
+<div class="outline-text-3" id="text-1-4">
 <div class="org-src-container">
-<pre class="src src-shell" id="orgc30c4ed">brew services list
+<pre class="src src-shell" id="org894cf13">brew services list
 </pre>
+</div>
+
+<p>
+Cette commande doit retourner <code>mariadb started</code>.
+</p>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org19828d8" class="outline-4">
-<h4 id="org19828d8"><span class="section-number-4">1.1.5</span> Client-serveur</h4>
-<div class="outline-text-4" id="text-1-1-5">
+
+<div id="outline-container-org47f8e00" class="outline-2">
+<h2 id="org47f8e00"><span class="section-number-2">2</span> Connexion au serveur à travers le client <code>mysql</code></h2>
+<div class="outline-text-2" id="text-2">
+</div>
+<div id="outline-container-org89d1141" class="outline-3">
+<h3 id="org89d1141"><span class="section-number-3">2.1</span> Client-serveur</h3>
+<div class="outline-text-3" id="text-2-1">
 <p>
 Comme la plupart des SGBD ([S]ystème de [G]estion de [B]ase de [D]onnées), MariaDB est basée sur le <b>modèle client-serveur</b>. Cela implique que la base de données se trouve sur un <b>serveur</b> auquel nous n'avons pas accès directement. Il faut passer par un <b>client</b> qui fera la liaison entre nous et le serveur.
 </p>
@@ -366,50 +390,30 @@ Donc, maintenant que  MariaDB Server a démarré, on va s'y connecter en utilisa
 </div>
 </div>
 
-<div id="outline-container-org2f2cb3c" class="outline-4">
-<h4 id="org2f2cb3c"><span class="section-number-4">1.1.6</span> Distinguer les utilisateurs</h4>
-<div class="outline-text-4" id="text-1-1-6">
-</div>
-<ol class="org-ol">
-<li><a id="orgaa45cf8"></a>Types d'utilisateurs<br />
-<div class="outline-text-5" id="text-1-1-6-1">
-<p>
-Il faut distinguer trois types d'utilisateur d'un SGBD ayant chacun des rôles bien distincts :
-</p>
-<ol class="org-ol">
-<li><b>L'administrateur</b> du SGBD et donc des Bases de Données. Il s'appelle <code>root</code>. Son rôle est d'installer et gérer le SGBD dans sa globalité. Chaque fois que l'administrateur crée une base de données, il délègue sa gestion à un autre utilisateur à qui il donne les droits nécessaires. <b>Remarque:</b>  Il ne faut pas travailler sur une bases de données en tant que <code>root</code>; ce n'est pas son rôle (<a href="https://www.youtube.com/watch?v=oiQG6tP3940">c'est mal</a>).</li>
-<li><b>Le gestionnaire</b> de Bases de Données (dans un SGBD existant) qui doit connaître  <b>sql</b> (Structured Query Language) : création (CREATE TABLE), modification (ALTER TABLE), suppression (DROP TABLE) de tables&#x2026;</li>
-<li><b>L'utilisateur final</b> de la base de donnée. Il va interagir avec tout ou partie de la base de donnée à travers une application se voulant conviviale; il n'a pas à connaître <b>sql</b>.</li>
-</ol>
-</div>
-</li>
-
-
-
-<li><a id="org09486fd"></a>À la création<br />
-<div class="outline-text-5" id="text-1-1-6-2">
-<p>
-<b>À la création, la base de donnée est initialisée avec 2 comptes:</b> 
-</p>
+<div id="outline-container-org22eeeed" class="outline-3">
+<h3 id="org22eeeed"><span class="section-number-3">2.2</span> À la création, la base de donnée est initialisée avec 2 comptes</h3>
+<div class="outline-text-3" id="text-2-2">
 <ul class="org-ul">
-<li>le premier correspond au nom d'utilisateur actuel (checké avec la commande <code>whoami</code>); il ne nécessite pas de mot de passe;</li>
-<li>tandis que le second est le compte administrateur <code>root</code> ; il est inaccessible tant qu'on n'a pas défini de mot de passe.</li>
+<li>Le premier compte correspond au nom d'utilisateur actuel (checké avec la commande <code>whoami</code>); il ne nécessite pas de mot de passe;</li>
+<li>Le second est le compte administrateur <code>root</code> ; il est inaccessible tant qu'on n'a pas défini de mot de passe.</li>
 </ul>
 
 <p>
-On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (root) puis s'y connecter pour créer une base de données (<code>bd_gestion_des_notes</code>) et un compte gestionnaire.  
+On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (root) puis s'y connecter pour créer une base de données (<code>bd_gestion_des_notes</code>).
 </p>
 </div>
-</li>
+</div>
 
-<li><a id="org37c909f"></a>Activer l'accès au compte <code>root</code><br />
-<div class="outline-text-5" id="text-1-1-6-3">
+
+<div id="outline-container-orga6b83b8" class="outline-3">
+<h3 id="orga6b83b8"><span class="section-number-3">2.3</span> Activer l'accès au compte <code>root</code></h3>
+<div class="outline-text-3" id="text-2-3">
 <p>
 Pour cela, d'abord se connecter au client <b>mysql</b>  avec son nom d'utilisateur:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell" id="org25bb962">mysql -u $(whoami)
+<pre class="src src-shell" id="orgd38d54d">mysql -u $(whoami)
 </pre>
 </div>
 
@@ -418,7 +422,7 @@ Puis, grâce au commandes du client <b>mysql</b>, définir le mot de passe de <c
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sql" id="orgec0aa54">SHOW databases;
+<pre class="src src-sql" id="org815d6b0">SHOW databases;
 USE mysql;
 <span style="color: #a020f0;">SET</span> password <span style="color: #a020f0;">FOR</span> <span style="color: #8b2252;">'root'</span>@<span style="color: #8b2252;">'localhost'</span> = 
 password(<span style="color: #8b2252;">'YOUR_ROOT_PASSWORD_HERE'</span>);
@@ -431,24 +435,24 @@ quit
 où <code>YOUR_ROOT_PASSWORD_HERE</code> est à remplacer par le mot de passe souhaité.
 </p>
 </div>
-</li>
-</ol>
 </div>
 </div>
 
-<div id="outline-container-org62b559b" class="outline-3">
-<h3 id="org62b559b"><span class="section-number-3">1.2</span> Création par <code>root</code> d'une nouvelle base de données et d'un gestionnaire pour assurer sa gestion</h3>
-<div class="outline-text-3" id="text-1-2">
+
+
+<div id="outline-container-orgdba4e06" class="outline-2">
+<h2 id="orgdba4e06"><span class="section-number-2">3</span> Création par <code>root</code> d'une nouvelle base de données et d'un gestionnaire pour assurer sa gestion</h2>
+<div class="outline-text-2" id="text-3">
 </div>
-<div id="outline-container-org104ee79" class="outline-4">
-<h4 id="org104ee79"><span class="section-number-4">1.2.1</span> Login en tant que <code>root</code></h4>
-<div class="outline-text-4" id="text-1-2-1">
+<div id="outline-container-org6981492" class="outline-3">
+<h3 id="org6981492"><span class="section-number-3">3.1</span> Login en tant que <code>root</code></h3>
+<div class="outline-text-3" id="text-3-1">
 <p>
 Maintenant, nous pouvons nous connecter en tant que <code>root</code>:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-shell" id="org4685f09">mysql -u root -p
+<pre class="src src-shell" id="org0a395d4">mysql -u root -p
 </pre>
 </div>
 
@@ -458,119 +462,215 @@ Il faudra fournir le mot de passe renseigné à l'étape précédente.
 </div>
 </div>
 
-<div id="outline-container-orgb540c72" class="outline-4">
-<h4 id="orgb540c72"><span class="section-number-4">1.2.2</span> Commandes de base à la disposition de l'administrateur</h4>
-<div class="outline-text-4" id="text-1-2-2">
-<ul class="org-ul">
-<li><p>
-Afficher le statut du serveur:<br />
-</p>
-
+<div id="outline-container-org8e4bdf3" class="outline-3">
+<h3 id="org8e4bdf3"><span class="section-number-3">3.2</span> Création de la nouvelle base de données <code>bd_gestion_des_notes</code>:</h3>
+<div class="outline-text-3" id="text-3-2">
 <div class="org-src-container">
-<pre class="src src-sql" id="org1ad9e29">SHOW STATUS;
-</pre>
-</div></li>
-
-<li><p>
-Créer une nouvelle base de données:<br />
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sql" id="org0b6b2dd"><span style="color: #a020f0;">CREATE</span> DATABASE nom_database;
-</pre>
-</div></li>
-
-<li><p>
-Lister les bases de données:<br />
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sql" id="org8636cea">SHOW DATABASES;
-</pre>
-</div></li>
-
-<li><p>
-Effacer une base de donnée:<br />
-</p>
-
-<div class="org-src-container">
-<pre class="src src-sql" id="org19d080a"><span style="color: #a020f0;">DROP</span> DATABASE nom_database;
-</pre>
-</div></li>
-</ul>
-</div>
-</div>
-
-
-
-
-
-<div id="outline-container-org403f172" class="outline-4">
-<h4 id="org403f172"><span class="section-number-4">1.2.3</span> Création de la nouvelle base de données <code>bd_gestion_des_notes</code>:</h4>
-<div class="outline-text-4" id="text-1-2-3">
-<div class="org-src-container">
-<pre class="src src-sql" id="org645def7"><span style="color: #a020f0;">CREATE</span> DATABASE bd_gestion_des_notes;
+<pre class="src src-sql" id="org3ff2f63"><span style="color: #a020f0;">CREATE</span> DATABASE bd_gestion_des_notes;
 SHOW DATABASES;
 </pre>
 </div>
+
+<p>
+où:
+</p>
+<div class="org-src-container">
+<pre class="src src-sql" id="org2f3b919"><span style="color: #a020f0;">CREATE</span> DATABASE nom_database;
+</pre>
+</div>
+
+<p>
+permet de créer une nouvelle base de données et:
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sql" id="org39bc323">SHOW DATABASES;
+</pre>
+</div>
+<p>
+permet d'afficher la liste des bases de données.
+</p>
+
+<p>
+Si l'on souhaite effacer une base de donnée:<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sql" id="org8093d21"><span style="color: #a020f0;">DROP</span> DATABASE nom_database;
+</pre>
+</div>
 </div>
 </div>
 
-<div id="outline-container-org6fc97c4" class="outline-4">
-<h4 id="org6fc97c4"><span class="section-number-4">1.2.4</span> Création d'un utilisateur <code>gestionnaire</code></h4>
-<div class="outline-text-4" id="text-1-2-4">
+
+
+<div id="outline-container-orgc1ee736" class="outline-3">
+<h3 id="orgc1ee736"><span class="section-number-3">3.3</span> Types d'utilisateurs d'un SGBP</h3>
+<div class="outline-text-3" id="text-3-3">
 <p>
-Utilisateur à qui <code>root</code> va donner les droits nécessaires pour créer ou modifier des tables dans la base de données <code>bd_gestion_des_notes</code> ou pour inscrire des utilisateurs
+De façon générale, trois types d'<b>utilisateurs</b> ayant chacun des <b>rôles</b> bien distincts sont à distinguer :
 </p>
+<ol class="org-ol">
+<li><b>L'administrateur</b> du SGBD et donc des Bases de Données. Il s'appelle <code>root</code>. Son rôle est d'installer et gérer le SGBD dans sa globalité. Chaque fois que l'administrateur crée une base de données, il délègue sa gestion à un autre utilisateur à qui il donne les droits nécessaires. <b>Remarque:</b>  Il ne faut pas travailler sur une bases de données en tant que <code>root</code>; ce n'est pas son rôle (<a href="https://www.youtube.com/watch?v=oiQG6tP3940">c'est mal</a>).</li>
+<li><b>Le gestionnaire</b> de Bases de Données (dans un SGBD existant) qui doit connaître  <b>sql</b> (Structured Query Language) : création (CREATE TABLE), modification (ALTER TABLE), suppression (DROP TABLE) de tables&#x2026;</li>
+<li><b>L'utilisateur final</b> de la base de donnée. Il va interagir avec tout ou partie de la base de donnée à travers une application se voulant conviviale; il n'a pas à connaître <b>sql</b>.</li>
+</ol>
+
+
+<p>
+Le SGBD permet de créer différents utilisateurs avec des droits spécifiques, mais il permet aussi de créer différents rôles correspondant à des droits spécifiques ce qui rend la gestion d'utilisateurs ayant des droits identiques plus efficace.
+</p>
+</div>
+</div>
+
+<div id="outline-container-org2877d0a" class="outline-3">
+<h3 id="org2877d0a"><span class="section-number-3">3.4</span> Création d'un utilisateur <code>gestionnaire</code></h3>
+<div class="outline-text-3" id="text-3-4">
+<p>
+Utilisateur à qui <code>root</code> va donner les droits nécessaires pour créer ou modifier des tables dans la base de données <code>bd_gestion_des_notes</code> ou pour inscrire des utilisateurs.
+</p>
+</div>
+
+
+<div id="outline-container-org4e22fdd" class="outline-4">
+<h4 id="org4e22fdd"><span class="section-number-4">3.4.1</span> Méthode 1</h4>
+<div class="outline-text-4" id="text-3-4-1">
+<p>
+On pourrait procéder ainsi: 
+</p>
+
 <div class="org-src-container">
-<pre class="src src-sql" id="orgfc08de1"><span style="color: #a020f0;">CREATE</span> <span style="color: #483d8b;">USER</span> user_gestionnaire@localhost
+<pre class="src src-sql" id="orgff26c60"><span style="color: #a020f0;">CREATE</span> <span style="color: #483d8b;">USER</span> user_gestionnaire@localhost
 IDENTIFIED <span style="color: #a020f0;">BY</span> <span style="color: #8b2252;">'gestionnaire'</span>;
 <span style="color: #a020f0;">GRANT</span> <span style="color: #a020f0;">ALL</span> <span style="color: #a020f0;">PRIVILEGES</span> <span style="color: #a020f0;">ON</span> bd_gestion_des_notes.* 
 <span style="color: #a020f0;">TO</span> user_gestionnaire@localhost;
 quit
 </pre>
 </div>
+
+
+<p>
+Se connecter au client <code>mysql</code> en tant que gestionnaire
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sql" id="orga6d567f">mysql -u user_gestionnaire -p
+</pre>
+</div>
+
+<p>
+Saisir le mot de passe précédemment défini. 
+</p>
+
+
+<p>
+Mais nous allons plutôt employer la seconde méthode (voir <a href="#org899e71f">3.4.2</a> ).
+</p>
+
+<p>
+Mais, en tant que <code>root</code>, commençons par effacer (si besoin) l'utilisateur <code>gestionnaire</code> :<br />
+</p>
+
+<div class="org-src-container">
+<pre class="src src-sql" id="org8e36cdf"><span style="color: #a020f0;">DROP</span> <span style="color: #483d8b;">USER</span> user_gestionnaire@localhost;
+</pre>
+</div>
 </div>
 </div>
 
-<div id="outline-container-org3208e26" class="outline-4">
-<h4 id="org3208e26"><span class="section-number-4">1.2.5</span> Effacer (si besoin) l'utilisateur <code>gestionnaire</code></h4>
-<div class="outline-text-4" id="text-1-2-5">
+
+<div id="outline-container-org899e71f" class="outline-4">
+<h4 id="org899e71f"><span class="section-number-4">3.4.2</span> Méthode 2</h4>
+<div class="outline-text-4" id="text-3-4-2">
+<ul class="org-ul">
+<li>Création du rôle de gestionnaire</li>
+</ul>
+
 <div class="org-src-container">
-<pre class="src src-sql" id="orgddc7d84"><span style="color: #a020f0;">DROP</span> <span style="color: #483d8b;">USER</span> user_gestionnaire@localhost;
+<pre class="src src-sql" id="orge56511a"><span style="color: #a020f0;">CREATE</span> <span style="color: #a020f0;">OR</span> replace <span style="color: #a020f0;">ROLE</span> role_gestionnaire;
+<span style="color: #a020f0;">GRANT</span> <span style="color: #a020f0;">ALL</span> 
+<span style="color: #a020f0;">ON</span> bd_gestion_des_notes.* 
+<span style="color: #a020f0;">TO</span> role_gestionnaire;
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Si le "stil" et le "proviseur" sont habilités à endosser ce rôle</li>
+</ul>
+
+<div class="org-src-container">
+<pre class="src src-sql" id="orgd4f3379"><span style="color: #a020f0;">CREATE</span> <span style="color: #a020f0;">OR</span> replace <span style="color: #483d8b;">USER</span>  stil@localhost IDENTIFIED <span style="color: #a020f0;">BY</span> <span style="color: #8b2252;">'stilstil'</span>;                 
+<span style="color: #a020f0;">GRANT</span> role_gestionnaire
+<span style="color: #a020f0;">TO</span> stil@localhost;
+<span style="color: #a020f0;">SET</span> <span style="color: #a020f0;">DEFAULT</span> <span style="color: #a020f0;">ROLE</span> role_gestionnaire <span style="color: #a020f0;">FOR</span> stil@localhost;
+
+<span style="color: #a020f0;">CREATE</span> <span style="color: #a020f0;">OR</span> replace <span style="color: #483d8b;">USER</span>  proviseur@localhost IDENTIFIED <span style="color: #a020f0;">BY</span> <span style="color: #8b2252;">'propro'</span>;                 
+<span style="color: #a020f0;">GRANT</span> role_gestionnaire
+<span style="color: #a020f0;">TO</span> proviseur@localhost;
+<span style="color: #a020f0;">SET</span> <span style="color: #a020f0;">DEFAULT</span> <span style="color: #a020f0;">ROLE</span> role_gestionnaire <span style="color: #a020f0;">FOR</span> proviseur@localhost;
+</pre>
+</div>
+
+<ul class="org-ul">
+<li>Pour vérifier le rôle de l'utilisateur connecté:</li>
+</ul>
+<div class="org-src-container">
+<pre class="src src-sql" id="org0561159"><span style="color: #a020f0;">SELECT</span> <span style="color: #483d8b;">CURRENT_ROLE</span>();      
 </pre>
 </div>
 </div>
 </div>
 </div>
+
+
+<div id="outline-container-org7dd4ab1" class="outline-3">
+<h3 id="org7dd4ab1"><span class="section-number-3">3.5</span> Mot de passe et sécurité</h3>
+<div class="outline-text-3" id="text-3-5">
+<p>
+Les mots de passe précédents seront à utiliser lors de la première connexion. Ensuite, pour des raisons évidentes de sécurité, les utilisateurs doivent se voir proposer un moyen de changer leur mot de passe. 
+</p>
+
+<p>
+La commande sql est la suivante:
+</p>
+<div class="org-src-container">
+<pre class="src src-sql" id="org08ed995"><span style="color: #a020f0;">SET</span> PASSWORD <span style="color: #a020f0;">FOR</span> <span style="color: #8b2252;">'proviseur'</span>@<span style="color: #8b2252;">'localhost'</span> = PASSWORD(<span style="color: #8b2252;">'pro'</span>);
+</pre>
+</div>
+
+<p>
+Mais l'utilisateur final de la BD n'a pas à connaître sql c'est donc à l'application de proposer cette possibilité.
+</p>
+</div>
+</div>
 </div>
 
 
-<div id="outline-container-orgcd71ab8" class="outline-2">
-<h2 id="orgcd71ab8"><span class="section-number-2">2</span> Afficher les utilisateurs</h2>
-<div class="outline-text-2" id="text-2">
+<div id="outline-container-org2c3b1d3" class="outline-2">
+<h2 id="org2c3b1d3"><span class="section-number-2">4</span> Afficher les utilisateurs</h2>
+<div class="outline-text-2" id="text-4">
 </div>
-<div id="outline-container-org7656225" class="outline-3">
-<h3 id="org7656225"><span class="section-number-3">2.1</span> Afficher tous les utilisateurs (en tant qu'administrateur)</h3>
-<div class="outline-text-3" id="text-2-1">
+<div id="outline-container-orgd1df373" class="outline-3">
+<h3 id="orgd1df373"><span class="section-number-3">4.1</span> Afficher tous les utilisateurs (en tant qu'administrateur)</h3>
+<div class="outline-text-3" id="text-4-1">
 <p>
 Connecté en <code>root</code> saisir la commande:
 </p>
 <div class="org-src-container">
-<pre class="src src-sql" id="org65da49c"><span style="color: #a020f0;">select</span> <span style="color: #a020f0;">host</span>, <span style="color: #483d8b;">user</span> <span style="color: #a020f0;">from</span> mysql.<span style="color: #483d8b;">user</span>;
+<pre class="src src-sql" id="org8d48cef"><span style="color: #a020f0;">select</span> <span style="color: #a020f0;">host</span>, <span style="color: #483d8b;">user</span> <span style="color: #a020f0;">from</span> mysql.<span style="color: #483d8b;">user</span>;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgf75b7b4" class="outline-3">
-<h3 id="orgf75b7b4"><span class="section-number-3">2.2</span> Afficher l'utilisateur connecté</h3>
-<div class="outline-text-3" id="text-2-2">
+<div id="outline-container-org8f6f440" class="outline-3">
+<h3 id="org8f6f440"><span class="section-number-3">4.2</span> Afficher l'utilisateur connecté</h3>
+<div class="outline-text-3" id="text-4-2">
 <p>
 Deux commandes possibles pour cela:
 </p>
 <div class="org-src-container">
-<pre class="src src-sql" id="orgcc87623"><span style="color: #a020f0;">SELECT</span> <span style="color: #483d8b;">current_user</span>;
+<pre class="src src-sql" id="org574f9b1"><span style="color: #a020f0;">SELECT</span> <span style="color: #483d8b;">current_user</span>;
 </pre>
 </div>
 
@@ -579,7 +679,7 @@ ou
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sql" id="orgbfb0871"><span style="color: #a020f0;">SELECT</span> <span style="color: #483d8b;">user</span>();
+<pre class="src src-sql" id="org00e5f17"><span style="color: #a020f0;">SELECT</span> <span style="color: #483d8b;">user</span>();
 </pre>
 </div>
 </div>
@@ -587,73 +687,59 @@ ou
 </div>
 
 
-<div id="outline-container-org7772318" class="outline-2">
-<h2 id="org7772318"><span class="section-number-2">3</span> Gestion de la base de données</h2>
-<div class="outline-text-2" id="text-3">
+<div id="outline-container-orgb228306" class="outline-2">
+<h2 id="orgb228306"><span class="section-number-2">5</span> Gestion de la base de données</h2>
+<div class="outline-text-2" id="text-5">
 </div>
-<div id="outline-container-org7d8683c" class="outline-3">
-<h3 id="org7d8683c"><span class="section-number-3">3.1</span> Se connecter au client <code>mysql</code> en tant que gestionnaire</h3>
-<div class="outline-text-3" id="text-3-1">
+<div id="outline-container-org241aff1" class="outline-3">
+<h3 id="org241aff1"><span class="section-number-3">5.1</span> Lister les bases de données (auxquelles le gestionnaire a accès)</h3>
+<div class="outline-text-3" id="text-5-1">
 <div class="org-src-container">
-<pre class="src src-sql" id="org3448453">mysql -u user_gestionnaire -p
-</pre>
-</div>
-
-<p>
-Saisir le mot de passe précédemment défini. 
-</p>
-</div>
-</div>
-
-<div id="outline-container-org012fc60" class="outline-3">
-<h3 id="org012fc60"><span class="section-number-3">3.2</span> Lister les bases de données (auxquelles le gestionnaire a accès)</h3>
-<div class="outline-text-3" id="text-3-2">
-<div class="org-src-container">
-<pre class="src src-sql" id="orgb2116bc">SHOW DATABASES;
+<pre class="src src-sql" id="orgea7d92b">SHOW DATABASES;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org1e97ed8" class="outline-3">
-<h3 id="org1e97ed8"><span class="section-number-3">3.3</span> Se connecter à une base de données</h3>
-<div class="outline-text-3" id="text-3-3">
+<div id="outline-container-orga56034a" class="outline-3">
+<h3 id="orga56034a"><span class="section-number-3">5.2</span> Se connecter à une base de données</h3>
+<div class="outline-text-3" id="text-5-2">
 <p>
 Pour utiliser la base de donnée <code>bd_gestion_des_notes</code>:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sql" id="orgcf283ab">USE bd_gestion_des_notes;      
+<pre class="src src-sql" id="orge8b8e34">USE bd_gestion_des_notes;      
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org7bcc479" class="outline-3">
-<h3 id="org7bcc479"><span class="section-number-3">3.4</span> Afficher les tables de la base courante</h3>
-<div class="outline-text-3" id="text-3-4">
+<div id="outline-container-org4699113" class="outline-3">
+<h3 id="org4699113"><span class="section-number-3">5.3</span> Afficher les tables de la base courante</h3>
+<div class="outline-text-3" id="text-5-3">
 <div class="org-src-container">
-<pre class="src src-sql" id="org827672d">SHOW TABLES;
+<pre class="src src-sql" id="orga21db82">SHOW TABLES;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgb37a861" class="outline-3">
-<h3 id="orgb37a861"><span class="section-number-3">3.5</span> Afficher la structure de la table</h3>
-<div class="outline-text-3" id="text-3-5">
+<div id="outline-container-org6db4e5c" class="outline-3">
+<h3 id="org6db4e5c"><span class="section-number-3">5.4</span> Afficher la structure de la table</h3>
+<div class="outline-text-3" id="text-5-4">
 <div class="org-src-container">
-<pre class="src src-sql" id="org55a024a">DESCRIBLE nom_table;
+<pre class="src src-sql" id="org44e5c26">DESCRIBLE nom_table;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org9a5a53f" class="outline-3">
-<h3 id="org9a5a53f"><span class="section-number-3">3.6</span> Créer une nouvelle table</h3>
-<div class="outline-text-3" id="text-3-6">
+<div id="outline-container-orgdf90818" class="outline-3">
+<h3 id="orgdf90818"><span class="section-number-3">5.5</span> Créer une nouvelle table</h3>
+<div class="outline-text-3" id="text-5-5">
 <div class="org-src-container">
-<pre class="src src-sql" id="org4c5d93b"><span style="color: #a020f0;">CREATE</span> <span style="color: #a020f0;">TABLE</span> <span style="color: #0000ff;">nom_table</span> (
+<pre class="src src-sql" id="orgffbe91d"><span style="color: #a020f0;">CREATE</span> <span style="color: #a020f0;">TABLE</span> <span style="color: #0000ff;">nom_table</span> (
 nom_colonne1 <span style="color: #228b22;">int</span>,
 nom_colonne2 <span style="color: #228b22;">VARCHAR</span>(100)
 );
@@ -662,41 +748,41 @@ nom_colonne2 <span style="color: #228b22;">VARCHAR</span>(100)
 </div>
 </div>
 
-<div id="outline-container-org40e6c70" class="outline-3">
-<h3 id="org40e6c70"><span class="section-number-3">3.7</span> Ajouter une colonne à une table</h3>
-<div class="outline-text-3" id="text-3-7">
+<div id="outline-container-org68a4d85" class="outline-3">
+<h3 id="org68a4d85"><span class="section-number-3">5.6</span> Ajouter une colonne à une table</h3>
+<div class="outline-text-3" id="text-5-6">
 <div class="org-src-container">
-<pre class="src src-sql" id="orgd1eb6c3"><span style="color: #a020f0;">ALTER</span> <span style="color: #a020f0;">TABLE</span> <span style="color: #0000ff;">nom_table</span> <span style="color: #a020f0;">ADD</span> nom_colonne type_colonne;
+<pre class="src src-sql" id="org343eb09"><span style="color: #a020f0;">ALTER</span> <span style="color: #a020f0;">TABLE</span> <span style="color: #0000ff;">nom_table</span> <span style="color: #a020f0;">ADD</span> nom_colonne type_colonne;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org452c536" class="outline-3">
-<h3 id="org452c536"><span class="section-number-3">3.8</span> Effacer une colonne</h3>
-<div class="outline-text-3" id="text-3-8">
+<div id="outline-container-org1184f8b" class="outline-3">
+<h3 id="org1184f8b"><span class="section-number-3">5.7</span> Effacer une colonne</h3>
+<div class="outline-text-3" id="text-5-7">
 <div class="org-src-container">
-<pre class="src src-sql" id="orgf2cb3cd"><span style="color: #a020f0;">ALTER</span> <span style="color: #a020f0;">TABLE</span> <span style="color: #0000ff;">nom_table</span> <span style="color: #a020f0;">DROP</span> <span style="color: #a020f0;">COLUMN</span> nom_colonne;
+<pre class="src src-sql" id="org71c8764"><span style="color: #a020f0;">ALTER</span> <span style="color: #a020f0;">TABLE</span> <span style="color: #0000ff;">nom_table</span> <span style="color: #a020f0;">DROP</span> <span style="color: #a020f0;">COLUMN</span> nom_colonne;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-orgc4e4d3b" class="outline-3">
-<h3 id="orgc4e4d3b"><span class="section-number-3">3.9</span> Effacer une table</h3>
-<div class="outline-text-3" id="text-3-9">
+<div id="outline-container-org1a88367" class="outline-3">
+<h3 id="org1a88367"><span class="section-number-3">5.8</span> Effacer une table</h3>
+<div class="outline-text-3" id="text-5-8">
 <div class="org-src-container">
-<pre class="src src-sql" id="org8e4d576"><span style="color: #a020f0;">DROP</span> nom_table;
+<pre class="src src-sql" id="org06a25d2"><span style="color: #a020f0;">DROP</span> nom_table;
 </pre>
 </div>
 </div>
 </div>
 
-<div id="outline-container-org33eceeb" class="outline-3">
-<h3 id="org33eceeb"><span class="section-number-3">3.10</span> Afficher le contenu de la table</h3>
-<div class="outline-text-3" id="text-3-10">
+<div id="outline-container-org137b847" class="outline-3">
+<h3 id="org137b847"><span class="section-number-3">5.9</span> Afficher le contenu de la table</h3>
+<div class="outline-text-3" id="text-5-9">
 <div class="org-src-container">
-<pre class="src src-sql" id="org7ed9c3d"><span style="color: #a020f0;">SELECT</span> * <span style="color: #a020f0;">FROM</span> nom_table;
+<pre class="src src-sql" id="orgef6125a"><span style="color: #a020f0;">SELECT</span> * <span style="color: #a020f0;">FROM</span> nom_table;
 </pre>
 </div>
 </div>
@@ -704,37 +790,37 @@ nom_colonne2 <span style="color: #228b22;">VARCHAR</span>(100)
 </div>
 
 
-<div id="outline-container-orgd3fefb4" class="outline-2">
-<h2 id="orgd3fefb4"><span class="section-number-2">4</span> SQL avec emacs</h2>
-<div class="outline-text-2" id="text-4">
+<div id="outline-container-orgc9554af" class="outline-2">
+<h2 id="orgc9554af"><span class="section-number-2">6</span> SQL avec emacs</h2>
+<div class="outline-text-2" id="text-6">
 </div>
-<div id="outline-container-orgbd4e58c" class="outline-3">
-<h3 id="orgbd4e58c"><span class="section-number-3">4.1</span> Se connecter au client <code>mysql</code> dans emacs</h3>
-<div class="outline-text-3" id="text-4-1">
+<div id="outline-container-orgc29d149" class="outline-3">
+<h3 id="orgc29d149"><span class="section-number-3">6.1</span> Se connecter au client <code>mysql</code> dans emacs</h3>
+<div class="outline-text-3" id="text-6-1">
 <p>
 Utiliser la commande: <code>M-x sql-mysql</code>
 </p>
 
 <p>
-Renseigner:
+Renseigner (avec par exemple):
 </p>
 <ul class="org-ul">
-<li>User: <code>user_gestionnaire</code></li>
-<li>Password: <code>gestionnaire</code></li>
+<li>User: <code>stil</code></li>
+<li>Password: <code>stilstil</code></li>
 <li>Database : (ne rien mettre)</li>
 <li>Server: <code>localhost</code></li>
 </ul>
 </div>
 </div>
 
-<div id="outline-container-org059f3c6" class="outline-3">
-<h3 id="org059f3c6"><span class="section-number-3">4.2</span> Si emacs ne trouve pas le programme mysql</h3>
-<div class="outline-text-3" id="text-4-2">
+<div id="outline-container-org4da99ca" class="outline-3">
+<h3 id="org4da99ca"><span class="section-number-3">6.2</span> Si emacs ne trouve pas le programme mysql</h3>
+<div class="outline-text-3" id="text-6-2">
 <ul class="org-ul">
 <li>Déterminer l'emplacement de <code>mysql</code> avec la commande:</li>
 </ul>
 <div class="org-src-container">
-<pre class="src src-shell" id="org5af7e12"><span style="color: #483d8b;">which</span> mysql
+<pre class="src src-shell" id="orgfe0fe6b"><span style="color: #483d8b;">which</span> mysql
 </pre>
 </div>
 <p>
@@ -746,7 +832,7 @@ qui retourne <code>/usr/local/bin/mysql</code>
 </ul>
 
 <div class="org-src-container">
-<pre class="src src-elisp" id="org8f477d8">(add-to-list 'exec-path <span style="color: #8b2252;">"/usr/local/bin"</span>)
+<pre class="src src-elisp" id="org5e5350c">(add-to-list 'exec-path <span style="color: #8b2252;">"/usr/local/bin"</span>)
 </pre>
 </div>
 
@@ -756,14 +842,14 @@ Emacs recherche les programmes dans les répertoires listés dans la variable <c
 </div>
 </div>
 
-<div id="outline-container-org6ea7fef" class="outline-3">
-<h3 id="org6ea7fef"><span class="section-number-3">4.3</span> Faciliter la connexion</h3>
-<div class="outline-text-3" id="text-4-3">
+<div id="outline-container-org5eb79b1" class="outline-3">
+<h3 id="org5eb79b1"><span class="section-number-3">6.3</span> Faciliter la connexion</h3>
+<div class="outline-text-3" id="text-6-3">
 <p>
 À placer dans <code>.emacs.d/init.el</code>
 </p>
 <div class="org-src-container">
-<pre class="src src-elisp" id="orgc381e0d">(<span style="color: #a020f0;">use-package</span> <span style="color: #008b8b;">sql</span>
+<pre class="src src-elisp" id="orgb524883">(<span style="color: #a020f0;">use-package</span> <span style="color: #008b8b;">sql</span>
   <span style="color: #483d8b;">:ensure</span> t
   <span style="color: #483d8b;">:config</span>
   (sql-set-product-feature 'mysql <span style="color: #483d8b;">:prompt-regexp</span> 
@@ -782,9 +868,9 @@ Connexion acilitée, toujours avec la commande <code>M-x sql-mysql</code> et dor
 </div>
 </div>
 
-<div id="outline-container-org8be5c1d" class="outline-3">
-<h3 id="org8be5c1d"><span class="section-number-3">4.4</span> Mots clés automatiquement en majuscule</h3>
-<div class="outline-text-3" id="text-4-4">
+<div id="outline-container-orga37cd60" class="outline-3">
+<h3 id="orga37cd60"><span class="section-number-3">6.4</span> Mots clés automatiquement en majuscule</h3>
+<div class="outline-text-3" id="text-6-4">
 <p>
 SQLUP-MODE permet d'écrire les mots clés SQL en majuscule.
 </p>
@@ -794,7 +880,7 @@ Les lignes suivantes sont  à placer dans le fichier <code>init.el</code>:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-elisp" id="org3083675">(<span style="color: #a020f0;">use-package</span> <span style="color: #008b8b;">sqlup-mode</span>
+<pre class="src src-elisp" id="orga3a7bf9">(<span style="color: #a020f0;">use-package</span> <span style="color: #008b8b;">sqlup-mode</span>
   <span style="color: #483d8b;">:ensure</span> t
   <span style="color: #483d8b;">:config</span>
   (add-hook 'sql-mode-hook 'sqlup-mode)
@@ -806,11 +892,11 @@ Les lignes suivantes sont  à placer dans le fichier <code>init.el</code>:
 </div>
 </div>
 
-<div id="outline-container-orgfeb7f94" class="outline-3">
-<h3 id="orgfeb7f94"><span class="section-number-3">4.5</span> Autocompletion</h3>
-<div class="outline-text-3" id="text-4-5">
+<div id="outline-container-org1ff37f0" class="outline-3">
+<h3 id="org1ff37f0"><span class="section-number-3">6.5</span> Autocompletion</h3>
+<div class="outline-text-3" id="text-6-5">
 <div class="org-src-container">
-<pre class="src src-elisp" id="orge265192"><span style="color: #b22222;">;;; </span><span style="color: #b22222;">SQL COMPLETION</span>
+<pre class="src src-elisp" id="org9fd5610"><span style="color: #b22222;">;;; </span><span style="color: #b22222;">SQL COMPLETION</span>
 <span style="color: #b22222;">;; </span><span style="color: #b22222;">put the root password in  ~/.emacs.d/lisp/mysql.el</span>
 (<span style="color: #a020f0;">require</span> '<span style="color: #008b8b;">sql-completion</span>)
 (<span style="color: #a020f0;">setq</span> sql-interactive-mode-hook
@@ -826,15 +912,15 @@ Les lignes suivantes sont  à placer dans le fichier <code>init.el</code>:
 </div>
 
 
-<div id="outline-container-orgef86cda" class="outline-2">
-<h2 id="orgef86cda"><span class="section-number-2">5</span> Exécuter un script sql</h2>
-<div class="outline-text-2" id="text-5">
+<div id="outline-container-org825fd2d" class="outline-2">
+<h2 id="org825fd2d"><span class="section-number-2">7</span> Exécuter un script sql</h2>
+<div class="outline-text-2" id="text-7">
 <p>
 Il faut déclarer le fichier SQL comme source:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sql" id="org143b2bf"><span style="color: #a020f0;">source</span> path_to/the/script_file.<span style="color: #a020f0;">sql</span>
+<pre class="src src-sql" id="orge65bf5a"><span style="color: #a020f0;">source</span> path_to/the/script_file.<span style="color: #a020f0;">sql</span>
 </pre>
 </div>
 
@@ -843,20 +929,20 @@ Par exemple:
 </p>
 
 <div class="org-src-container">
-<pre class="src src-sql" id="org5f36dbd"><span style="color: #a020f0;">source</span> <span style="color: #a020f0;">SOURCE</span> ./initdb_gestiondesnotes.<span style="color: #a020f0;">SQL</span>
+<pre class="src src-sql" id="orgf7c1069"><span style="color: #a020f0;">SOURCE</span> ./initdb_gestiondesnotes.<span style="color: #a020f0;">SQL</span>
 </pre>
 </div>
 </div>
 </div>
 
 
-<div id="outline-container-orgc4a8acb" class="outline-2">
-<h2 id="orgc4a8acb"><span class="section-number-2">6</span> Python tkinter table widget for displaying tabular data</h2>
-<div class="outline-text-2" id="text-6">
+<div id="outline-container-org9eea2b2" class="outline-2">
+<h2 id="org9eea2b2"><span class="section-number-2">8</span> Python tkinter table widget for displaying tabular data</h2>
+<div class="outline-text-2" id="text-8">
 </div>
-<div id="outline-container-org1d82e6f" class="outline-3">
-<h3 id="org1d82e6f"><span class="section-number-3">6.1</span> installation</h3>
-<div class="outline-text-3" id="text-6-1">
+<div id="outline-container-orgd16070f" class="outline-3">
+<h3 id="orgd16070f"><span class="section-number-3">8.1</span> installation</h3>
+<div class="outline-text-3" id="text-8-1">
 <div class="org-src-container">
 <pre class="src src-shell">pip install tksheet
 </pre>
@@ -864,27 +950,27 @@ Par exemple:
 </div>
 </div>
 
-<div id="outline-container-org24f34fb" class="outline-3">
-<h3 id="org24f34fb"><span class="section-number-3">6.2</span> source</h3>
-<div class="outline-text-3" id="text-6-2">
+<div id="outline-container-org75d02e3" class="outline-3">
+<h3 id="org75d02e3"><span class="section-number-3">8.2</span> source</h3>
+<div class="outline-text-3" id="text-8-2">
 <p>
 <a href="https://github.com/ragardner/tksheet">https://github.com/ragardner/tksheet</a>
 </p>
 </div>
 </div>
 
-<div id="outline-container-orgedb4f43" class="outline-3">
-<h3 id="orgedb4f43"><span class="section-number-3">6.3</span> paramètres</h3>
-<div class="outline-text-3" id="text-6-3">
+<div id="outline-container-org05f0fef" class="outline-3">
+<h3 id="org05f0fef"><span class="section-number-3">8.3</span> paramètres</h3>
+<div class="outline-text-3" id="text-8-3">
 <p>
 <a href="https://github.com/ragardner/tksheet/blob/master/DOCUMENTATION.md">https://github.com/ragardner/tksheet/blob/master/DOCUMENTATION.md</a>
 </p>
 </div>
 </div>
 
-<div id="outline-container-org1cf9d14" class="outline-3">
-<h3 id="org1cf9d14"><span class="section-number-3">6.4</span> fonctions</h3>
-<div class="outline-text-3" id="text-6-4">
+<div id="outline-container-org0ad1288" class="outline-3">
+<h3 id="org0ad1288"><span class="section-number-3">8.4</span> fonctions</h3>
+<div class="outline-text-3" id="text-8-4">
 <p>
 <a href="https://github.com/ragardner/tksheet/blob/master/tksheet/_tksheet.py">https://github.com/ragardner/tksheet/blob/master/tksheet/_tksheet.py</a>
 </p>
@@ -894,7 +980,7 @@ Par exemple:
 </div>
 <div id="postamble" class="status">
 <p class="author">Auteur: Raoul HATTERER</p>
-<p class="date">Created: 2020-02-23 Sun 19:41</p>
+<p class="date">Created: 2020-08-14 Fri 02:59</p>
 <p class="validation"><a href="http://validator.w3.org/check?uri=referer">Validate</a></p>
 </div>
 </body>

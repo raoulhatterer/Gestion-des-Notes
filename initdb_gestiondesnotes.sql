@@ -1,11 +1,77 @@
+-- ------------------------------------------------
+-- Pour exécuter le script sql d'initialisation
+-- À partir du Terminal se rendre dans le dossier où se trouve le script
+-- Se connecter en tant que root à mysql avec
+-- mysql -u root -p
+-- Dans l'invite de commande MariaDB> entrer:
+-- SOURCE ./initdb_gestiondesnotes.sql;
+
+
+-- ------------------------------------------------
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+01:00";
 
 -- ------------------------------------------------
--- Reset: efface l'ancienne bd si elle existait
+-- Création de la base de données
+-- Efface l'ancienne bd si elle existait
 -- et en crée une nouvelle
 CREATE OR REPLACE DATABASE bd_gestion_des_notes;
 USE bd_gestion_des_notes;
+
+-- ------------------------------------------------
+-- Création de différents rôles
+CREATE OR replace ROLE role_gestionnaire;
+GRANT ALL 
+ON bd_gestion_des_notes.* 
+TO role_gestionnaire;
+
+-- CREATE ROLE role_personnel;
+-- GRANT CREATE TABLE, CREATE VIEW
+-- TO user_personnel;
+
+-- CREATE ROLE role_professeur;
+-- GRANT CREATE VIEW
+-- TO role_professeur;
+
+-- CREATE ROLE role_eleve;
+-- GRANT CREATE VIEW
+-- TO role_eleve;
+
+
+-- ------------------------------------------------
+-- Création de différents utilisateurs
+
+CREATE OR replace USER  stil@localhost IDENTIFIED BY 'stilstil';                 
+GRANT role_gestionnaire
+TO stil@localhost;
+SET DEFAULT ROLE role_gestionnaire FOR stil@localhost;
+
+CREATE OR replace USER  proviseur@localhost IDENTIFIED BY 'propro';                 
+GRANT role_gestionnaire
+TO proviseur@localhost;
+SET DEFAULT ROLE role_gestionnaire FOR proviseur@localhost;
+
+-- CREATE OR replace USER  first_connection@localhost       
+-- IDENTIFIED BY 'first_connection';                 
+-- GRANT SELECT ON Administrateurs
+-- TO first_connection@localhost;
+-- GRANT SELECT ON Professeurs
+-- TO first_connection@localhost;
+-- GRANT SELECT ON Eleves
+-- TO first_connection@localhost;
+-- GRANT CREATE VIEW ON bd_gestion_des_notes.*
+-- TO first_connection@localhost;
+-- GRANT DROP ON bd_gestion_des_notes.*
+-- TO first_connection@localhost;
+
+
+-- FLUSH PRIVILEGES;
+
+
+
+
+
+
 -- ------------------------------------------------
 -- Création de la table des fonctions
 -- des gestionnaires de la base de données
@@ -358,53 +424,6 @@ INSERT INTO Eleves (FirstName, LastName, Gender) VALUES
 ('Eliane', 'Antoine', 'F');
 
 show warnings;
--- ------------------------------------------------
--- Création de différents rôles
-CREATE OR replace ROLE role_gestionnaire;
-GRANT ALL 
-ON bd_gestion_des_notes.* 
-TO role_gestionnaire;
-
--- CREATE ROLE role_personnel;
--- GRANT CREATE TABLE, CREATE VIEW
--- TO user_personnel;
-
--- CREATE ROLE role_professeur;
--- GRANT CREATE VIEW
--- TO role_professeur;
-
--- CREATE ROLE role_eleve;
--- GRANT CREATE VIEW
--- TO role_eleve;
-
--- ------------------------------------------------
--- Création de différents utilisateurs
-
-CREATE OR replace USER  stil@localhost IDENTIFIED BY 'stilstil';                 
-GRANT role_gestionnaire
-TO stil@localhost;
-SET DEFAULT ROLE role_gestionnaire FOR stil@localhost;
-
-CREATE OR replace USER  proviseur@localhost IDENTIFIED BY 'propro';                 
-GRANT role_gestionnaire
-TO proviseur@localhost;
-SET DEFAULT ROLE role_gestionnaire FOR proviseur@localhost;
-
-CREATE OR replace USER  first_connection@localhost       
-IDENTIFIED BY 'first_connection';                 
-GRANT SELECT ON Administrateurs
-TO first_connection@localhost;
-GRANT SELECT ON Professeurs
-TO first_connection@localhost;
-GRANT SELECT ON Eleves
-TO first_connection@localhost;
-GRANT CREATE VIEW ON bd_gestion_des_notes.*
-TO first_connection@localhost;
-GRANT DROP ON bd_gestion_des_notes.*
-TO first_connection@localhost;
-
-
--- FLUSH PRIVILEGES;
 
 -- ------------------------------------------------
 -- Création de la table Classes

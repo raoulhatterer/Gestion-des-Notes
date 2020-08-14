@@ -21,177 +21,241 @@
 #+LATEX: \newpage
 
 
-* Installations et paramétrages
+* Installation et démarrage du serveur MariaDB 
   *Remarque*: Certaines parties concernent plus spécifiquement mon utilisation personnelle avec [[https://emacsformacosx.com][emacs sous OSX]].
-** Prérequis
-*** Installer Homebrew
 
-    Pour installer MariaDB, il faut disposer de [[https://brew.sh/index_fr][Homebrew]] (The Missing Package Manager for macOS).
+** Installer Homebrew
 
-*** Installer MariaDB
+   Pour installer MariaDB, il faut disposer de [[https://brew.sh/index_fr][Homebrew]] (The Missing Package Manager for macOS).
 
-    MariaDB Server peut ensuite être installé grâce à cette commande:
+** Installer MariaDB
 
-    #+NAME: mariadbinstallation
-    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
-    #+BEGIN_SRC shell
-      brew update
-      brew install mariadb
-    #+END_SRC
+   MariaDB Server peut ensuite être installé grâce à cette commande (à taper dans le =Terminal=):
 
-*** Démarrer MariaDB Server
-    Après installation, on peut (mais on ne va pas le faire) démarrer le serveur avec la commande:
-    #+NAME: mariadbstart
-    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
-    #+BEGIN_SRC shell
-      mysql.server start
-    #+END_SRC
-   
-    Il est plus commode d'activer le démarrage automatique du serveur:
-
-    #+NAME: mariadbautostart
-    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
-    #+BEGIN_SRC shell
-      brew services start mariadb
-    #+END_SRC
-
-*** Vérifier que MariaDB a démarré
-
-    #+NAME: serviceslist
-    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
-    #+BEGIN_SRC shell
-      brew services list
-    #+END_SRC
-
-*** Client-serveur
-
-    Comme la plupart des SGBD ([S]ystème de [G]estion de [B]ase de [D]onnées), MariaDB est basée sur le *modèle client-serveur*. Cela implique que la base de données se trouve sur un *serveur* auquel nous n'avons pas accès directement. Il faut passer par un *client* qui fera la liaison entre nous et le serveur.
-
-    Donc, maintenant que  MariaDB Server a démarré, on va s'y connecter en utilisant un logiciel client (nommé ~mysql~)... mais sous quelle identité et avec quels droits?
-
-*** Distinguer les utilisateurs
-
-**** Types d'utilisateurs
-
-     Il faut distinguer trois types d'utilisateur d'un SGBD ayant chacun des rôles bien distincts :
-     1. *L'administrateur* du SGBD et donc des Bases de Données. Il s'appelle ~root~. Son rôle est d'installer et gérer le SGBD dans sa globalité. Chaque fois que l'administrateur crée une base de données, il délègue sa gestion à un autre utilisateur à qui il donne les droits nécessaires. *Remarque:*  Il ne faut pas travailler sur une bases de données en tant que ~root~; ce n'est pas son rôle ([[https://www.youtube.com/watch?v=oiQG6tP3940][c'est mal]]).
-     2. *Le gestionnaire* de Bases de Données (dans un SGBD existant) qui doit connaître  *sql* (Structured Query Language) : création (CREATE TABLE), modification (ALTER TABLE), suppression (DROP TABLE) de tables...     
-     3. *L'utilisateur final* de la base de donnée. Il va interagir avec tout ou partie de la base de donnée à travers une application se voulant conviviale; il n'a pas à connaître *sql*.
-
-
-
-**** À la création
-
-    *À la création, la base de donnée est initialisée avec 2 comptes:* 
- - le premier correspond au nom d'utilisateur actuel (checké avec la commande ~whoami~); il ne nécessite pas de mot de passe;
- - tandis que le second est le compte administrateur ~root~ ; il est inaccessible tant qu'on n'a pas défini de mot de passe.
-
- On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (root) puis s'y connecter pour créer une base de données (~bd_gestion_des_notes~) et un compte gestionnaire.  
-
-**** Activer l'accès au compte ~root~
-    
-     Pour cela, d'abord se connecter au client *mysql*  avec son nom d'utilisateur:
-
-     #+NAME: whoam
-     #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
-     #+BEGIN_SRC shell
-       mysql -u $(whoami)
-     #+END_SRC
-    
-     Puis, grâce au commandes du client *mysql*, définir le mot de passe de ~root~:
- 
-     #+NAME: setrootpwd
-     #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t
-     #+BEGIN_SRC sql
-       SHOW databases;
-       USE mysql;
-       SET password FOR 'root'@'localhost' = 
-       password('YOUR_ROOT_PASSWORD_HERE');
-       FLUSH PRIVILEGES;
-       quit
-     #+END_SRC
-
-     où ~YOUR_ROOT_PASSWORD_HERE~ est à remplacer par le mot de passe souhaité.
-
-** Création par ~root~ d'une nouvelle base de données et d'un gestionnaire pour assurer sa gestion 
-
-*** Login en tant que ~root~  
-
-    Maintenant, nous pouvons nous connecter en tant que ~root~:
-
-   #+NAME: loginrootpwd
+   #+NAME: mariadbinstallation
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
    #+BEGIN_SRC shell
-     mysql -u root -p
+     brew update
+     brew install mariadb
    #+END_SRC
 
-   Il faudra fournir le mot de passe renseigné à l'étape précédente.
+** Démarrer MariaDB Server
+   Après installation, on peut (mais on ne va pas le faire) démarrer le serveur avec la commande:
+   #+NAME: mariadbstart
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
+   #+BEGIN_SRC shell
+     mysql.server start
+   #+END_SRC
+   
+   Il est plus commode d'activer le démarrage automatique du serveur:
 
-*** Commandes de base à la disposition de l'administrateur
+   #+NAME: mariadbautostart
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
+   #+BEGIN_SRC shell
+     brew services start mariadb
+   #+END_SRC
 
-   - Afficher le statut du serveur:\\
+** Vérifier que MariaDB a démarré
+
+   #+NAME: serviceslist
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
+   #+BEGIN_SRC shell
+     brew services list
+   #+END_SRC
+
+   Cette commande doit retourner =mariadb started=.
+
+
+* Connexion au serveur à travers le client ~mysql~ 
+
+** Client-serveur
+
+   Comme la plupart des SGBD ([S]ystème de [G]estion de [B]ase de [D]onnées), MariaDB est basée sur le *modèle client-serveur*. Cela implique que la base de données se trouve sur un *serveur* auquel nous n'avons pas accès directement. Il faut passer par un *client* qui fera la liaison entre nous et le serveur.
+
+   Donc, maintenant que  MariaDB Server a démarré, on va s'y connecter en utilisant un logiciel client (nommé ~mysql~)... mais sous quelle identité et avec quels droits?
+
+** À la création, la base de donnée est initialisée avec 2 comptes
+- Le premier compte correspond au nom d'utilisateur actuel (checké avec la commande ~whoami~); il ne nécessite pas de mot de passe;
+- Le second est le compte administrateur ~root~ ; il est inaccessible tant qu'on n'a pas défini de mot de passe.
+
+On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (root) puis s'y connecter pour créer une base de données (~bd_gestion_des_notes~).
+
+
+** Activer l'accès au compte ~root~
+
+    
+   Pour cela, d'abord se connecter au client *mysql*  avec son nom d'utilisateur:
+
+   #+NAME: whoam
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
+   #+BEGIN_SRC shell
+     mysql -u $(whoami)
+   #+END_SRC
+    
+   Puis, grâce au commandes du client *mysql*, définir le mot de passe de ~root~:
  
-     #+NAME: showstatus
-     #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t
-     #+BEGIN_SRC sql
-       SHOW STATUS;
-     #+END_SRC
+   #+NAME: setrootpwd
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t
+   #+BEGIN_SRC sql
+     SHOW databases;
+     USE mysql;
+     SET password FOR 'root'@'localhost' = 
+     password('YOUR_ROOT_PASSWORD_HERE');
+     FLUSH PRIVILEGES;
+     quit
+   #+END_SRC
 
-   - Créer une nouvelle base de données:\\
-
-     #+NAME: createdatabase2
-     #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t
-     #+BEGIN_SRC sql
-       CREATE DATABASE nom_database;
-     #+END_SRC
-
-   - Lister les bases de données:\\
-
-     #+NAME: showdatabases
-     #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t
-     #+BEGIN_SRC sql
-       SHOW DATABASES;
-     #+END_SRC
-
-   - Effacer une base de donnée:\\
- 
-     #+NAME: dropdatabase
-     #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t
-     #+BEGIN_SRC sql
-       DROP DATABASE nom_database;
-     #+END_SRC
+   où ~YOUR_ROOT_PASSWORD_HERE~ est à remplacer par le mot de passe souhaité.
 
 
 
+* Création par ~root~ d'une nouvelle base de données et d'un gestionnaire pour assurer sa gestion 
 
+** Login en tant que ~root~  
 
-*** Création de la nouvelle base de données =bd_gestion_des_notes=:
-    #+NAME: createdatabase
-    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
+   Maintenant, nous pouvons nous connecter en tant que ~root~:
+
+  #+NAME: loginrootpwd
+  #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
+  #+BEGIN_SRC shell
+    mysql -u root -p
+  #+END_SRC
+
+  Il faudra fournir le mot de passe renseigné à l'étape précédente.
+
+** Création de la nouvelle base de données =bd_gestion_des_notes=:
+   #+NAME: createdatabase
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
+   #+BEGIN_SRC sql
+     CREATE DATABASE bd_gestion_des_notes;
+     SHOW DATABASES;
+   #+END_SRC
+
+   où:
+  #+NAME: createdatabase2
+    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t
     #+BEGIN_SRC sql
-      CREATE DATABASE bd_gestion_des_notes;
-      SHOW DATABASES;
+      CREATE DATABASE nom_database;
     #+END_SRC
 
-*** Création d'un utilisateur =gestionnaire=
-    Utilisateur à qui ~root~ va donner les droits nécessaires pour créer ou modifier des tables dans la base de données =bd_gestion_des_notes= ou pour inscrire des utilisateurs
-    #+NAME: createusergestionnaire
+  permet de créer une nouvelle base de données et:
+
+    #+NAME: showdatabases
+    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t
+    #+BEGIN_SRC sql
+      SHOW DATABASES;
+    #+END_SRC
+permet d'afficher la liste des bases de données.
+
+Si l'on souhaite effacer une base de donnée:\\
+ 
+    #+NAME: dropdatabase
+    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t
+    #+BEGIN_SRC sql
+      DROP DATABASE nom_database;
+    #+END_SRC
+
+
+
+** Types d'utilisateurs d'un SGBP
+
+   De façon générale, trois types d'*utilisateurs* ayant chacun des *rôles* bien distincts sont à distinguer :
+   1. *L'administrateur* du SGBD et donc des Bases de Données. Il s'appelle ~root~. Son rôle est d'installer et gérer le SGBD dans sa globalité. Chaque fois que l'administrateur crée une base de données, il délègue sa gestion à un autre utilisateur à qui il donne les droits nécessaires. *Remarque:*  Il ne faut pas travailler sur une bases de données en tant que ~root~; ce n'est pas son rôle ([[https://www.youtube.com/watch?v=oiQG6tP3940][c'est mal]]).
+   2. *Le gestionnaire* de Bases de Données (dans un SGBD existant) qui doit connaître  *sql* (Structured Query Language) : création (CREATE TABLE), modification (ALTER TABLE), suppression (DROP TABLE) de tables...     
+   3. *L'utilisateur final* de la base de donnée. Il va interagir avec tout ou partie de la base de donnée à travers une application se voulant conviviale; il n'a pas à connaître *sql*.
+
+
+Le SGBD permet de créer différents utilisateurs avec des droits spécifiques, mais il permet aussi de créer différents rôles correspondant à des droits spécifiques ce qui rend la gestion d'utilisateurs ayant des droits identiques plus efficace.
+
+** Création d'un utilisateur =gestionnaire=
+   Utilisateur à qui ~root~ va donner les droits nécessaires pour créer ou modifier des tables dans la base de données =bd_gestion_des_notes= ou pour inscrire des utilisateurs.
+
+
+*** Méthode 1
+
+    On pourrait procéder ainsi: 
+
+   #+NAME: createusergestionnaire
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
+   #+BEGIN_SRC sql
+     CREATE USER user_gestionnaire@localhost
+     IDENTIFIED BY 'gestionnaire';
+     GRANT ALL PRIVILEGES ON bd_gestion_des_notes.* 
+     TO user_gestionnaire@localhost;
+     quit
+   #+END_SRC		
+
+
+   Se connecter au client ~mysql~ en tant que gestionnaire
+
+   #+NAME: connectgestionnaire
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
+   #+BEGIN_SRC sql
+     mysql -u user_gestionnaire -p
+   #+END_SRC
+
+   Saisir le mot de passe précédemment défini. 
+
+
+   Mais nous allons plutôt employer la seconde méthode (voir [[*Méthode 2]] ).
+
+   Mais, en tant que ~root~, commençons par effacer (si besoin) l'utilisateur =gestionnaire= :\\
+
+   #+NAME: dropusergestionnaire
+   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
+   #+BEGIN_SRC sql
+     DROP USER user_gestionnaire@localhost;
+   #+END_SRC		
+
+
+*** Méthode 2
+
+    - Création du rôle de gestionnaire
+
+    #+NAME: createrolegestionnaire
     #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
     #+BEGIN_SRC sql
-      CREATE USER user_gestionnaire@localhost
-      IDENTIFIED BY 'gestionnaire';
-      GRANT ALL PRIVILEGES ON bd_gestion_des_notes.* 
-      TO user_gestionnaire@localhost;
-      quit
-    #+END_SRC		
+      CREATE OR replace ROLE role_gestionnaire;
+      GRANT ALL 
+      ON bd_gestion_des_notes.* 
+      TO role_gestionnaire;
+    #+END_SRC
 
-*** Effacer (si besoin) l'utilisateur =gestionnaire=
+    - Si le "stil" et le "proviseur" sont habilités à endosser ce rôle
 
-    #+NAME: dropusergestionnaire
+    #+NAME: createusersgestionnaire
     #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
     #+BEGIN_SRC sql
-      DROP USER user_gestionnaire@localhost;
-    #+END_SRC		
+      CREATE OR replace USER  stil@localhost IDENTIFIED BY 'stilstil';                 
+      GRANT role_gestionnaire
+      TO stil@localhost;
+      SET DEFAULT ROLE role_gestionnaire FOR stil@localhost;
+
+      CREATE OR replace USER  proviseur@localhost IDENTIFIED BY 'propro';                 
+      GRANT role_gestionnaire
+      TO proviseur@localhost;
+      SET DEFAULT ROLE role_gestionnaire FOR proviseur@localhost;
+    #+END_SRC  
+
+    - Pour vérifier le rôle de l'utilisateur connecté:
+    #+NAME: verifierrole
+    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
+    #+BEGIN_SRC sql
+      SELECT CURRENT_ROLE();      
+    #+END_SRC
+
+
+** Mot de passe et sécurité
+Les mots de passe précédents seront à utiliser lors de la première connexion. Ensuite, pour des raisons évidentes de sécurité, les utilisateurs doivent se voir proposer un moyen de changer leur mot de passe. 
+
+La commande sql est la suivante:
+    #+NAME: changerpwd
+    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
+    #+BEGIN_SRC sql
+      SET PASSWORD FOR 'proviseur'@'localhost' = PASSWORD('pro');
+    #+END_SRC
+
+Mais l'utilisateur final de la BD n'a pas à connaître sql c'est donc à l'application de proposer cette possibilité.
 
 
 * Afficher les utilisateurs
@@ -224,15 +288,6 @@
 
 * Gestion de la base de données
 
-** Se connecter au client ~mysql~ en tant que gestionnaire
-
-   #+NAME: connectgestionnaire
-   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
-   #+BEGIN_SRC sql
-     mysql -u user_gestionnaire -p
-   #+END_SRC
-
-   Saisir le mot de passe précédemment défini. 
 
 ** Lister les bases de données (auxquelles le gestionnaire a accès)
 
@@ -313,9 +368,9 @@
 
    Utiliser la commande: ~M-x sql-mysql~
 
-   Renseigner:
-   - User: ~user_gestionnaire~
-   - Password: ~gestionnaire~
+   Renseigner (avec par exemple):
+   - User: ~stil~
+   - Password: ~stilstil~
    - Database : (ne rien mettre)
    - Server: ~localhost~
 
@@ -407,7 +462,7 @@
   #+NAME: sourceexemple
   #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
   #+BEGIN_SRC sql
-    source SOURCE ./initdb_gestiondesnotes.SQL
+    SOURCE ./initdb_gestiondesnotes.SQL
   #+END_SRC
 
 

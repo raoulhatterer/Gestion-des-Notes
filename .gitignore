@@ -7,3 +7,5 @@
 /test_tksheet.py~
 /initdb_gestiondesnotes.sql~
 /__pycache__/
+._sync_
+._sync_*
