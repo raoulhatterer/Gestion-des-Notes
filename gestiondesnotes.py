@@ -98,21 +98,6 @@ def connexion_utilisateur():
         records = cursor.fetchall()
         user_role = records[0][0]
         print(f"User role: {user_role}")
-
-        if user_role == 'role_gestionnaire':
-            frame_connexion.destroy()
-            affiche_compte_admin()
-            notebook.add(f1, text="Disciplines")
-            notebook.add(f2, text="Enseignants")
-            notebook.add(f3, text="Élèves")
-            notebook.add(f4, text="Classes")
-
-            afficher_disciplines()
-            afficher_professeurs()
-            afficher_eleves()
-            afficher_classes()
-
-
         # sql = "CREATE OR REPLACE SQL SECURITY INVOKER VIEW membres_lycee AS SELECT Login, 'Professeur' AS status FROM Professeurs UNION select Login, 'Admin' AS status FROM Administrateurs UNION select Login, 'Eleve' AS status FROM Eleves;"
         # cursor.execute(sql)
         # sql = "SELECT * FROM membres_lycee WHERE Login=%s;"
@@ -127,10 +112,20 @@ def connexion_utilisateur():
         cursor.close()
         connection.close()
         print("MySQL connection is closed")
-        
     except Error as e:
         print("Error while connecting to MySQL", e)
         messagebox.showwarning("Erreur de connexion", "Identifiant ou mot de passe non valide")
+    if user_role == 'role_gestionnaire':
+        frame_connexion.destroy()
+        affiche_compte_admin()
+        notebook.add(f1, text="Disciplines")
+        notebook.add(f2, text="Enseignants")
+        notebook.add(f3, text="Élèves")
+        notebook.add(f4, text="Classes")
+        afficher_disciplines()
+        afficher_professeurs()
+        afficher_eleves()
+        afficher_classes()
 
 
 
@@ -139,11 +134,28 @@ def affiche_compte_admin():
     Affiche le compte administrateur
     """
     global prenom_entry_text, nom_entry_text, combobox_genre, naissance_entry_text, login_entry_text, frame_compte
-    sql = "SELECT FirstName, LastName, Gender ,Birthday , Func_Name, Login FROM Administrateurs INNER JOIN Fonctions WHERE Administrateurs.Func_Id=Fonctions.Func_Id AND Login=%s;"
-    tuple_login =  (GN_user,)
-    cursor.execute(sql, tuple_login)
-    records = cursor.fetchall()
-    print(records)
+
+    try:
+        print(f"Try to connected to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print(f"Connected to MySQL Server version {db_Info}")
+        cursor = connection.cursor()
+        sql = "SELECT FirstName, LastName, Gender ,Birthday , Func_Name, Login FROM Administrateurs INNER JOIN Fonctions WHERE Administrateurs.Func_Id=Fonctions.Func_Id AND Login=%s;"
+        tuple_login =  (GN_user,)
+        cursor.execute(sql, tuple_login)
+        records = cursor.fetchall()
+        print(records)
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+        messagebox.showwarning("Erreur de connexion", "Identifiant ou mot de passe non valide")
+
     frame_compte = tk.Frame(f0)
      # row0 column0
     frame_compte.grid_rowconfigure(0, minsize=100)
@@ -307,7 +319,7 @@ def annuler_new_password():
     
 def save_compte_admin():
     try:
-        # print("Try to connected to MySQL Server")
+        print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
                                              database=GN_database,
                                              user=GN_user,
@@ -320,14 +332,14 @@ def save_compte_admin():
         administrateur = (prenom_entry_text.get(), nom_entry_text.get(), combobox_genre.get(), date, login_entry_text.get())
         print(administrateur)
         cursor.execute(sql, administrateur)
-        connection.commit()        
+        connection.commit()
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")        
     except Error as e:
         print("Error while connecting to MySQL", e)
-    finally:
-        if (connection.is_connected()):
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
+
+        
             
 def deconnexion():
     """
@@ -450,7 +462,7 @@ def enregistrer_disciplines():
     disciplines.
     """
     try:
-        # print("Try to connected to MySQL Server")
+        print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
                                              database=GN_database,
                                              user=GN_user,
@@ -461,13 +473,14 @@ def enregistrer_disciplines():
             discipline = (disc_Name[index][0], disc_Id[index])
             cursor.execute(sql, discipline)
             connection.commit()
+        # déconnexion
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+
     except Error as e:
         print("Error while connecting to MySQL", e)
-    finally:
-        if (connection.is_connected()):
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
+
     sheet_disciplines.destroy()
     afficher_disciplines()
 
@@ -483,7 +496,7 @@ def ajouter_discipline():
     global sheet_disciplines
     sql = "INSERT INTO Disciplines (Disc_Name) VALUES ('À définir')"
     try:
-        # print("Try to connected to MySQL Server")
+        print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
                                              database=GN_database,
                                              user=GN_user,
@@ -491,13 +504,11 @@ def ajouter_discipline():
         cursor = connection.cursor()
         cursor.execute(sql)
         connection.commit()
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
     except Error as e:
         print("Error while connecting to MySQL", e)
-    finally:
-        if (connection.is_connected()):
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
     sheet_disciplines.destroy()
     afficher_disciplines()
     sheet_disciplines.select_row(disc_Name.index(['À définir']))
@@ -519,7 +530,7 @@ def _charger_professeurs():
     'prof_Print': liste affichée dans l'onglet Professeurs
     """
     try:
-        # print("Try to connected to MySQL Server")
+        print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
                                              database=GN_database,
                                              user=GN_user,
@@ -530,7 +541,7 @@ def _charger_professeurs():
         cursor.execute("select Prof_Id, FirstName, LastName, Disc_Name, Gender FROM Professeurs INNER JOIN Disciplines WHERE Professeurs.Disc_Id = Disciplines.Disc_Id ORDER BY LastName ASC")        
         records = cursor.fetchall()
         # print(records)
-        print("All professeur of Professeurs (", cursor.rowcount, "): ")
+        print("All professeur of Professeurs (", cursor.rowcount, "): ") 
         prof_Id, prof_Print, prof_Name = list(), list(), list()
         for row in records:
             # print("\t", row)
@@ -542,13 +553,11 @@ def _charger_professeurs():
                 prof_Print += [['Mme', row[1], row[2], row[3]]]
             else:
                 prof_Print += [['M ou Mme', row[1], row[2], row[3]]]
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
     except Error as e:
         print("Error while connecting to MySQL", e)
-    finally:
-        if (connection.is_connected()):
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
     return (prof_Id, prof_Name, prof_Print)
 
 
@@ -560,11 +569,12 @@ def afficher_professeurs():
     prof_Id, prof_Name, prof_Print = _charger_professeurs()
     sheet_professeurs = Sheet(f2,
                               data=prof_Print,  # to set sheet data at startup
+                              headers=["Titre", "Nom", "Prénom", "Discipline"],
                               height=600,
                               width=800)
     # sheet_professeurs.hide("row_index")
     sheet_professeurs.hide("top_left")
-    sheet_professeurs.hide("header")
+    #sheet_professeurs.hide("header")
     sheet_professeurs.grid(row=0, column=0, columnspan=2, sticky="nswe")
     sheet_professeurs.enable_bindings(("single_select",  # "single_select" or "toggle_select"
                                        "arrowkeys",
@@ -581,7 +591,7 @@ def enregistrer_professeurs():
     Met à jour la base de données en y ajoutant d'éventuelles modifications.
     """
     try:
-        # print("Try to connected to MySQL Server")
+        print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
                                              database=GN_database,
                                              user=GN_user,
@@ -613,13 +623,11 @@ def enregistrer_professeurs():
                 # print(professeur)
                 cursor.execute(sql, professeur)
                 connection.commit()
+                cursor.close()
+                connection.close()
+                print("MySQL connection is closed")                
     except Error as e:
         print("Error while connecting to MySQL", e)
-    finally:
-        if (connection.is_connected()):
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
     sheet_professeurs.destroy()
     afficher_professeurs()
 
@@ -638,7 +646,7 @@ def ajouter_professeur():
     sql = "INSERT INTO Professeurs (FirstName, LastName, Disc_Id) VALUES (%s, %s, %s)"
     prof_nouveau = ('* Prénom ? *', '* Nom ? *', disc_Id[disc_Name.index(['À définir'])])
     try:
-        # print("Try to connected to MySQL Server")
+        print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
                                              database=GN_database,
                                              user=GN_user,
@@ -646,13 +654,11 @@ def ajouter_professeur():
         cursor = connection.cursor()
         cursor.execute(sql, prof_nouveau)
         connection.commit()
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
     except Error as e:
         print("Error while connecting to MySQL", e)
-    finally:
-        if (connection.is_connected()):
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
     sheet_professeurs.destroy()
     afficher_professeurs()
     row_index = prof_Name.index('* Nom ? *')
@@ -673,7 +679,7 @@ def _charger_eleves():
     'eleves_Print': liste affichée dans l'onglet élèves sous forme de tableau
     """
     try:
-        # print("Try to connected to MySQL Server")
+        print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
                                              database=GN_database,
                                              user=GN_user,
@@ -691,13 +697,11 @@ def _charger_eleves():
             eleves_Id += [row[0]]
             eleves_Name += [row[2]]
             eleves_Print += [[row[2], row[1], row[3], row[4]]]  # LastName, FirstName, Gender, Classe_Id
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
     except Error as e:
         print("Error while connecting to MySQL", e)
-    finally:
-        if (connection.is_connected()):
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
     return (eleves_Id, eleves_Name, eleves_Print)
 
 
@@ -731,7 +735,7 @@ def enregistrer_eleves():
     Met à jour la base de données en y ajoutant d'éventuelles modifications.
     """
     try:
-        # print("Try to connected to MySQL Server")
+        print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
                                              database=GN_database,
                                              user=GN_user,
@@ -747,13 +751,11 @@ def enregistrer_eleves():
             # print(eleve)
             cursor.execute(sql, eleve)
             connection.commit()
-    except Error as e:
-        print("Error while connecting to MySQL", e)
-    finally:
-        if (connection.is_connected()):
             cursor.close()
             connection.close()
             print("MySQL connection is closed")
+    except Error as e:
+        print("Error while connecting to MySQL", e)
     sheet_eleves.destroy()
     afficher_eleves()
 
@@ -770,7 +772,7 @@ def ajouter_eleve():
     sql = "INSERT INTO Eleves (FirstName, LastName, Gender) VALUES (%s, %s, %s)"
     eleve_nouveau = ('* Prénom ? *', '* Nom ? *', 'M ou F')
     try:
-        # print("Try to connected to MySQL Server")
+        print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
                                              database=GN_database,
                                              user=GN_user,
@@ -778,13 +780,11 @@ def ajouter_eleve():
         cursor = connection.cursor()
         cursor.execute(sql, eleve_nouveau)
         connection.commit()
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
     except Error as e:
         print("Error while connecting to MySQL", e)
-    finally:
-        if (connection.is_connected()):
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
     sheet_eleves.destroy()
     afficher_eleves()
     row_index = eleves_Name.index('* Nom ? *')
@@ -806,7 +806,7 @@ def _charger_classes():
     classe_Print :liste affichée dans l'onglet classes sous forme de tableau
     """
     try:
-        # print("Try to connected to MySQL Server")
+        print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
                                              database=GN_database,
                                              user=GN_user,
@@ -824,13 +824,11 @@ def _charger_classes():
             classe_Id += [row[0]]
             classe_Name += [row[1]]
             classe_Print += [[row[1], row[2]]]  # liste de liste requise pour un affichage modifiable avec tksheet
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
     except Error as e:
         print("Error while connecting to MySQL", e)
-    finally:
-        if (connection.is_connected()):
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
     return (classe_Id, classe_Name, classe_Print)
 
 def afficher_classes():
@@ -863,7 +861,7 @@ def enregistrer_classe():
     classes.
     """
     try:
-        # print("Try to connected to MySQL Server")
+        print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
                                              database=GN_database,
                                              user=GN_user,
@@ -874,13 +872,11 @@ def enregistrer_classe():
             classe = (classe_Print[index][0], classe_Print[index][1], classe_Id[index])
             cursor.execute(sql, classe)
             connection.commit()
-    except Error as e:
-        print("Error while connecting to MySQL", e)
-    finally:
-        if (connection.is_connected()):
             cursor.close()
             connection.close()
             print("MySQL connection is closed")
+    except Error as e:
+        print("Error while connecting to MySQL", e)
     sheet_classes.destroy()
     afficher_classes()
 
@@ -896,7 +892,7 @@ def ajouter_classe():
     global sheet_classes
     sql = "INSERT INTO Classes (Classe_Name) VALUES ('À définir')"
     try:
-        # print("Try to connected to MySQL Server")
+        print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
                                              database=GN_database,
                                              user=GN_user,
@@ -904,13 +900,11 @@ def ajouter_classe():
         cursor = connection.cursor()
         cursor.execute(sql)
         connection.commit()
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")        
     except Error as e:
         print("Error while connecting to MySQL", e)
-    finally:
-        if (connection.is_connected()):
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
     sheet_classes.destroy()
     afficher_classes()
     sheet_classes.select_row(classe_Name.index('À définir'))
