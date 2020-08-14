@@ -33,8 +33,6 @@ from tksheet import Sheet
 GN_host = 'localhost'
 GN_database = 'bd_gestion_des_notes'
 GN_user = None
-#GN_user='stil'###############################
-#GN_password='stilstil'########################
 user_role = None
 
 
@@ -104,6 +102,16 @@ def connexion_utilisateur():
         if user_role == 'role_gestionnaire':
             frame_connexion.destroy()
             affiche_compte_admin()
+            notebook.add(f1, text="Disciplines")
+            notebook.add(f2, text="Enseignants")
+            notebook.add(f3, text="Élèves")
+            notebook.add(f4, text="Classes")
+
+            afficher_disciplines()
+            afficher_professeurs()
+            afficher_eleves()
+            afficher_classes()
+
 
         # sql = "CREATE OR REPLACE SQL SECURITY INVOKER VIEW membres_lycee AS SELECT Login, 'Professeur' AS status FROM Professeurs UNION select Login, 'Admin' AS status FROM Administrateurs UNION select Login, 'Eleve' AS status FROM Eleves;"
         # cursor.execute(sql)
@@ -326,6 +334,10 @@ def deconnexion():
     Déconnexion du compte et retour à l'IHM de connexion 
     """
     frame_compte.destroy()
+    notebook.hide(1)  # Disciplines
+    notebook.hide(2)  # Enseignants
+    notebook.hide(3)  # Élèves
+    notebook.hide(4)  # Classes  
     afficher_IHM_connexion()
 
 def afficher_IHM_connexion():
@@ -378,6 +390,7 @@ def _charger_disciplines():
     alphabétique) contenus dans la table Discipline de la base de données
     'bd_gestion_des_notes'.
     """
+    global GN_password
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
@@ -396,15 +409,16 @@ def _charger_disciplines():
             # print("\t", row)
             disc_Id += [row[0]]
             disc_Name += [[row[1]]]  # liste de liste requise pour un affichage modifiable avec tksheet
+
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+    
     except Error as e:
         print("Error while connecting to MySQL", e)
-    finally:
-        if (connection.is_connected()):
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
-    return (disc_Id, disc_Name)
 
+
+    return (disc_Id, disc_Name)
 
 def afficher_disciplines():
     """
@@ -694,12 +708,13 @@ def afficher_eleves():
     global sheet_eleves, eleves_Id, eleves_Name, eleves_Print
     eleves_Id, eleves_Name, eleves_Print = _charger_eleves()
     sheet_eleves = Sheet(f3,
-                              data=eleves_Print,  # to set sheet data at startup
-                              height=600,
-                              width=800)
+                         data=eleves_Print,  # to set sheet data at startup
+                         headers=["Nom", "Prénom", "Genre", "Classe"],
+                         height=600,
+                         width=800)
     # sheet_eleves.hide("row_index")
     sheet_eleves.hide("top_left")
-    sheet_eleves.hide("header")
+    # sheet_eleves.hide("header")
     sheet_eleves.grid(row=0, column=0, columnspan=2, sticky="nswe")
     sheet_eleves.enable_bindings(("single_select",  # "single_select" or "toggle_select"
                                        "arrowkeys",
@@ -926,11 +941,11 @@ f4 = tk.Frame(notebook, width=800, height=600)  # frame pour les classes
 # verif_base_accesible() # pas forcement utile
 afficher_IHM_connexion()
 
-if GN_user != None:
-    afficher_disciplines()
-    afficher_professeurs()
-    afficher_eleves()
-    afficher_classes()
+
+# afficher_disciplines()
+# afficher_professeurs()
+# afficher_eleves()
+# afficher_classes()
 
 
 button_add_discipline = tk.Button(f1, text='Ajouter',
@@ -950,11 +965,11 @@ button_add_classe = tk.Button(f4, text='Ajouter',
 button_save_classes = tk.Button(f4, text='Enregistrer',
                                command=enregistrer_eleves)
 notebook.add(f0, text="Mon compte")
-if GN_user != None:
-    notebook.add(f1, text="Disciplines")
-    notebook.add(f2, text="Enseignants")
-    notebook.add(f3, text="Élèves")
-    notebook.add(f4, text="Classes")
+
+# notebook.add(f1, text="Disciplines")
+# notebook.add(f2, text="Enseignants")
+# notebook.add(f3, text="Élèves")
+# notebook.add(f4, text="Classes")
 
 notebook.grid(row=0, column=0, sticky="nw")
 
