@@ -9,3 +9,5 @@
 /__pycache__/
 ._sync_
 ._sync_*
+/.DS_Store
+/.ipynb_checkpoints/

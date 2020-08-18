@@ -1,0 +1,23 @@
+
+Planifier, _11 Évaluateur, 0N Sous-Période
+::::
+Sous-Période: sous-période_id
+
+Évaluateur: professeur_id
+Donner, _11 Évaluation, 0N Évaluateur
+Évaluation: evaluation_id, Date_Contrôle, Date_Note
+Noter, 1N Évaluation,  0N Élève: Note
+Élève: eleve_id, FirstName, LastName
+Diviser, _11 Sous-Période, 1N Période    
+
+:::
+Discipline: discipline_id, Disc_Name
+Appartenir, 1N Classe, 11 Élève 
+Période: année-scolaire
+
+:
+:
+Professeur: professeur_ id, FirstName, LastName
+Enseigner, 1N Classe, 1N Professeur, 1N Discipline
+Classe: classe_id
+Exister, 1N Période, _11 Classe

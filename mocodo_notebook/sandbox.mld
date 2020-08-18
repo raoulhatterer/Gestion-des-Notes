@@ -1,0 +1,29 @@
+%%mocodo
+:::::::::
+Sous-Période: année-scolaire, _sous-période_id
+:
+
+
+:
+Évaluateur: #année-scolaire->Sous-Période->année-scolaire, _#sous-période_id->Sous-Période->sous-période_id, _professeur_id
+:
+Évaluation: #année-scolaire->Évaluateur->année-scolaire, _#sous-période_id->Évaluateur->sous-période_id, _#professeur_id->Évaluateur->professeur_id, _evaluation_id, Date_Contrôle, Date_Note
+:
+Noter: #année-scolaire->Évaluation->année-scolaire, _#sous-période_id->Évaluation->sous-période_id, _#professeur_id->Évaluation->professeur_id, _#evaluation_id->Évaluation->evaluation_id, _#eleve_id->Élève->eleve_id, Note
+:
+Élève: eleve_id, FirstName, LastName, #année-scolaire->Classe->année-scolaire, #classe_id->Classe->classe_id
+:::
+
+
+:::::
+Discipline: discipline_id, Disc_Name
+::::
+
+
+:::
+Professeur: professeur_ id, FirstName, LastName
+:
+Enseigner: #année-scolaire->Classe->année-scolaire, _#classe_id->Classe->classe_id, _#professeur_ id->Professeur->professeur_ id, _#discipline_id->Discipline->discipline_id
+:
+Classe: année-scolaire, _classe_id
+:::

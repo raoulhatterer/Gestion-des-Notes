@@ -17,12 +17,12 @@
 #  C-c C , s to insert a src block.
 # C-c C-v t tangle the current file
 
-# La première page contient le titre et la table des matières
+# La première page contient le titre et la table des matières
 #+LATEX: \newpage
 
 
-* Installation et démarrage du serveur MariaDB 
-  *Remarque*: Certaines parties concernent plus spécifiquement mon utilisation personnelle avec [[https://emacsformacosx.com][emacs sous OSX]].
+* Installation et démarrage du serveur MariaDB 
+  *Remarque*: Certaines parties concernent plus spécifiquement mon utilisation personnelle avec [[https://emacsformacosx.com][emacs sous OSX]].
 
 ** Installer Homebrew
 
@@ -30,7 +30,7 @@
 
 ** Installer MariaDB
 
-   MariaDB Server peut ensuite être installé grâce à cette commande (à taper dans le =Terminal=):
+   MariaDB Server peut ensuite être installé grâce à cette commande (à taper dans le =Terminal=):
 
    #+NAME: mariadbinstallation
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
@@ -39,15 +39,15 @@
      brew install mariadb
    #+END_SRC
 
-** Démarrer MariaDB Server
-   Après installation, on peut (mais on ne va pas le faire) démarrer le serveur avec la commande:
+** Démarrer MariaDB Server
+   Après installation, on peut (mais on ne va pas le faire) démarrer le serveur avec la commande:
    #+NAME: mariadbstart
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
    #+BEGIN_SRC shell
      mysql.server start
    #+END_SRC
    
-   Il est plus commode d'activer le démarrage automatique du serveur:
+   Il est plus commode d'activer le démarrage automatique du serveur:
 
    #+NAME: mariadbautostart
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
@@ -55,7 +55,7 @@
      brew services start mariadb
    #+END_SRC
 
-** Vérifier que MariaDB a démarré
+** Vérifier que MariaDB a démarré
 
    #+NAME: serviceslist
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}}, labelposition = topline, samepage = t
@@ -66,22 +66,22 @@
    Cette commande doit retourner =mariadb started=.
 
 
-* Connexion au serveur à travers le client ~mysql~ 
+* Connexion au serveur à travers le client ~mysql~ 
 
 ** Client-serveur
 
-   Comme la plupart des SGBD ([S]ystème de [G]estion de [B]ase de [D]onnées), MariaDB est basée sur le *modèle client-serveur*. Cela implique que la base de données se trouve sur un *serveur* auquel nous n'avons pas accès directement. Il faut passer par un *client* qui fera la liaison entre nous et le serveur.
+   Comme la plupart des SGBD ([S]ystème de [G]estion de [B]ase de [D]onnées), MariaDB est basée sur le *modèle client-serveur*. Cela implique que la base de données se trouve sur un *serveur* auquel nous n'avons pas accès directement. Il faut passer par un *client* qui fera la liaison entre nous et le serveur.
 
-   Donc, maintenant que  MariaDB Server a démarré, on va s'y connecter en utilisant un logiciel client (nommé ~mysql~)... mais sous quelle identité et avec quels droits?
+   Donc, maintenant que  MariaDB Server a démarré, on va s'y connecter en utilisant un logiciel client (nommé ~mysql~)... mais sous quelle identité et avec quels droits?
 
-** À la création, la base de donnée est initialisée avec 2 comptes
-- Le premier compte correspond au nom d'utilisateur actuel (checké avec la commande ~whoami~); il ne nécessite pas de mot de passe;
-- Le second est le compte administrateur ~root~ ; il est inaccessible tant qu'on n'a pas défini de mot de passe.
+** À la création, la base de donnée est initialisée avec 2 comptes
+- Le premier compte correspond au nom d'utilisateur actuel (checké avec la commande ~whoami~); il ne nécessite pas de mot de passe;
+- Le second est le compte administrateur ~root~ ; il est inaccessible tant qu'on n'a pas défini de mot de passe.
 
-On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (root) puis s'y connecter pour créer une base de données (~bd_gestion_des_notes~).
+On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (root) puis s'y connecter pour créer une base de données (~bd_gestion_des_notes~).
 
 
-** Activer l'accès au compte ~root~
+** Activer l'accès au compte ~root~
 
     
    Pour cela, d'abord se connecter au client *mysql*  avec son nom d'utilisateur:
@@ -92,7 +92,7 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
      mysql -u $(whoami)
    #+END_SRC
     
-   Puis, grâce au commandes du client *mysql*, définir le mot de passe de ~root~:
+   Puis, grâce au commandes du client *mysql*, définir le mot de passe de ~root~:
  
    #+NAME: setrootpwd
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t
@@ -105,11 +105,11 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
      quit
    #+END_SRC
 
-   où ~YOUR_ROOT_PASSWORD_HERE~ est à remplacer par le mot de passe souhaité.
+   où ~YOUR_ROOT_PASSWORD_HERE~ est à remplacer par le mot de passe souhaité.
 
 
 
-* Création par ~root~ d'une nouvelle base de données et d'un gestionnaire pour assurer sa gestion 
+* Création par ~root~ d'une nouvelle base de données et d'un gestionnaire pour assurer sa gestion 
 
 ** Login en tant que ~root~  
 
@@ -121,9 +121,9 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
     mysql -u root -p
   #+END_SRC
 
-  Il faudra fournir le mot de passe renseigné à l'étape précédente.
+  Il faudra fournir le mot de passe renseigné à l'étape précédente.
 
-** Création de la nouvelle base de données =bd_gestion_des_notes=:
+** Création de la nouvelle base de données =bd_gestion_des_notes=:
    #+NAME: createdatabase
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, 
    #+BEGIN_SRC sql
@@ -131,23 +131,23 @@ On va donc faire ce qu'il faut pour activer l'accès au compte administrateur (r
      SHOW DATABASES;
    #+END_SRC
 
-   où:
+   où:
   #+NAME: createdatabase2
     #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t
     #+BEGIN_SRC sql
       CREATE DATABASE nom_database;
     #+END_SRC
 
-  permet de créer une nouvelle base de données et:
+  permet de créer une nouvelle base de données et:
 
     #+NAME: showdatabases
     #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t
     #+BEGIN_SRC sql
       SHOW DATABASES;
     #+END_SRC
-permet d'afficher la liste des bases de données.
+permet d'afficher la liste des bases de données.
 
-Si l'on souhaite effacer une base de donnée:\\
+Si l'on souhaite effacer une base de donnée:\\
  
     #+NAME: dropdatabase
     #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}}, labelposition = topline, samepage = t
@@ -159,21 +159,21 @@ Si l'on souhaite effacer une base de donnée:\\
 
 ** Types d'utilisateurs d'un SGBP
 
-   De façon générale, trois types d'*utilisateurs* ayant chacun des *rôles* bien distincts sont à distinguer :
-   1. *L'administrateur* du SGBD et donc des Bases de Données. Il s'appelle ~root~. Son rôle est d'installer et gérer le SGBD dans sa globalité. Chaque fois que l'administrateur crée une base de données, il délègue sa gestion à un autre utilisateur à qui il donne les droits nécessaires. *Remarque:*  Il ne faut pas travailler sur une bases de données en tant que ~root~; ce n'est pas son rôle ([[https://www.youtube.com/watch?v=oiQG6tP3940][c'est mal]]).
-   2. *Le gestionnaire* de Bases de Données (dans un SGBD existant) qui doit connaître  *sql* (Structured Query Language) : création (CREATE TABLE), modification (ALTER TABLE), suppression (DROP TABLE) de tables...     
-   3. *L'utilisateur final* de la base de donnée. Il va interagir avec tout ou partie de la base de donnée à travers une application se voulant conviviale; il n'a pas à connaître *sql*.
+   De façon générale, trois types d'*utilisateurs* ayant chacun des *rôles* bien distincts sont à distinguer :
+   1. *L'administrateur* du SGBD et donc des Bases de Données. Il s'appelle ~root~. Son rôle est d'installer et gérer le SGBD dans sa globalité. Chaque fois que l'administrateur crée une base de données, il délègue sa gestion à un autre utilisateur à qui il donne les droits nécessaires. *Remarque:*  Il ne faut pas travailler sur une bases de données en tant que ~root~; ce n'est pas son rôle ([[https://www.youtube.com/watch?v=oiQG6tP3940][c'est mal]]).
+   2. *Le gestionnaire* de Bases de Données (dans un SGBD existant) qui doit connaître  *sql* (Structured Query Language) : création (CREATE TABLE), modification (ALTER TABLE), suppression (DROP TABLE) de tables...     
+   3. *L'utilisateur final* de la base de donnée. Il va interagir avec tout ou partie de la base de donnée à travers une application se voulant conviviale; il n'a pas à connaître *sql*.
 
 
-Le SGBD permet de créer différents utilisateurs avec des droits spécifiques, mais il permet aussi de créer différents rôles correspondant à des droits spécifiques ce qui rend la gestion d'utilisateurs ayant des droits identiques plus efficace.
+Le SGBD permet de créer différents utilisateurs avec des droits spécifiques, mais il permet aussi de créer différents rôles correspondant à des droits spécifiques ce qui rend la gestion d'utilisateurs ayant des droits identiques plus efficace.
 
-** Création d'un utilisateur =gestionnaire=
-   Utilisateur à qui ~root~ va donner les droits nécessaires pour créer ou modifier des tables dans la base de données =bd_gestion_des_notes= ou pour inscrire des utilisateurs.
+** Création d'un utilisateur =gestionnaire=
+   Utilisateur à qui ~root~ va donner les droits nécessaires pour créer ou modifier des tables dans la base de données =bd_gestion_des_notes= ou pour inscrire des utilisateurs.
 
 
-*** Méthode 1
+*** Méthode 1
 
-    On pourrait procéder ainsi: 
+    On pourrait procéder ainsi: 
 
    #+NAME: createusergestionnaire
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
@@ -194,12 +194,12 @@ Le SGBD permet de créer différents utilisateurs avec des droits spécifiques, 
      mysql -u user_gestionnaire -p
    #+END_SRC
 
-   Saisir le mot de passe précédemment défini. 
+   Saisir le mot de passe précédemment défini. 
 
 
-   Mais nous allons plutôt employer la seconde méthode (voir [[*Méthode 2]] ).
+   Mais nous allons plutôt employer la seconde méthode (voir [[*Méthode 2]] ).
 
-   Mais, en tant que ~root~, commençons par effacer (si besoin) l'utilisateur =gestionnaire= :\\
+   Mais, en tant que ~root~, commençons par effacer (si besoin) l'utilisateur =gestionnaire= :\\
 
    #+NAME: dropusergestionnaire
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
@@ -208,9 +208,9 @@ Le SGBD permet de créer différents utilisateurs avec des droits spécifiques, 
    #+END_SRC		
 
 
-*** Méthode 2
+*** Méthode 2
 
-    - Création du rôle de gestionnaire
+    - Création du rôle de gestionnaire
 
     #+NAME: createrolegestionnaire
     #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
@@ -221,7 +221,7 @@ Le SGBD permet de créer différents utilisateurs avec des droits spécifiques, 
       TO role_gestionnaire;
     #+END_SRC
 
-    - Si le "stil" et le "proviseur" sont habilités à endosser ce rôle
+    - Si le "stil" et le "proviseur" sont habilités à endosser ce rôle
 
     #+NAME: createusersgestionnaire
     #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
@@ -237,7 +237,7 @@ Le SGBD permet de créer différents utilisateurs avec des droits spécifiques, 
       SET DEFAULT ROLE role_gestionnaire FOR proviseur@localhost;
     #+END_SRC  
 
-    - Pour vérifier le rôle de l'utilisateur connecté:
+    - Pour vérifier le rôle de l'utilisateur connecté:
     #+NAME: verifierrole
     #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
     #+BEGIN_SRC sql
@@ -245,8 +245,8 @@ Le SGBD permet de créer différents utilisateurs avec des droits spécifiques, 
     #+END_SRC
 
 
-** Mot de passe et sécurité
-Les mots de passe précédents seront à utiliser lors de la première connexion. Ensuite, pour des raisons évidentes de sécurité, les utilisateurs doivent se voir proposer un moyen de changer leur mot de passe. 
+** Mot de passe et sécurité
+Les mots de passe précédents seront à utiliser lors de la première connexion. Ensuite, pour des raisons évidentes de sécurité, les utilisateurs doivent se voir proposer un moyen de changer leur mot de passe. 
 
 La commande sql est la suivante:
     #+NAME: changerpwd
@@ -255,20 +255,20 @@ La commande sql est la suivante:
       SET PASSWORD FOR 'proviseur'@'localhost' = PASSWORD('pro');
     #+END_SRC
 
-Mais l'utilisateur final de la BD n'a pas à connaître sql c'est donc à l'application de proposer cette possibilité.
+Mais l'utilisateur final de la BD n'a pas à connaître sql c'est donc à l'application de proposer cette possibilité.
 
 
 * Afficher les utilisateurs
 ** Afficher tous les utilisateurs (en tant qu'administrateur)
 
-   Connecté en ~root~ saisir la commande:
+   Connecté en ~root~ saisir la commande:
    #+NAME: showallusers
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
    #+BEGIN_SRC sql
      select host, user from mysql.user;
    #+END_SRC
 
-** Afficher l'utilisateur connecté
+** Afficher l'utilisateur connecté
 
    Deux commandes possibles pour cela:
    #+NAME: showcurrentuser
@@ -286,10 +286,10 @@ Mais l'utilisateur final de la BD n'a pas à connaître sql c'est donc à l'appl
    #+END_SRC
 
 
-* Gestion de la base de données
+* Gestion de la base de données
 
 
-** Lister les bases de données (auxquelles le gestionnaire a accès)
+** Lister les bases de données (auxquelles le gestionnaire a accès)
 
    #+NAME: showdatabases2
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
@@ -297,8 +297,8 @@ Mais l'utilisateur final de la BD n'a pas à connaître sql c'est donc à l'appl
      SHOW DATABASES;
    #+END_SRC
 
-** Se connecter à une base de données
-   Pour utiliser la base de donnée ~bd_gestion_des_notes~:
+** Se connecter à une base de données
+   Pour utiliser la base de donnée ~bd_gestion_des_notes~:
  
    #+NAME: usebd_gestion_des_notes
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
@@ -322,7 +322,7 @@ Mais l'utilisateur final de la BD n'a pas à connaître sql c'est donc à l'appl
     DESCRIBLE nom_table;
   #+END_SRC
 
-** Créer une nouvelle table
+** Créer une nouvelle table
 
    #+NAME: createtable
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
@@ -333,7 +333,7 @@ Mais l'utilisateur final de la BD n'a pas à connaître sql c'est donc à l'appl
      );
    #+END_SRC
  
-** Ajouter une colonne à une table
+** Ajouter une colonne à une table
    #+NAME: addcolumn
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
    #+BEGIN_SRC sql
@@ -375,7 +375,7 @@ Mais l'utilisateur final de la BD n'a pas à connaître sql c'est donc à l'appl
    - Server: ~localhost~
 
 ** Si emacs ne trouve pas le programme mysql
-   - Déterminer l'emplacement de ~mysql~ avec la commande:
+   - Déterminer l'emplacement de ~mysql~ avec la commande:
    #+NAME: whishsql
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{shell}},  labelposition = topline, samepage = t
    #+BEGIN_SRC shell
@@ -391,10 +391,10 @@ Mais l'utilisateur final de la BD n'a pas à connaître sql c'est donc à l'appl
      (add-to-list 'exec-path "/usr/local/bin")
    #+END_SRC
 
-   Emacs recherche les programmes dans les répertoires listés dans la variable ~exec-path~. On a ajouté  ~/usr/local/bin~ à cette variable.
+   Emacs recherche les programmes dans les répertoires listés dans la variable ~exec-path~. On a ajouté  ~/usr/local/bin~ à cette variable.
 
 ** Faciliter la connexion 
-   À placer dans ~.emacs.d/init.el~
+   À placer dans ~.emacs.d/init.el~
    #+NAME: connexionfacile
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{elisp}},  labelposition = topline, samepage = t
    #+BEGIN_SRC elisp
@@ -410,13 +410,13 @@ Mais l'utilisateur final de la BD n'a pas à connaître sql c'est donc à l'appl
        )
    #+END_SRC
 
-   Connexion acilitée, toujours avec la commande ~M-x sql-mysql~ et dorénavant il ne reste plus qu'à saisir le mot de passe utilisateur (en l'occurrence: ~gestionnaire~); le reste étant renseigné à l'avance.
+   Connexion acilitée, toujours avec la commande ~M-x sql-mysql~ et dorénavant il ne reste plus qu'à saisir le mot de passe utilisateur (en l'occurrence: ~gestionnaire~); le reste étant renseigné à l'avance.
 
-** Mots clés automatiquement en majuscule
+** Mots clés automatiquement en majuscule
 
-   SQLUP-MODE permet d'écrire les mots clés SQL en majuscule.
+   SQLUP-MODE permet d'écrire les mots clés SQL en majuscule.
 
-   Les lignes suivantes sont  à placer dans le fichier ~init.el~:
+   Les lignes suivantes sont  à placer dans le fichier ~init.el~:
 
    #+NAME: sqlup
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{elisp}},  labelposition = topline, samepage = t
@@ -447,9 +447,9 @@ Mais l'utilisateur final de la BD n'a pas à connaître sql c'est donc à l'appl
    #+END_SRC
 
 
-* Exécuter un script sql
+* Exécuter un script sql
 
-  Il faut déclarer le fichier SQL comme source:
+  Il faut déclarer le fichier SQL comme source:
 
    #+NAME: source
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
@@ -476,8 +476,90 @@ Mais l'utilisateur final de la BD n'a pas à connaître sql c'est donc à l'appl
 ** source
   https://github.com/ragardner/tksheet
 
-** paramètres
+** paramètres
    https://github.com/ragardner/tksheet/blob/master/DOCUMENTATION.md
 
 ** fonctions
    https://github.com/ragardner/tksheet/blob/master/tksheet/_tksheet.py
+
+
+* Fonctionnalités  et Modèle Conceptuel des Données (MCD)
+
+Les fonctionnalités attendues sont les suivantes :
+
+** Ajout de discipline ;
+
+   Seuls les utilisateurs ayant le statut (= rôle au sens sql) de *gestionnaire*  sont habilités à ajouter des disciplines.
+
+   - 1 gestionnaire peut ajouter une ou plusieurs disciplines
+   - 1 discipline peut être ajoutée par 1 gestionnaire 
+
+#+BEGIN_SRC ditaa :file MCD displines.png
+
++-------------+     1..n     /------------\       1      +------------+
++gestionnaires+--------------+ajouter cYEL+--------------+disciplines +
++-------------+              \------------/              +------------+
+   
+
+#+END_SRC
+
+#+RESULTS:
+[[file:MCD displines.png]]
+
+
+** Ajout d'enseignants ;
+** Ajout d'élèves ;
+** Créer les classes chaque année pour chaque niveau ;
+** Affecter les notes d'une discipline donnée par un professeur à un élève ;
+** Calculer les moyennes et autres statistiques liées aux notes.
+
+
+#+begin_src ditaa :file some_filename.png 
+
+
+    +-----------+        +---------+  
+    |    PLC    |        |         |                
+    |  Network  +<------>+   PLC   +<---=---------+ 
+    |    cRED   |        |  c707   |              | 
+    +-----------+        +----+----+              | 
+                              ^                   | 
+                              |                   | 
+                              |  +----------------|-----------------+
+                              |  |                |                 |
+                              v  v                v                 v
+      +----------+       +----+--+--+      +-------+---+      +-----+-----+       Windows clients
+      |          |       |          |      |           |      |           |      +----+      +----+
+      | Database +<----->+  Shared  +<---->+ Executive +<-=-->+ Operator  +<---->|cYEL| . . .|cYEL|
+      |   c707   |       |  Memory  |      |   c707    |      | Server    |      |    |      |    |
+      +--+----+--+       |{d} cGRE  |      +------+----+      |   c707    |      +----+      +----+
+         ^    ^          +----------+             ^           +-------+---+
+         |    |                                   |                        
+         |    +--------=--------------------------+                    
+         v                                                             
++--------+--------+                                                         
+|                 |                                                         
+| Millwide System |            -------- Data ---------                      
+| cBLU            |            --=----- Signals ---=--                      
++-----------------+
+
+
+
+
+
+#+end_src
+
+#+RESULTS:
+[[file:some_filename.png]]
+ 
+
+
+
+
+#+BEGIN_SRC ditaa :file foo.png
+  +-------+
+  | Hello |
+  +-------+
+#+END_SRC
+
+#+RESULTS:
+[[file:foo.png]]

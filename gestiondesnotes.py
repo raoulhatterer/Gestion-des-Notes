@@ -17,14 +17,14 @@ from tksheet import Sheet
 
 # dans emacs activer l'environnement virtuel python3.8
 
-# Au préalable:
+# Au préalable:
 # -------------
-# À partir du Terminal se rendre dans le dossier où se trouve les scripts
-# Se connecter en tant que root à mysql avec                           
+# À partir du Terminal se rendre dans le dossier où se trouve les scripts
+# Se connecter en tant que root à mysql avec                           
 # mysql -u root -p                                                     
 # Dans l'invite de commande MariaDB> entrer:                             
 # SOURCE ./initdb_gestiondesnotes.sql;                                 
-# pour créer la base de données et les utlisateurs stil et gestionnaire
+# pour créer la base de données et les utlisateurs stil et gestionnaire
 # et initialiser les tables de la BD.
 
 # ------------------------------------------------------------------------------
@@ -37,14 +37,14 @@ user_role = None
 
 
 # # ------------------------------------------------------------------------------
-# # VÉRIFICATION de l'ACCESSIBILITÉ de la BASE DE DONNÉES
+# # VÉRIFICATION de l'ACCESSIBILITÉ de la BASE DE DONNÉES
 # # ------------------------------------------------------------------------------
 
 # # pas forcement utile
 
 # def verif_base_accesible():
 #     """
-#     Tente la connexion à la base de données avec un compte à droits restreints 
+#     Tente la connexion à la base de données avec un compte à droits restreints 
 #     """
 #     GN_user = 'first_connection'
 #     GN_password = 'first_connection'
@@ -69,13 +69,37 @@ user_role = None
 #             connection.close()
 #             print("MySQL connection is closed")
 
+
+
 # ------------------------------------------------------------------------------
-# MON COMPTE
+# AFFICHAGE NOTEBOOK
+# ------------------------------------------------------------------------------
+
+def afficher_notebook_gestionnaire():
+    """
+    Affiche le notebook avec tous les onglets
+    """
+    afficher_compte_admin()
+    notebook.add(f1, text="Disciplines")
+    notebook.add(f2, text="Enseignants")
+    notebook.add(f3, text="Élèves")
+    notebook.add(f4, text="Classes")
+    afficher_disciplines()
+    afficher_professeurs()
+    afficher_eleves()
+    afficher_classes()
+
+
+
+
+
+# ------------------------------------------------------------------------------
+# GESTION COMPTE
 # ------------------------------------------------------------------------------
 
 def connexion(event=None):
     """
-    Tente la connexion à la base de données avec les identifiants que l'utilisateur a saisi dans l'IHM
+    Tente la connexion à la base de données avec les identifiants que l'utilisateur a saisi dans l'IHM
     """
     global cursor, GN_user, GN_password
     GN_user = user_entry_text.get()
@@ -88,7 +112,7 @@ def connexion(event=None):
 
 def sql_read_role():
     """
-    Se connecte à MySQL et retourne le rôle de l'utilisateur parmi : role_gestionnaire...
+    Se connecte à MySQL et retourne le rôle de l'utilisateur parmi : role_gestionnaire...
     """
     global cursor, GN_user, GN_password
     try:
@@ -114,25 +138,9 @@ def sql_read_role():
         messagebox.showwarning("Erreur de connexion", "Identifiant ou mot de passe non valide")
     
         
-        
-
-def afficher_notebook_gestionnaire():
-    """
-    Affiche le notebook avec tous les onglets
-    """
-    afficher_compte_admin()
-    notebook.add(f1, text="Disciplines")
-    notebook.add(f2, text="Enseignants")
-    notebook.add(f3, text="Élèves")
-    notebook.add(f4, text="Classes")
-    afficher_disciplines()
-    afficher_professeurs()
-    afficher_eleves()
-    afficher_classes()
-
 def sql_read_admin():
     """
-    Se connecte à Mysql et retourne les données concernant le gestionnaire à partir de la jonction des deux tables Àdministraterus`et `Fonctions`. 
+    Se connecte à Mysql et retourne les données concernant le gestionnaire à partir de la jonction des deux tables Àdministraterus`et `Fonctions`. 
     """
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")
@@ -154,7 +162,7 @@ def sql_read_admin():
         return(records)
     except Error as e:
         print("Error while connecting to MySQL", e)
-        messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
+        messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
 
 
 def afficher_compte_admin():
@@ -169,13 +177,13 @@ def afficher_compte_admin():
     frame_compte.grid_rowconfigure(0, minsize=100)
     frame_compte.grid_columnconfigure(0, minsize=100)    
     # column1
-    button_deconnect = tk.Button(frame_compte, text='Déconnexion',
+    button_deconnect = tk.Button(frame_compte, text='Déconnexion',
                                  command=deconnexion)
     button_deconnect.grid(row=1,column=2, sticky=tk.W)
     frame_compte.grid_rowconfigure(2, minsize=20)    
     lbl_login = tk.Label(frame_compte, text="Login")
     lbl_login.grid(row=3, column=1, sticky=tk.E)
-    lbl_prenom = tk.Label(frame_compte, text="Prénom")
+    lbl_prenom = tk.Label(frame_compte, text="Prénom")
     lbl_prenom.grid(row=4, column=1, sticky=tk.E)
     lbl_nom = tk.Label(frame_compte, text="Nom")
     lbl_nom.grid(row=5, column=1, sticky=tk.E)
@@ -239,13 +247,13 @@ def afficher_compte_admin():
 def change_password():
     """
     Affichage d'une IHM permettant de changer le mot de passe de l'utilisateur.
-    Déconnections du compte à l'issue du changement de mot de passe. 
+    Déconnections du compte à l'issue du changement de mot de passe. 
     """
     global frame_new_password, GN_password
 
-    def check_new_password():
+    def sql_change_password_if_valid():
         """
-        Contrôle la validité du nouveau mot de passe
+        Contrôle la validité du nouveau mot de passe puis le modifie
         """
         global GN_password
         GN_new_password = new_password_entry_text.get()
@@ -273,9 +281,9 @@ def change_password():
                 print("Error while connecting to MySQL", e)
                 messagebox.showwarning("Erreur de connexion", "Identifiant ou mot de passe non valide")
         else:
-            messagebox.showwarning("Erreur de saisie", "Nouveau mot de passe non confirmé")
+            messagebox.showwarning("Erreur de saisie", "Nouveau mot de passe non confirmé")
 
-                
+    # IHM New Password
     frame_compte.destroy()
     bullet = "●"
     frame_new_password = tk.Frame(f0)
@@ -307,7 +315,7 @@ def change_password():
     button_cancel.grid(row=0, column=0)
     frame_boutons.grid_columnconfigure(1, minsize=40)    
     button_save = tk.Button(frame_boutons, text='Enregistrer',
-                             command=check_new_password)
+                             command=sql_change_password_if_valid)
     button_save.grid(row=0, column=2)
     frame_boutons.grid(row=6, column=1)
     # raw7
@@ -328,7 +336,7 @@ def annuler_new_password():
     
 def sql_save_compte_admin():
     """
-    Se connecte à MySQL pour sauvegarder les données du compte administrateur dans la table Administrateurs
+    Se connecte à MySQL pour sauvegarder les données du compte administrateur dans la table Administrateurs
     """
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")
@@ -355,12 +363,12 @@ def sql_save_compte_admin():
             
 def deconnexion():
     """
-    Déconnexion du compte et retour à l'IHM de connexion 
+    Déconnexion du compte et retour à l'IHM de connexion 
     """
     frame_compte.destroy()
     notebook.hide(1)  # Disciplines
     notebook.hide(2)  # Enseignants
-    notebook.hide(3)  # Élèves
+    notebook.hide(3)  # Élèves
     notebook.hide(4)  # Classes  
     afficher_IHM_connexion()
 
@@ -406,12 +414,12 @@ def afficher_IHM_connexion():
 
 def sql_read_disciplines():
     """
-    Fonction appelée par 'afficher_disciplines()'
-    Retourne un tupple conteant 'disc_Id' et 'disc_Name'.
-    disc_Id : liste contenant tous les index générés de façon automatique de
-    la table Discipline de la base de données 'bd_gestion_des_notes'.
+    Fonction appelée par 'afficher_disciplines()'
+    Retourne un tupple conteant 'discipline_id' et 'disc_Name'.
+    discipline_id : liste contenant tous les index générés de façon automatique de
+    la table Discipline de la base de données 'bd_gestion_des_notes'.
     disc_Name : liste contenant tous les noms des disciplines (dans l'ordre
-    alphabétique) contenus dans la table Discipline de la base de données
+    alphabétique) contenus dans la table Discipline de la base de données
     'bd_gestion_des_notes'.
     """
     global GN_password
@@ -424,20 +432,20 @@ def sql_read_disciplines():
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server version", db_Info)
         cursor = connection.cursor()
-        cursor.execute("select Disc_Id, Disc_Name from Disciplines ORDER BY Disc_Name ASC;")
+        cursor.execute("select discipline_id, Disc_Name from Discipline ORDER BY Disc_Name ASC;")
         records = cursor.fetchall()
         # print(records)
-        print("All discipline of Disciplines (", cursor.rowcount, "): ")
-        disc_Id, disc_Name = list(), list()
+        print("All discipline of Discipline (", cursor.rowcount, "): ")
+        discipline_id, disc_Name = list(), list()
         for row in records:
             # print("\t", row)
-            disc_Id += [row[0]]
+            discipline_id += [row[0]]
             disc_Name += [[row[1]]]  # liste de liste requise pour un affichage modifiable avec tksheet
 
         cursor.close()
         connection.close()
         print("MySQL connection is closed")
-        return (disc_Id, disc_Name)
+        return (discipline_id, disc_Name)
     
     except Error as e:
         print("Error while connecting to MySQL", e)
@@ -449,10 +457,11 @@ def afficher_disciplines():
     """
     Affiche un tableau de type tableur avec toutes les disciplines (IHM)
     """
-    global sheet_disciplines, disc_Id, disc_Name
-    disc_Id, disc_Name = sql_read_disciplines()
+    global sheet_disciplines, discipline_id, disc_Name
+    discipline_id, disc_Name = sql_read_disciplines()
     sheet_disciplines = Sheet(f1,
                               data=disc_Name,  # to set sheet data at startup
+                              column_width = 250,
                               height=600,
                               width=800)
     # sheet_disciplines.hide("row_index")
@@ -471,8 +480,8 @@ def afficher_disciplines():
 
 def enregistrer_disciplines():
     """
-    Met à jour la base de données en y ajoutant d'éventuelles nouvelles
-    disciplines puis rafraîchi l'ÌHM 
+    Met à jour la base de données en y ajoutant d'éventuelles nouvelles
+    disciplines puis rafraîchi l'ÌHM 
     """
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")
@@ -482,15 +491,15 @@ def enregistrer_disciplines():
                                              password=GN_password)
         cursor = connection.cursor()
         for index in range(len(disc_Name)):
-            sql = "UPDATE Disciplines SET Disc_Name = %s WHERE Disc_Id = %s"
-            discipline = (disc_Name[index][0], disc_Id[index])
+            sql = "UPDATE Discipline SET Disc_Name = %s WHERE discipline_id = %s"
+            discipline = (disc_Name[index][0], discipline_id[index])
             cursor.execute(sql, discipline)
             connection.commit()
-        # déconnexion
+        # déconnexion
         cursor.close()
         connection.close()
         print("MySQL connection is closed")
-        # rafraîchissement IHM
+        # rafraîchissement IHM
         sheet_disciplines.destroy()
         afficher_disciplines()
 
@@ -501,14 +510,14 @@ def enregistrer_disciplines():
 
 def ajouter_discipline():
     """
-    Ajoute une discipline 'À définir' dans le tableau des disciplines (et dans
-    la base de données) et sélectionne la ligne. Commence par enregistrer
-    l'état précédent du tableau dans la base de données dans le cas où
-    l'utilisateur enchaîne les ajouts.
+    Ajoute une discipline 'À définir' dans le tableau des disciplines (et dans
+    la base de données) et sélectionne la ligne. Commence par enregistrer
+    l'état précédent du tableau dans la base de données dans le cas où
+    l'utilisateur enchaîne les ajouts.
     """
     enregistrer_disciplines()
     global sheet_disciplines
-    sql = "INSERT INTO Disciplines (Disc_Name) VALUES ('À définir')"
+    sql = "INSERT INTO Disciplines (Disc_Name) VALUES ('À définir')"
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
@@ -525,7 +534,7 @@ def ajouter_discipline():
         print("Error while connecting to MySQL", e)
     sheet_disciplines.destroy()
     afficher_disciplines()
-    sheet_disciplines.select_row(disc_Name.index(['À définir']))
+    sheet_disciplines.select_row(disc_Name.index(['À définir']))
 
 
 # ------------------------------------------------------------------------------
@@ -534,14 +543,14 @@ def ajouter_discipline():
 
 def sql_read_professeurs():
     """
-    Fonction appelée par 'afficher_professeurs()'
-    Retourne un tupple conteant: 'prof_Id', 'prof_Name', 'prof_Print'.
-    prof_Id : liste contenant tous les index générés de façon automatique de
-    la table 'Professeurs' de la base de données 'bd_gestion_des_notes'.
+    Fonction appelée par 'afficher_professeurs()'
+    Retourne un tupple conteant: 'professeur_id', 'prof_Name', 'prof_Print'.
+    professeur_id : liste contenant tous les index générés de façon automatique de
+    la table 'Professeur' de la base de données 'bd_gestion_des_notes'.
     prof_Name : liste contenant tous les noms des professeurs (dans l'ordre
-    alphabétique) contenus dans la table Discipline de la base de données
+    alphabétique) contenus dans la table Discipline de la base de données
     'bd_gestion_des_notes'.
-    'prof_Print': liste affichée dans l'onglet Professeurs
+    'prof_Print': liste affichée dans l'onglet Professeurs
     """
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")
@@ -552,14 +561,14 @@ def sql_read_professeurs():
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server version", db_Info)
         cursor = connection.cursor()
-        cursor.execute("select Prof_Id, FirstName, LastName, Disc_Name, Gender FROM Professeurs INNER JOIN Disciplines WHERE Professeurs.Disc_Id = Disciplines.Disc_Id ORDER BY LastName ASC")        
+        cursor.execute("select professeur_id, FirstName, LastName, Disc_Name, Gender FROM Professeur INNER JOIN Discipline WHERE Professeur.discipline_id = Discipline.discipline_id ORDER BY LastName ASC")        
         records = cursor.fetchall()
         # print(records)
         print("All professeur of Professeurs (", cursor.rowcount, "): ") 
-        prof_Id, prof_Print, prof_Name = list(), list(), list()
+        professeur_id, prof_Print, prof_Name = list(), list(), list()
         for row in records:
             # print("\t", row)
-            prof_Id += [row[0]]
+            professeur_id += [row[0]]
             prof_Name += [row[2]]
             if row[4] == 'M':
                 prof_Print += [['M', row[1], row[2], row[3]]]
@@ -572,18 +581,18 @@ def sql_read_professeurs():
         print("MySQL connection is closed")
     except Error as e:
         print("Error while connecting to MySQL", e)
-    return (prof_Id, prof_Name, prof_Print)
+    return (professeur_id, prof_Name, prof_Print)
 
 
 def afficher_professeurs():
     """
     Affiche un tableau de type tableur avec toutes les professeurs (IHM)
     """
-    global sheet_professeurs, prof_Id, prof_Name, prof_Print
-    prof_Id, prof_Name, prof_Print = sql_read_professeurs()
+    global sheet_professeurs, professeur_id, prof_Name, prof_Print
+    professeur_id, prof_Name, prof_Print = sql_read_professeurs()
     sheet_professeurs = Sheet(f2,
                               data=prof_Print,  # to set sheet data at startup
-                              headers=["Titre", "Nom", "Prénom", "Discipline"],
+                              headers=["Titre", "Nom", "Prénom", "Discipline"],
                               height=600,
                               width=800)
     # sheet_professeurs.hide("row_index")
@@ -602,7 +611,7 @@ def afficher_professeurs():
 
 def enregistrer_professeurs():
     """
-    Met à jour la base de données en y ajoutant d'éventuelles modifications puis rafraîchi l'IHM pour une remise dans l'ordre alphabétique.
+    Met à jour la base de données en y ajoutant d'éventuelles modifications puis rafraîchi l'IHM pour une remise dans l'ordre alphabétique.
     """
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")
@@ -613,34 +622,34 @@ def enregistrer_professeurs():
         cursor = connection.cursor()
         for index in range(len(prof_Name)):
             if [prof_Print[index][3]] not in disc_Name:
-                messagebox.showerror("Erreur", f"Cette discipline n'est pas enregistrée: {prof_Print[index][3]}")
+                messagebox.showerror("Erreur", f"Cette discipline n'est pas enregistrée: {prof_Print[index][3]}")
             else:
-                sql = "UPDATE Professeurs SET FirstName=%s, LastName=%s, Disc_Id=%s, Gender=%s WHERE Prof_Id = %s"
+                sql = "UPDATE Professeur SET FirstName=%s, LastName=%s, discipline_id=%s, Gender=%s WHERE professeur_id = %s"
                 if prof_Print[index][0] in ['M', 'M.']:
                     professeur = (prof_Print[index][1],  # FirstName
                                   prof_Print[index][2],  # LastName
-                                  disc_Id[disc_Name.index([prof_Print[index][3]])],  # from Disc_Name to Disc_Id
+                                  discipline_id[disc_Name.index([prof_Print[index][3]])],  # from Disc_Name to discipline_id
                                   'M',
-                                  prof_Id[index])
+                                  professeur_id[index])
                 elif prof_Print[index][0] in ['Mme', 'Mme.']:
                     professeur = (prof_Print[index][1],  # FirstName 
                                   prof_Print[index][2],  # LastName  
-                                  disc_Id[disc_Name.index([prof_Print[index][3]])],  # from Disc_Name to Disc_Id
+                                  discipline_id[disc_Name.index([prof_Print[index][3]])],  # from Disc_Name to discipline_id
                                   'F',
-                                  prof_Id[index])
+                                  professeur_id[index])
                 else:
                     professeur = (prof_Print[index][1],  # FirstName 
                                   prof_Print[index][2],  # LastName  
-                                  disc_Id[disc_Name.index([prof_Print[index][3]])],  # from Disc_Name to Disc_Id
+                                  discipline_id[disc_Name.index([prof_Print[index][3]])],  # from Disc_Name to discipline_id
                                   None,
-                                  prof_Id[index])
+                                  professeur_id[index])
                 # print(professeur)
                 cursor.execute(sql, professeur)
                 connection.commit()
                 cursor.close()
                 connection.close()
                 print("MySQL connection is closed")
-        # Rafraîchissement IHM
+        # Rafraîchissement IHM
         sheet_professeurs.destroy()
         afficher_professeurs()
 
@@ -651,16 +660,16 @@ def enregistrer_professeurs():
 def ajouter_professeur():
     """
     Ajoute un nouveau professeur dans le tableau des professeurs (et dans
-    la base de données) et sélectionne la ligne. Commence par enregistrer
-    l'état précédent du tableau dans la base de données dans le cas où
-    l'utilisateur enchaîne les ajouts.
+    la base de données) et sélectionne la ligne. Commence par enregistrer
+    l'état précédent du tableau dans la base de données dans le cas où
+    l'utilisateur enchaîne les ajouts.
     """
     enregistrer_professeurs()
-    global sheet_professeurs, disc_Name, disc_Id
-    if ['À définir'] not in disc_Name:
+    global sheet_professeurs, disc_Name, discipline_id
+    if ['À définir'] not in disc_Name:
         ajouter_discipline()
-    sql = "INSERT INTO Professeurs (FirstName, LastName, Disc_Id) VALUES (%s, %s, %s)"
-    prof_nouveau = ('* Prénom ? *', '* Nom ? *', disc_Id[disc_Name.index(['À définir'])])
+    sql = "INSERT INTO Professeurs (FirstName, LastName, discipline_id) VALUES (%s, %s, %s)"
+    prof_nouveau = ('* Prénom ? *', '* Nom ? *', discipline_id[disc_Name.index(['À définir'])])
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
@@ -682,18 +691,18 @@ def ajouter_professeur():
         print("Error while connecting to MySQL", e)
 
 # ------------------------------------------------------------------------------
-# ÉLÈVES
+# ÉLÈVES
 # ------------------------------------------------------------------------------
 
 def sql_read_eleves():
     """
-    Fonction appelée par 'afficher_eleves()'
-    Retourne un tupple conteant 'eleves_Id', 'eleves_Name', eleves_Print.
-    eleves_Id : liste contenant tous les index générés de façon automatique de
-    la table 'Eleves' de la base de données 'bd_gestion_des_notes'.
-    eleves_Name : liste contenant tous les noms des élèves (dans l'ordre
-    alphabétique) contenus dans la table 'Eleves' de la base de données
-    'eleves_Print': liste affichée dans l'onglet élèves sous forme de tableau
+    Fonction appelée par 'afficher_eleves()'
+    Retourne un tupple conteant 'eleve_id', 'eleves_Name', eleves_Print.
+    eleve_id : liste contenant tous les index générés de façon automatique de
+    la table 'Eleve' de la base de données 'bd_gestion_des_notes'.
+    eleves_Name : liste contenant tous les noms des élèves (dans l'ordre
+    alphabétique) contenus dans la table 'Eleve' de la base de données
+    'eleves_Print': liste affichée dans l'onglet élèves sous forme de tableau
     """
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")
@@ -704,20 +713,20 @@ def sql_read_eleves():
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server version", db_Info)
         cursor = connection.cursor()
-        cursor.execute("select Eleve_Id, FirstName, LastName, Gender, Classe_Id FROM Eleves ORDER BY LastName ASC")        
+        cursor.execute("select eleve_id, FirstName, LastName, Gender, Classe_Id FROM Eleve ORDER BY LastName ASC")        
         records = cursor.fetchall()
         # print(records)
         print("All eleve of Eleves (", cursor.rowcount, "): ")
-        eleves_Id, eleves_Print, eleves_Name = list(), list(), list()
+        eleve_id, eleves_Print, eleves_Name = list(), list(), list()
         for row in records:
             # print("\t", row)
-            eleves_Id += [row[0]]
+            eleve_id += [row[0]]
             eleves_Name += [row[2]]
             eleves_Print += [[row[2], row[1], row[3], row[4]]]  # LastName, FirstName, Gender, Classe_Id
         cursor.close()
         connection.close()
         print("MySQL connection is closed")
-        return (eleves_Id, eleves_Name, eleves_Print)
+        return (eleve_id, eleves_Name, eleves_Print)
     except Error as e:
         print("Error while connecting to MySQL", e)
 
@@ -725,13 +734,13 @@ def sql_read_eleves():
 
 def afficher_eleves():
     """
-    Affiche un tableau de type tableur avec toutes les élèves (IHM)
+    Affiche un tableau de type tableur avec toutes les élèves (IHM)
     """
-    global sheet_eleves, eleves_Id, eleves_Name, eleves_Print
-    eleves_Id, eleves_Name, eleves_Print = sql_read_eleves()
+    global sheet_eleves, eleve_id, eleves_Name, eleves_Print
+    eleve_id, eleves_Name, eleves_Print = sql_read_eleves()
     sheet_eleves = Sheet(f3,
                          data=eleves_Print,  # to set sheet data at startup
-                         headers=["Nom", "Prénom", "Genre", "Classe"],
+                         headers=["Nom", "Prénom", "Genre", "Classe"],
                          height=600,
                          width=800)
     # sheet_eleves.hide("row_index")
@@ -750,7 +759,7 @@ def afficher_eleves():
 
 def enregistrer_eleves():
     """
-    Met à jour la base de données en y ajoutant d'éventuelles modifications puis rafraîchi l'IHM
+    Met à jour la base de données en y ajoutant d'éventuelles modifications puis rafraîchi l'IHM
     """
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")
@@ -760,19 +769,19 @@ def enregistrer_eleves():
                                              password=GN_password)
         cursor = connection.cursor()
         for index in range(len(eleves_Name)):
-            sql = "UPDATE Eleves SET FirstName=%s, LastName=%s, Gender=%s, Classe_Id=%s WHERE Eleve_Id = %s"
+            sql = "UPDATE Eleve SET FirstName=%s, LastName=%s, Gender=%s, Classe_Id=%s WHERE eleve_id = %s"
             eleve = (eleves_Print[index][1],  # FirstName
                      eleves_Print[index][0],  # LastName
                      eleves_Print[index][2],  # Gender
                      eleves_Print[index][3],  # Classe_Id
-                     eleves_Id[index])
+                     eleve_id[index])
             # print(eleve)
             cursor.execute(sql, eleve)
             connection.commit()
             cursor.close()
             connection.close()
             print("MySQL connection is closed")
-        # Rafraîchissement
+        # Rafraîchissement
         sheet_eleves.destroy()
         afficher_eleves()
 
@@ -782,15 +791,15 @@ def enregistrer_eleves():
 
 def ajouter_eleve():
     """
-    Ajoute un nouvel élève dans le tableau des élèves (et dans
-    la base de données) et sélectionne la ligne. Commence par enregistrer
-    l'état précédent du tableau dans la base de données dans le cas où
-    l'utilisateur enchaîne les ajouts.
+    Ajoute un nouvel élève dans le tableau des élèves (et dans
+    la base de données) et sélectionne la ligne. Commence par enregistrer
+    l'état précédent du tableau dans la base de données dans le cas où
+    l'utilisateur enchaîne les ajouts.
     """
     enregistrer_eleves()
-    global sheet_eleves, disc_Name, disc_Id
-    sql = "INSERT INTO Eleves (FirstName, LastName, Gender) VALUES (%s, %s, %s)"
-    eleve_nouveau = ('* Prénom ? *', '* Nom ? *', 'M ou F')
+    global sheet_eleves, disc_Name, discipline_id
+    sql = "INSERT INTO Eleve (FirstName, LastName, Gender) VALUES (%s, %s, %s)"
+    eleve_nouveau = ('* Prénom ? *', '* Nom ? *', 'M ou F')
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
@@ -803,7 +812,7 @@ def ajouter_eleve():
         cursor.close()
         connection.close()
         print("MySQL connection is closed")
-        # Rafraîchissement
+        # Rafraîchissement
         sheet_eleves.destroy()
         afficher_eleves()
         row_index = eleves_Name.index('* Nom ? *')
@@ -818,14 +827,14 @@ def ajouter_eleve():
 
 def _charger_classes():
     """
-    Fonction appelée par 'afficher_classes()'
-    Retourne un tupple conteant 'classe_Id' et 'classe_Name'.
-    classe_Id : liste contenant tous les index générés de façon automatique de
-    la table Classes de la base de données 'bd_gestion_des_notes'.
+    Fonction appelée par 'afficher_classes()'
+    Retourne un tupple conteant 'classe_id' et 'classe_Name'.
+    classe_id : liste contenant tous les index générés de façon automatique de
+    la table Classes de la base de données 'bd_gestion_des_notes'.
     classe_Name : liste contenant tous les noms des classes (dans l'ordre
-    alphabétique) contenus dans la table Classes de la base de données
+    alphabétique) contenus dans la table Classes de la base de données
     'bd_gestion_des_notes'.
-    classe_Print :liste affichée dans l'onglet classes sous forme de tableau
+    classe_Print :liste affichée dans l'onglet classes sous forme de tableau
     """
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")
@@ -836,14 +845,14 @@ def _charger_classes():
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server version", db_Info)
         cursor = connection.cursor()
-        cursor.execute("select Classe_Id, Classe_Name, Classe_Date from Classes ORDER BY Classe_Name ASC;")
+        cursor.execute("select Classe_Id, Classe_Name, Classe_Date from Classe ORDER BY Classe_Name ASC;")
         records = cursor.fetchall()
         # print(records)
         print("All classe of Classes (", cursor.rowcount, "): ")
-        classe_Id, classe_Name, classe_Print = list(), list(), list()
+        classe_id, classe_Name, classe_Print = list(), list(), list()
         for row in records:
             # print("\t", row)
-            classe_Id += [row[0]]
+            classe_id += [row[0]]
             classe_Name += [row[1]]
             classe_Print += [[row[1], row[2]]]  # liste de liste requise pour un affichage modifiable avec tksheet
         cursor.close()
@@ -851,21 +860,22 @@ def _charger_classes():
         print("MySQL connection is closed")
     except Error as e:
         print("Error while connecting to MySQL", e)
-    return (classe_Id, classe_Name, classe_Print)
+    return (classe_id, classe_Name, classe_Print)
 
 def afficher_classes():
     """
     Affiche un tableau de type tableur avec toutes les classes
     """
-    global sheet_classes, classe_Id, classe_Name, classe_Print
-    classe_Id, classe_Name, classe_Print = _charger_classes()
+    global sheet_classes, classe_id, classe_Name, classe_Print
+    classe_id, classe_Name, classe_Print = _charger_classes()
     sheet_classes = Sheet(f4,
                           data=classe_Print,  # to set sheet data at startup
+                          headers=["Classe", "Période"],
                           height=600,
                           width=800)
     # sheet_classes.hide("row_index")
     sheet_classes.hide("top_left")
-    sheet_classes.hide("header")
+    # sheet_classes.hide("header")
     sheet_classes.grid(row=0, column=0, columnspan=2, sticky="nswe")
     sheet_classes.enable_bindings(("single_select",  # "single_select" or "toggle_select"
                                    "arrowkeys",
@@ -879,7 +889,7 @@ def afficher_classes():
 
 def enregistrer_classe():
     """
-    Met à jour la base de données en y ajoutant d'éventuelles nouvelles
+    Met à jour la base de données en y ajoutant d'éventuelles nouvelles
     classes.
     """
     try:
@@ -890,8 +900,8 @@ def enregistrer_classe():
                                              password=GN_password)
         cursor = connection.cursor()
         for index in range(len(classe_Name)):
-            sql = "UPDATE Classes SET Classe_Name = %s, Classe_Date = %s WHERE Classe_Id = %s"
-            classe = (classe_Print[index][0], classe_Print[index][1], classe_Id[index])
+            sql = "UPDATE Classe SET Classe_Name = %s, Classe_Date = %s WHERE Classe_Id = %s"
+            classe = (classe_Print[index][0], classe_Print[index][1], classe_id[index])
             cursor.execute(sql, classe)
             connection.commit()
             cursor.close()
@@ -905,14 +915,14 @@ def enregistrer_classe():
 
 def ajouter_classe():
     """
-    Ajoute une 'À définir' dans le tableau des disciplines (et dans
-    la base de données) et sélectionne la ligne. Commence par enregistrer
-    l'état précédent du tableau dans la base de données dans le cas où
-    l'utilisateur enchaîne les ajouts.
+    Ajoute une 'À définir' dans le tableau des disciplines (et dans
+    la base de données) et sélectionne la ligne. Commence par enregistrer
+    l'état précédent du tableau dans la base de données dans le cas où
+    l'utilisateur enchaîne les ajouts.
     """
     enregistrer_classe()
     global sheet_classes
-    sql = "INSERT INTO Classes (Classe_Name) VALUES ('À définir')"
+    sql = "INSERT INTO Classes (Classe_Name) VALUES ('À définir')"
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
@@ -929,7 +939,7 @@ def ajouter_classe():
         print("Error while connecting to MySQL", e)
     sheet_classes.destroy()
     afficher_classes()
-    sheet_classes.select_row(classe_Name.index('À définir'))
+    sheet_classes.select_row(classe_Name.index('À définir'))
 
 
 
@@ -954,7 +964,7 @@ notebook = ttk.Notebook(root, style="lefttab.TNotebook")
 f0 = tk.Frame(notebook, width=800, height=600)  # frame pour la connexion
 f1 = tk.Frame(notebook, width=800, height=600)  # frame pour les disciplines
 f2 = tk.Frame(notebook, width=800, height=600)  # frame pour les enseignants
-f3 = tk.Frame(notebook, width=800, height=600)  # frame pour les élèves
+f3 = tk.Frame(notebook, width=800, height=600)  # frame pour les élèves
 f4 = tk.Frame(notebook, width=800, height=600)  # frame pour les classes
 
 button_add_discipline = tk.Button(f1, text='Ajouter',

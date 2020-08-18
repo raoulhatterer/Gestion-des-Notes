@@ -1,0 +1,91 @@
+<html>
+<head>
+<meta charset='utf-8'>
+<style>
+  #mld .relation { font-variant: small-caps; font-weight: bold }
+  #mld .primary { text-decoration: underline }
+  #mld .foreign { font-style: oblique }
+  #mld .normal { }
+</style>
+</head>
+<body>
+<div id='mld'>
+<div>
+  <span class='relation'>Sous-Période</span> (
+    <span class='foreign primary'>année-scolaire</span>,
+    <span class='primary'>sous-période_id</span>
+  )
+</div>
+<div>
+  <span class='relation'>Évaluateur</span> (
+    <span class='foreign primary'>année-scolaire</span>,
+    <span class='foreign primary'>sous-période_id</span>,
+    <span class='primary'>professeur_id</span>
+  )
+</div>
+<div>
+  <span class='relation'>Évaluation</span> (
+    <span class='foreign primary'>année-scolaire</span>,
+    <span class='foreign primary'>sous-période_id</span>,
+    <span class='foreign primary'>professeur_id</span>,
+    <span class='primary'>evaluation_id</span>,
+    <span class='normal'>Date_Contrôle</span>,
+    <span class='normal'>Date_Note</span>
+  )
+</div>
+<div>
+  <span class='relation'>Noter</span> (
+    <span class='foreign primary'>année-scolaire</span>,
+    <span class='foreign primary'>sous-période_id</span>,
+    <span class='foreign primary'>professeur_id</span>,
+    <span class='foreign primary'>evaluation_id</span>,
+    <span class='foreign primary'>eleve_id</span>,
+    <span class='normal'>Note</span>
+  )
+</div>
+<div>
+  <span class='relation'>Élève</span> (
+    <span class='primary'>eleve_id</span>,
+    <span class='normal'>FirstName</span>,
+    <span class='normal'>LastName</span>,
+    <span class='foreign'>année-scolaire</span>,
+    <span class='foreign'>classe_id</span>
+  )
+</div>
+<div>
+  <span class='relation'>Discipline</span> (
+    <span class='primary'>discipline_id</span>,
+    <span class='normal'>Disc_Name</span>
+  )
+</div>
+<!--
+<div>
+  <span class='relation'>Période</span> (
+    <span class='primary'>année-scolaire</span>
+  )
+</div>
+-->
+<div>
+  <span class='relation'>Professeur</span> (
+    <span class='primary'>professeur_ id</span>,
+    <span class='normal'>FirstName</span>,
+    <span class='normal'>LastName</span>
+  )
+</div>
+<div>
+  <span class='relation'>Enseigner</span> (
+    <span class='foreign primary'>année-scolaire</span>,
+    <span class='foreign primary'>classe_id</span>,
+    <span class='foreign primary'>professeur_ id</span>,
+    <span class='foreign primary'>discipline_id</span>
+  )
+</div>
+<div>
+  <span class='relation'>Classe</span> (
+    <span class='foreign primary'>année-scolaire</span>,
+    <span class='primary'>classe_id</span>
+  )
+</div>
+</div>
+</body>
+</html>

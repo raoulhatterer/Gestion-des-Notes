@@ -112,21 +112,21 @@ INSERT INTO Administrateurs(FirstName, LastName, Func_Id, Gender, Birthday, Logi
 
 show warnings;
 -- ------------------------------------------------
--- Création de la table professeurs
-CREATE TABLE IF NOT EXISTS Professeurs (
-Prof_Id int NOT NULL AUTO_INCREMENT,
+-- Création de la table Professeur
+CREATE TABLE IF NOT EXISTS Professeur (
+professeur_id int NOT NULL AUTO_INCREMENT,
 FirstName varchar(30) COLLATE utf8_bin NOT NULL,
 LastName varchar(30) COLLATE utf8_bin NOT NULL,
-Disc_Id int,
+discipline_id int,
 Gender char DEFAULT NULL,
 Birthday date,
 Grade_Id varchar(30) DEFAULT NULL,
 Login varchar(30) COLLATE utf8_bin DEFAULT NULL,
 Droit_Admin BOOLEAN DEFAULT FALSE NOT NULL,
-PRIMARY KEY (Prof_Id)
+PRIMARY KEY (professeur_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO Professeurs (FirstName, LastName, Disc_Id, Gender) VALUES
+INSERT INTO Professeur (FirstName, LastName, discipline_id, Gender) VALUES
 ('Kunihiko', 'Kodaira', 1, 'M'),
 ('Pierre', 'Serre', 1, 'M'),
 ('Klaus', 'Roth', 1, 'M'),
@@ -202,20 +202,26 @@ INSERT INTO Professeurs (FirstName, LastName, Disc_Id, Gender) VALUES
 
 show warnings;
 
-UPDATE Professeurs SET Login = concat(FirstName,".",LastName);
+UPDATE Professeur SET Login = concat(FirstName,".",LastName);
 
 show warnings;
 
 -- ------------------------------------------------
--- Création de la table disciplines
-CREATE or replace TABLE Disciplines (
-Disc_Id int NOT NULL AUTO_INCREMENT,
-Disc_Name varchar(20) COLLATE utf8_bin NOT NULL,
-PRIMARY KEY (Disc_Id)
+-- Création de la table Discipline
+CREATE or replace TABLE Discipline (
+discipline_id int NOT NULL AUTO_INCREMENT,
+Disc_Name varchar(50) COLLATE utf8_bin NOT NULL,
+PRIMARY KEY (discipline_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO Disciplines (Disc_Name) VALUES
+INSERT INTO Discipline (Disc_Name) VALUES
 ('À définir'),
+('Histoire - Géographie'),
+('Sciences économiques et sociales'),
+('Sciences de la vie et de la Terre'),
+('Education physique et sportive'),
+('Enseignement moral et civique'),
+('Sciences numériques et technologie'),
 ('Français'),
 ('Mathématiques'),
 ('NSI'),
@@ -224,20 +230,20 @@ INSERT INTO Disciplines (Disc_Name) VALUES
 show warnings;
 
 -- ------------------------------------------------
--- Création de la table élèves
-CREATE TABLE IF NOT EXISTS Eleves (
-Eleve_Id int NOT NULL AUTO_INCREMENT,
+-- Création de la table Élève
+CREATE TABLE IF NOT EXISTS Eleve (
+eleve_id int NOT NULL AUTO_INCREMENT,
 FirstName varchar(20) COLLATE utf8_bin NOT NULL,
 LastName varchar(20) COLLATE utf8_bin NOT NULL,
 Gender varchar(10) COLLATE utf8_bin DEFAULT NULL,
-Classe_Id varchar(10) COLLATE utf8_bin DEFAULT NULL,
+classe_id varchar(10) COLLATE utf8_bin DEFAULT NULL,
 Birthday date,
 Login varchar(20) COLLATE utf8_bin DEFAULT NULL,
-PRIMARY KEY (Eleve_Id)
+PRIMARY KEY (eleve_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
-INSERT INTO Eleves (FirstName, LastName, Gender) VALUES
+INSERT INTO Eleve (FirstName, LastName, Gender) VALUES
 ('Jean', 'Martin', 'M'),
 ('Pierre', 'Bernard', 'M'),
 ('Michel', 'Thomas', 'M'),
@@ -426,15 +432,15 @@ INSERT INTO Eleves (FirstName, LastName, Gender) VALUES
 show warnings;
 
 -- ------------------------------------------------
--- Création de la table Classes
-CREATE or replace TABLE Classes (
-Classe_Id int NOT NULL AUTO_INCREMENT,
+-- Création de la table Classe
+CREATE or replace TABLE Classe (
+classe_id int NOT NULL AUTO_INCREMENT,
 Classe_Name varchar(20) COLLATE utf8_bin NOT NULL,
 Classe_date varchar(20) COLLATE utf8_bin DEFAULT NULL,
-PRIMARY KEY (Classe_Id)
+PRIMARY KEY (classe_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO Classes (Classe_Name, Classe_date) VALUES
+INSERT INTO Classe (Classe_Name, Classe_date) VALUES
 ('S1', '2019-2020'),
 ('À définir', '2019-2020');
 
@@ -442,25 +448,24 @@ INSERT INTO Classes (Classe_Name, Classe_date) VALUES
 -- DESCRIPTIONS
 SELECT "TABLES";
 SHOW tables;
-SELECT "Description de la TABLE Disciplines";
-DESCRIBE Disciplines;
-SELECT * FROM Disciplines;
+SELECT "Description de la TABLE Discipline";
+DESCRIBE Discipline;
+SELECT * FROM Discipline;
 SELECT "Description de la TABLE des Fonctions du personnel";
 DESCRIBE Fonctions;
 SELECT * FROM Fonctions;
 SELECT "Description de la TABLE Administrateurs";
 DESCRIBE Administrateurs;
 SELECT * FROM Administrateurs;
-SELECT "Description de la TABLE Professeurs";
-DESCRIBE Professeurs;
-SELECT * FROM Professeurs;
-SELECT "Description de la TABLE Eleves";
-DESCRIBE Eleves;
-SELECT * FROM Eleves;
-SELECT "Description de la TABLE Classes";
-DESCRIBE Classes;
-SELECT * FROM Classes;
+SELECT "Description de la TABLE Professeur";
+DESCRIBE Professeur;
+SELECT * FROM Professeur;
+SELECT "Description de la TABLE Eleve";
+DESCRIBE Eleve;
+SELECT * FROM Eleve;
+SELECT "Description de la TABLE Classe";
+DESCRIBE Classe;
+SELECT * FROM Classe;
 SELECT "UTILISATEURS";
 select host, USER, password from mysql.user;
-
 
