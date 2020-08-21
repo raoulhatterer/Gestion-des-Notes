@@ -46,9 +46,11 @@ def afficher_notebook_gestionnaire():
     """
     afficher_compte_admin()
     notebook.add(f1, text="Disciplines")
-    notebook.add(f2, text="Enseignants")
+   notebook.add(f2, text="Enseignants")
     notebook.add(f3, text="Élèves")
     notebook.add(f4, text="Classes")
+    notebook.add(f5, text="Enseignements")
+    notebook.add(f6, text="Années Scolaires")    
     afficher_disciplines()
     afficher_professeurs()
     afficher_eleves()
@@ -958,6 +960,12 @@ f1 = tk.Frame(notebook, width=800, height=600)  # frame pour les disciplines
 f2 = tk.Frame(notebook, width=800, height=600)  # frame pour les enseignants
 f3 = tk.Frame(notebook, width=800, height=600)  # frame pour les élèves
 f4 = tk.Frame(notebook, width=800, height=600)  # frame pour les classes
+f5 = tk.Frame(notebook, width=800, height=600)  # frame pour les enseignements
+f6 = tk.Frame(notebook, width=800, height=600)  # frame pour les années scolaires
+
+
+
+
 
 button_add_discipline = tk.Button(f1, text='Ajouter',
                                   command=ajouter_discipline)

@@ -436,6 +436,43 @@ INSERT INTO Classe (nom, niveau, annee_id) VALUES
 ('S1', 'seconde', '2019-2020'),
 ('À définir', 'À définir', '2019-2020');
 
+
+
+-- ------------------------------------------------
+-- Création de la table Periode
+
+CREATE OR replace TABLE Periode (
+  periode_id int NOT NULL AUTO_INCREMENT,
+  nom VARCHAR(20) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (periode_id) 
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO Periode (nom) VALUES
+('trimestre 1'),
+('trimestre 2'),
+('trimestre 3'),
+('semestre 1'),
+('semestre 2'),
+('À définir');
+
+
+-- ------------------------------------------------
+-- Création de la table AnneeScolaire
+
+CREATE TABLE Anneescolaire (
+  annee_id int NOT NULL AUTO_INCREMENT,
+  nom VARCHAR(20) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`annee_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+INSERT INTO Anneescolaire (nom) VALUES
+('2019-2020'),
+('2020-2021'),
+('À définir');
+
+
+
 -- ------------------------------------------------
 -- DESCRIPTIONS
 SELECT "TABLES";
@@ -458,6 +495,12 @@ SELECT * FROM Eleve;
 SELECT "Description de la TABLE Classe";
 DESCRIBE Classe;
 SELECT * FROM Classe;
+SELECT "Description de la TABLE Periode";
+DESCRIBE Periode;
+SELECT * FROM Periode;
+SELECT "Description de la TABLE Anneescolaire";
+DESCRIBE Anneescolaire;
+SELECT * FROM Anneescolaire;
+
 SELECT "UTILISATEURS";
 select host, USER, password from mysql.user;
-
