@@ -1,0 +1,190 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+"http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+
+<svg width="924" height="494" view_box="0 0 924 494"
+xmlns="http://www.w3.org/2000/svg"
+xmlns:link="http://www.w3.org/1999/xlink">\n\n<desc>Généré par Mocodo 2.3.8 le Wed, 19 Aug 2020 19:42:10</desc>
+
+<rect id="frame" x="0" y="0" width="924" height="494" fill="none" stroke="none" stroke-width="0"/>
+
+<!-- Entity Discipline -->
+<g id="entity-Discipline">
+	<g id="frame-Discipline">
+		<rect x="39" y="9" width="110" height="30" fill="#FAA945" stroke="#FAA945" stroke-width="0"/>
+		<rect x="39" y="39.0" width="110" height="46" fill="#FFB94E" stroke="#FFB94E" stroke-width="0"/>
+		<rect x="39" y="9" width="110" height="76" fill="none" stroke="#CB7E1F" stroke-width="1.5"/>
+		<line x1="39" y1="39" x2="149" y2="39" stroke="#CB7E1F" stroke-width="1.5"/>
+	</g>
+	<text x="47" y="30.3" fill="#645530" font-family="Copperplate" font-size="18">Discipline</text>
+	<text x="47" y="56.1" fill="#645530" font-family="Gill Sans" font-size="15">discipline_id</text>
+	<line x1="47" y1="59" x2="124" y2="59" stroke="#645530" stroke-width="1"/>
+	<text x="47" y="73.1" fill="#645530" font-family="Gill Sans" font-size="15">Nom</text>
+</g>
+
+<!-- Entity Enseigner -->
+<g id="entity-Enseigner">
+	<g id="frame-Enseigner">
+		<rect x="38" y="113" width="112" height="30" fill="#FAA945" stroke="#FAA945" stroke-width="0"/>
+		<rect x="38" y="143.0" width="112" height="64" fill="#FFB94E" stroke="#FFB94E" stroke-width="0"/>
+		<rect x="38" y="113" width="112" height="94" fill="none" stroke="#CB7E1F" stroke-width="1.5"/>
+		<line x1="38" y1="143" x2="150" y2="143" stroke="#CB7E1F" stroke-width="1.5"/>
+	</g>
+	<text x="46" y="134.3" fill="#645530" font-family="Copperplate" font-size="18">Enseigner</text>
+	<text x="46" y="160.1" fill="#645530" font-family="Gill Sans" font-size="15">#professeur_id</text>
+	<line x1="46" y1="163" x2="142" y2="163" stroke="#645530" stroke-width="1"/>
+	<text x="46" y="177.1" fill="#645530" font-family="Gill Sans" font-size="15">#classe_id</text>
+	<line x1="46" y1="180" x2="111" y2="180" stroke="#645530" stroke-width="1"/>
+	<text x="46" y="194.0" fill="#645530" font-family="Gill Sans" font-size="15">#discipline_id</text>
+	<line x1="46" y1="197" x2="132" y2="197" stroke="#645530" stroke-width="1"/>
+</g>
+
+<!-- Entity Professeur -->
+<g id="entity-Professeur">
+	<g id="frame-Professeur">
+		<rect x="208" y="105" width="124" height="30" fill="#FAA945" stroke="#FAA945" stroke-width="0"/>
+		<rect x="208" y="135.0" width="124" height="80" fill="#FFB94E" stroke="#FFB94E" stroke-width="0"/>
+		<rect x="208" y="105" width="124" height="110" fill="none" stroke="#CB7E1F" stroke-width="1.5"/>
+		<line x1="208" y1="135" x2="332" y2="135" stroke="#CB7E1F" stroke-width="1.5"/>
+	</g>
+	<text x="216" y="126.3" fill="#645530" font-family="Copperplate" font-size="18">Professeur</text>
+	<text x="216" y="152.1" fill="#645530" font-family="Gill Sans" font-size="15">professeur_id</text>
+	<line x1="216" y1="155" x2="303" y2="155" stroke="#645530" stroke-width="1"/>
+	<text x="216" y="169.1" fill="#645530" font-family="Gill Sans" font-size="15">titre</text>
+	<text x="216" y="186.1" fill="#645530" font-family="Gill Sans" font-size="15">prénom</text>
+	<text x="216" y="203.0" fill="#645530" font-family="Gill Sans" font-size="15">nom</text>
+</g>
+
+<!-- Entity Evaluation -->
+<g id="entity-Evaluation">
+	<g id="frame-Evaluation">
+		<rect x="556" y="71" width="138" height="30" fill="#FAA945" stroke="#FAA945" stroke-width="0"/>
+		<rect x="556" y="101.0" width="138" height="148" fill="#FFB94E" stroke="#FFB94E" stroke-width="0"/>
+		<rect x="556" y="71" width="138" height="178" fill="none" stroke="#CB7E1F" stroke-width="1.5"/>
+		<line x1="556" y1="101" x2="694" y2="101" stroke="#CB7E1F" stroke-width="1.5"/>
+	</g>
+	<text x="573" y="92.3" fill="#645530" font-family="Copperplate" font-size="18">Evaluation</text>
+	<text x="564" y="118.0" fill="#645530" font-family="Gill Sans" font-size="15">evaluation_id</text>
+	<line x1="564" y1="121" x2="647" y2="121" stroke="#645530" stroke-width="1"/>
+	<text x="564" y="135.1" fill="#645530" font-family="Gill Sans" font-size="15">Date_Contrôle</text>
+	<text x="564" y="152.1" fill="#645530" font-family="Gill Sans" font-size="15">Date_Note_Visible</text>
+	<text x="564" y="169.1" fill="#645530" font-family="Gill Sans" font-size="15">#discipline_id</text>
+	<text x="564" y="186.1" fill="#645530" font-family="Gill Sans" font-size="15">#professeur_id</text>
+	<text x="564" y="203.0" fill="#645530" font-family="Gill Sans" font-size="15">#classe_id</text>
+	<text x="564" y="220.0" fill="#645530" font-family="Gill Sans" font-size="15">année-scolaire</text>
+	<text x="564" y="237.0" fill="#645530" font-family="Gill Sans" font-size="15">#sousPeriode_id</text>
+</g>
+
+<!-- Entity Classe -->
+<g id="entity-Classe">
+	<g id="frame-Classe">
+		<rect x="41" y="231" width="106" height="30" fill="#FAA945" stroke="#FAA945" stroke-width="0"/>
+		<rect x="41" y="261.0" width="106" height="80" fill="#FFB94E" stroke="#FFB94E" stroke-width="0"/>
+		<rect x="41" y="231" width="106" height="110" fill="none" stroke="#CB7E1F" stroke-width="1.5"/>
+		<line x1="41" y1="261" x2="147" y2="261" stroke="#CB7E1F" stroke-width="1.5"/>
+	</g>
+	<text x="62" y="252.3" fill="#645530" font-family="Copperplate" font-size="18">Classe</text>
+	<text x="49" y="278.1" fill="#645530" font-family="Gill Sans" font-size="15">classe_id</text>
+	<line x1="49" y1="281" x2="105" y2="281" stroke="#645530" stroke-width="1"/>
+	<text x="49" y="295.1" fill="#645530" font-family="Gill Sans" font-size="15">nom</text>
+	<text x="49" y="312.1" fill="#645530" font-family="Gill Sans" font-size="15">niveau</text>
+	<text x="49" y="329.0" fill="#645530" font-family="Gill Sans" font-size="15">année-scolaire</text>
+</g>
+
+<!-- Entity Evaluer -->
+<g id="entity-Evaluer">
+	<g id="frame-Evaluer">
+		<rect x="390" y="239" width="108" height="30" fill="#FAA945" stroke="#FAA945" stroke-width="0"/>
+		<rect x="390" y="269.0" width="108" height="64" fill="#FFB94E" stroke="#FFB94E" stroke-width="0"/>
+		<rect x="390" y="239" width="108" height="94" fill="none" stroke="#CB7E1F" stroke-width="1.5"/>
+		<line x1="390" y1="269" x2="498" y2="269" stroke="#CB7E1F" stroke-width="1.5"/>
+	</g>
+	<text x="406" y="260.3" fill="#645530" font-family="Copperplate" font-size="18">Evaluer</text>
+	<text x="398" y="286.1" fill="#645530" font-family="Gill Sans" font-size="15">#evaluation_id</text>
+	<line x1="398" y1="289" x2="490" y2="289" stroke="#645530" stroke-width="1"/>
+	<text x="398" y="303.1" fill="#645530" font-family="Gill Sans" font-size="15">#eleve_id</text>
+	<line x1="398" y1="306" x2="460" y2="306" stroke="#645530" stroke-width="1"/>
+	<text x="398" y="320.0" fill="#645530" font-family="Gill Sans" font-size="15">note</text>
+</g>
+
+<!-- Entity Eleve -->
+<g id="entity-Eleve">
+	<g id="frame-Eleve">
+		<rect x="403" y="357" width="82" height="30" fill="#FAA945" stroke="#FAA945" stroke-width="0"/>
+		<rect x="403" y="387.0" width="82" height="98" fill="#FFB94E" stroke="#FFB94E" stroke-width="0"/>
+		<rect x="403" y="357" width="82" height="128" fill="none" stroke="#CB7E1F" stroke-width="1.5"/>
+		<line x1="403" y1="387" x2="485" y2="387" stroke="#CB7E1F" stroke-width="1.5"/>
+	</g>
+	<text x="417" y="378.3" fill="#645530" font-family="Copperplate" font-size="18">Eleve</text>
+	<text x="411" y="404.1" fill="#645530" font-family="Gill Sans" font-size="15">eleve_id</text>
+	<line x1="411" y1="407" x2="464" y2="407" stroke="#645530" stroke-width="1"/>
+	<text x="411" y="421.1" fill="#645530" font-family="Gill Sans" font-size="15">prénom</text>
+	<text x="411" y="438.1" fill="#645530" font-family="Gill Sans" font-size="15">nom</text>
+	<text x="411" y="455.0" fill="#645530" font-family="Gill Sans" font-size="15">genre</text>
+	<text x="411" y="472.0" fill="#645530" font-family="Gill Sans" font-size="15">#classe_id</text>
+</g>
+
+<!-- Entity SousPeriode -->
+<g id="entity-SousPeriode">
+	<g id="frame-SousPeriode">
+		<rect x="752" y="383" width="134" height="30" fill="#FAA945" stroke="#FAA945" stroke-width="0"/>
+		<rect x="752" y="413.0" width="134" height="46" fill="#FFB94E" stroke="#FFB94E" stroke-width="0"/>
+		<rect x="752" y="383" width="134" height="76" fill="none" stroke="#CB7E1F" stroke-width="1.5"/>
+		<line x1="752" y1="413" x2="886" y2="413" stroke="#CB7E1F" stroke-width="1.5"/>
+	</g>
+	<text x="760" y="404.3" fill="#645530" font-family="Copperplate" font-size="18">SousPeriode</text>
+	<text x="760" y="430.1" fill="#645530" font-family="Gill Sans" font-size="15">sousPeriode_id</text>
+	<line x1="760" y1="433" x2="857" y2="433" stroke="#645530" stroke-width="1"/>
+	<text x="760" y="447.1" fill="#645530" font-family="Gill Sans" font-size="15">nom</text>
+</g>
+
+<!-- Link from "professeur_id" (Enseigner) to "professeur_id" (Professeur) -->
+<path d="M150 157.5 C 179.0 153.5 169.33333333333334 149.5 208 149.5" fill="none" stroke="#4C3D30" stroke-width="1"/>
+<path d="M 208 149.5 L 196.0 155.5 L 200.0 149.5 L 196.0 143.5 Z" fill="#4C3D30" stroke-width="0"/>
+<circle cx="150" cy="157.5" r="1.5" stroke="#4C3D30" stroke-width="1.5" fill="#4C3D30"/>
+
+<!-- Link from "classe_id" (Enseigner) to "classe_id" (Classe) -->
+<path d="M38 174.5 C -10 225.0 -7 275.5 41 275.5" fill="none" stroke="#4C3D30" stroke-width="1"/>
+<path d="M 41 275.5 L 29.0 281.5 L 33.0 275.5 L 29.0 269.5 Z" fill="#4C3D30" stroke-width="0"/>
+<circle cx="38" cy="174.5" r="1.5" stroke="#4C3D30" stroke-width="1.5" fill="#4C3D30"/>
+
+<!-- Link from "discipline_id" (Enseigner) to "discipline_id" (Discipline) -->
+<path d="M150 191.5 C 198 122.5 197 53.5 149 53.5" fill="none" stroke="#4C3D30" stroke-width="1"/>
+<path d="M 149 53.5 L 161.0 47.5 L 157.0 53.5 L 161.0 59.5 Z" fill="#4C3D30" stroke-width="0"/>
+<circle cx="150" cy="191.5" r="1.5" stroke="#4C3D30" stroke-width="1.5" fill="#4C3D30"/>
+
+<!-- Link from "discipline_id" (Evaluation) to "discipline_id" (Discipline) -->
+<path d="M556 166.5 C 352.5 110.0 420.33333333333337 53.5 149 53.5" fill="none" stroke="#4C3D30" stroke-width="1"/>
+<path d="M 149 53.5 L 161.0 47.5 L 157.0 53.5 L 161.0 59.5 Z" fill="#4C3D30" stroke-width="0"/>
+<circle cx="556" cy="166.5" r="1.5" stroke="#4C3D30" stroke-width="1.5" fill="#4C3D30"/>
+
+<!-- Link from "professeur_id" (Evaluation) to "professeur_id" (Professeur) -->
+<path d="M556 183.5 C 444.0 166.5 481.3333333333333 149.5 332 149.5" fill="none" stroke="#4C3D30" stroke-width="1"/>
+<path d="M 332 149.5 L 344.0 143.5 L 340.0 149.5 L 344.0 155.5 Z" fill="#4C3D30" stroke-width="0"/>
+<circle cx="556" cy="183.5" r="1.5" stroke="#4C3D30" stroke-width="1.5" fill="#4C3D30"/>
+
+<!-- Link from "classe_id" (Evaluation) to "classe_id" (Classe) -->
+<path d="M556 200.5 C 351.5 238.0 419.66666666666663 275.5 147 275.5" fill="none" stroke="#4C3D30" stroke-width="1"/>
+<path d="M 147 275.5 L 159.0 269.5 L 155.0 275.5 L 159.0 281.5 Z" fill="#4C3D30" stroke-width="0"/>
+<circle cx="556" cy="200.5" r="1.5" stroke="#4C3D30" stroke-width="1.5" fill="#4C3D30"/>
+
+<!-- Link from "sousPeriode_id" (Evaluation) to "sousPeriode_id" (SousPeriode) -->
+<path d="M694 234.5 C 723.0 331.0 713.3333333333334 427.5 752 427.5" fill="none" stroke="#4C3D30" stroke-width="1"/>
+<path d="M 752 427.5 L 740.0 433.5 L 744.0 427.5 L 740.0 421.5 Z" fill="#4C3D30" stroke-width="0"/>
+<circle cx="694" cy="234.5" r="1.5" stroke="#4C3D30" stroke-width="1.5" fill="#4C3D30"/>
+
+<!-- Link from "evaluation_id" (Evaluer) to "evaluation_id" (Evaluation) -->
+<path d="M498 283.5 C 527.0 199.5 517.3333333333334 115.5 556 115.5" fill="none" stroke="#4C3D30" stroke-width="1"/>
+<path d="M 556 115.5 L 544.0 121.5 L 548.0 115.5 L 544.0 109.5 Z" fill="#4C3D30" stroke-width="0"/>
+<circle cx="498" cy="283.5" r="1.5" stroke="#4C3D30" stroke-width="1.5" fill="#4C3D30"/>
+
+<!-- Link from "eleve_id" (Evaluer) to "eleve_id" (Eleve) -->
+<path d="M390 300.5 C 342 351.0 355 401.5 403 401.5" fill="none" stroke="#4C3D30" stroke-width="1"/>
+<path d="M 403 401.5 L 391.0 407.5 L 395.0 401.5 L 391.0 395.5 Z" fill="#4C3D30" stroke-width="0"/>
+<circle cx="390" cy="300.5" r="1.5" stroke="#4C3D30" stroke-width="1.5" fill="#4C3D30"/>
+
+<!-- Link from "classe_id" (Eleve) to "classe_id" (Classe) -->
+<path d="M403 469.5 C 275.0 372.5 317.6666666666667 275.5 147 275.5" fill="none" stroke="#4C3D30" stroke-width="1"/>
+<path d="M 147 275.5 L 159.0 269.5 L 155.0 275.5 L 159.0 281.5 Z" fill="#4C3D30" stroke-width="0"/>
+<circle cx="403" cy="469.5" r="1.5" stroke="#4C3D30" stroke-width="1.5" fill="#4C3D30"/>
+</svg>

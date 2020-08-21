@@ -1,16 +1,12 @@
-- sous-période_id
-- professeur_id
-- evaluation_id
-- Date_Contrôle
-- Date_Note
+- Num. classe
+- Num. salle
+- Vol. horaire
+- Code catégorie
+- Nom catégorie
+- Num. élève
+- Nom élève
 - Note
-- eleve_id
-- FirstName
-- LastName
-- discipline_id
-- Disc_Name
-- année-scolaire
-- professeur_ id
-- FirstName
-- LastName
-- classe_id
+- Num. prof
+- Nom prof
+- Date
+- Libellé matière

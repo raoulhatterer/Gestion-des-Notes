@@ -1,23 +1,27 @@
 
-Planifier, _11 Évaluateur, 0N Sous-Période
-::::
-Sous-Période: sous-période_id
+Discipline: discipline_id, nom
+Porter, 11 Evaluation, 0N Discipline
+::
 
-Évaluateur: professeur_id
-Donner, _11 Évaluation, 0N Évaluateur
-Évaluation: evaluation_id, Date_Contrôle, Date_Note
-Noter, 1N Évaluation,  0N Élève: Note
-Élève: eleve_id, FirstName, LastName
-Diviser, _11 Sous-Période, 1N Période    
-
-:::
-Discipline: discipline_id, Disc_Name
-Appartenir, 1N Classe, 11 Élève 
-Période: année-scolaire
+Enseigner,  0N Professeur, 1N Classe, 0N Discipline
+Professeur: professeur_id, prenom, nom, titre
+Realiser, 11 Evaluation,  0N Professeur
+Evaluation: evaluation_id, Date_Contrôle, Date_Note_Visible
 
 :
+    
+Classe: classe_id, nom, niveau
+Destiner, 11 Evaluation, 0N Classe
+Evaluer, 1N Evaluation, 1N Eleve: note
+Situer, 0N AnneeScolaire, 0N Periode, 11 Evaluation
+
 :
-Professeur: professeur_ id, FirstName, LastName
-Enseigner, 1N Classe, 1N Professeur, 1N Discipline
-Classe: classe_id
-Exister, 1N Période, _11 Classe
+Appartenir, 1N Classe, 11 Eleve
+Eleve: eleve_id, prénom, nom, genre
+:
+Periode: periode_id, nom
+
+Exister, 0N AnneeScolaire, 11 Classe
+::
+AnneeScolaire: annee_id, nom
+:

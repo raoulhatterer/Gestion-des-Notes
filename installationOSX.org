@@ -319,7 +319,7 @@ Mais l'utilisateur final de la BD n'a pas à connaître sql c'est donc à l'a
    #+NAME: describetable
    #+ATTR_LATEX: :options frame=single, label = \textrm{\textbf{sql}},  labelposition = topline, samepage = t
   #+BEGIN_SRC sql
-    DESCRIBLE nom_table;
+    DESCRIBE nom_table;
   #+END_SRC
 
 ** Créer une nouvelle table

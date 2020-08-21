@@ -11,79 +11,72 @@
 <body>
 <div id='mld'>
 <div>
-  <span class='relation'>Sous-Période</span> (
-    <span class='foreign primary'>année-scolaire</span>,
-    <span class='primary'>sous-période_id</span>
-  )
-</div>
-<div>
-  <span class='relation'>Évaluateur</span> (
-    <span class='foreign primary'>année-scolaire</span>,
-    <span class='foreign primary'>sous-période_id</span>,
-    <span class='primary'>professeur_id</span>
-  )
-</div>
-<div>
-  <span class='relation'>Évaluation</span> (
-    <span class='foreign primary'>année-scolaire</span>,
-    <span class='foreign primary'>sous-période_id</span>,
-    <span class='foreign primary'>professeur_id</span>,
-    <span class='primary'>evaluation_id</span>,
-    <span class='normal'>Date_Contrôle</span>,
-    <span class='normal'>Date_Note</span>
-  )
-</div>
-<div>
-  <span class='relation'>Noter</span> (
-    <span class='foreign primary'>année-scolaire</span>,
-    <span class='foreign primary'>sous-période_id</span>,
-    <span class='foreign primary'>professeur_id</span>,
-    <span class='foreign primary'>evaluation_id</span>,
-    <span class='foreign primary'>eleve_id</span>,
-    <span class='normal'>Note</span>
-  )
-</div>
-<div>
-  <span class='relation'>Élève</span> (
-    <span class='primary'>eleve_id</span>,
-    <span class='normal'>FirstName</span>,
-    <span class='normal'>LastName</span>,
-    <span class='foreign'>année-scolaire</span>,
-    <span class='foreign'>classe_id</span>
-  )
-</div>
-<div>
   <span class='relation'>Discipline</span> (
     <span class='primary'>discipline_id</span>,
-    <span class='normal'>Disc_Name</span>
-  )
-</div>
-<!--
-<div>
-  <span class='relation'>Période</span> (
-    <span class='primary'>année-scolaire</span>
-  )
-</div>
--->
-<div>
-  <span class='relation'>Professeur</span> (
-    <span class='primary'>professeur_ id</span>,
-    <span class='normal'>FirstName</span>,
-    <span class='normal'>LastName</span>
+    <span class='normal'>nom</span>
   )
 </div>
 <div>
   <span class='relation'>Enseigner</span> (
-    <span class='foreign primary'>année-scolaire</span>,
-    <span class='foreign primary'>classe_id</span>,
-    <span class='foreign primary'>professeur_ id</span>,
-    <span class='foreign primary'>discipline_id</span>
+    <span class='primary'>#professeur_id</span>,
+    <span class='primary'>#classe_id</span>,
+    <span class='primary'>#discipline_id</span>
+  )
+</div>
+<div>
+  <span class='relation'>Professeur</span> (
+    <span class='primary'>professeur_id</span>,
+    <span class='normal'>prenom</span>,
+    <span class='normal'>nom</span>,
+    <span class='normal'>titre</span>
+  )
+</div>
+<div>
+  <span class='relation'>Evaluation</span> (
+    <span class='primary'>evaluation_id</span>,
+    <span class='normal'>Date_Contrôle</span>,
+    <span class='normal'>Date_Note_Visible</span>,
+    <span class='normal'>#discipline_id</span>,
+    <span class='normal'>#professeur_id</span>,
+    <span class='normal'>#classe_id</span>,
+    <span class='normal'>#annee_id</span>,
+    <span class='normal'>#periode_id</span>
   )
 </div>
 <div>
   <span class='relation'>Classe</span> (
-    <span class='foreign primary'>année-scolaire</span>,
-    <span class='primary'>classe_id</span>
+    <span class='primary'>classe_id</span>,
+    <span class='normal'>nom</span>,
+    <span class='normal'>niveau</span>,
+    <span class='normal'>#annee_id</span>
+  )
+</div>
+<div>
+  <span class='relation'>Evaluer</span> (
+    <span class='primary'>#evaluation_id</span>,
+    <span class='primary'>#eleve_id</span>,
+    <span class='normal'>note</span>
+  )
+</div>
+<div>
+  <span class='relation'>Eleve</span> (
+    <span class='primary'>eleve_id</span>,
+    <span class='normal'>prénom</span>,
+    <span class='normal'>nom</span>,
+    <span class='normal'>genre</span>,
+    <span class='normal'>#classe_id</span>
+  )
+</div>
+<div>
+  <span class='relation'>Periode</span> (
+    <span class='primary'>periode_id</span>,
+    <span class='normal'>nom</span>
+  )
+</div>
+<div>
+  <span class='relation'>AnneeScolaire</span> (
+    <span class='primary'>annee_id</span>,
+    <span class='normal'>nom</span>
   )
 </div>
 </div>
