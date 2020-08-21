@@ -691,7 +691,7 @@ def sql_read_eleves():
         print("Connected to MySQL Server version", db_Info)
         print("sql_read_eleves")
         cursor = connection.cursor()
-        cursor.execute("select eleve_id, FirstName, LastName, Gender, Classe_Id FROM Eleve ORDER BY LastName ASC")        
+        cursor.execute("select eleve_id, prenom, nom, genre, classe_id FROM Eleve ORDER BY nom ASC")        
         records = cursor.fetchall()
         # print(records)
         print("All eleve of Eleves (", cursor.rowcount, "): ")
@@ -700,7 +700,7 @@ def sql_read_eleves():
             # print("\t", row)
             eleve_id += [row[0]]
             eleves_Name += [row[2]]
-            eleves_Print += [[row[2], row[1], row[3], row[4]]]  # LastName, FirstName, Gender, Classe_Id
+            eleves_Print += [[row[2], row[1], row[3], row[4]]]  # nom, prenom, genre, classe_id
         cursor.close()
         connection.close()
         print("MySQL connection is closed")
@@ -750,18 +750,18 @@ def enregistrer_eleves():
         print("enregistrer_eleves")
         cursor = connection.cursor()
         for index in range(len(eleves_Name)):
-            sql = "UPDATE Eleve SET FirstName=%s, LastName=%s, Gender=%s, Classe_Id=%s WHERE eleve_id = %s"
-            eleve = (eleves_Print[index][1],  # FirstName
-                     eleves_Print[index][0],  # LastName
-                     eleves_Print[index][2],  # Gender
-                     eleves_Print[index][3],  # Classe_Id
+            sql = "UPDATE Eleve SET prenom=%s, nom=%s, genre=%s, classe_id=%s WHERE eleve_id = %s"
+            eleve = (eleves_Print[index][1],  # prenom
+                     eleves_Print[index][0],  # nom
+                     eleves_Print[index][2],  # genre
+                     eleves_Print[index][3],  # classe_id
                      eleve_id[index])
             # print(eleve)
             cursor.execute(sql, eleve)
             connection.commit()
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
         # Rafraîchissement
         sheet_eleves.destroy()
         afficher_eleves()
@@ -779,7 +779,7 @@ def ajouter_eleve():
     """
     enregistrer_eleves()
     global sheet_eleves, disc_Name, discipline_id
-    sql = "INSERT INTO Eleve (FirstName, LastName, Gender) VALUES (%s, %s, %s)"
+    sql = "INSERT INTO Eleve (prenom, nom, genre) VALUES (%s, %s, %s)"
     eleve_nouveau = ('* Prénom ? *', '* Nom ? *', 'M ou F')
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")

@@ -2,222 +2,156 @@
 <!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
 "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
 
-<svg width="654" height="560" view_box="0 0 654 560"
+<svg width="627" height="376" view_box="0 0 627 376"
 xmlns="http://www.w3.org/2000/svg"
-xmlns:link="http://www.w3.org/1999/xlink">\n\n<desc>Généré par Mocodo 2.3.8 le Fri, 21 Aug 2020 02:51:44</desc>
+xmlns:link="http://www.w3.org/1999/xlink">\n\n<desc>Généré par Mocodo 2.3.8 le Fri, 21 Aug 2020 19:00:08</desc>
 
-<rect id="frame" x="0" y="0" width="654" height="560" fill="none" stroke="none" stroke-width="0"/>
+<rect id="frame" x="0" y="0" width="627" height="376" fill="#f7f7f7" stroke="none" stroke-width="0"/>
 
-<!-- Association Porter -->
-<line x1="495" y1="155" x2="210" y2="47" stroke="#000000" stroke-width="1"/>
-<text x="403" y="141.88813283367526" fill="#000000" font-family="Futura" font-size="11">1,1</text>
-<line x1="64" y1="47" x2="210" y2="47" stroke="#000000" stroke-width="1"/>
-<text x="124" y="63.0" fill="#000000" font-family="Futura" font-size="11">0,N</text>
-<g id="association-Porter">
-	<path d="M 236 18 a 14 14 90 0 1 14 14 V 46 h -80 V 32 a 14 14 90 0 1 14 -14" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-	<path d="M 250 46.0 v 16 a 14 14 90 0 1 -14 14 H 184 a 14 14 90 0 1 -14 -14 V 46.0 H 80" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-	<rect x="170" y="18" width="80" height="58" fill="none" rx="14" stroke="#000000" stroke-width="1.5"/>
-	<line x1="170" y1="46" x2="250" y2="46" stroke="#000000" stroke-width="1.5"/>
-	<text x="177" y="39.3" fill="#000000" font-family="Copperplate" font-size="18">Porter</text>
+<!-- Association Inscrire -->
+<path d="M268 38 C 342.3333333333333 6.0 394.0 6.0 423 38" fill="none" stroke="#e08214" stroke-width="1"/>
+<text x="353" y="31.0" fill="#542788" font-family="Futura" font-size="11">1,N</text>
+<path d="M268 38 C 341.6666666666667 70.0 393.3333333333333 70.0 423 38" fill="none" stroke="#e08214" stroke-width="1"/>
+<text x="353" y="53.0" fill="#542788" font-family="Futura" font-size="11">1,1</text>
+<line x1="556" y1="146" x2="423" y2="38" stroke="#e08214" stroke-width="1"/>
+<text x="471" y="105.61493314094456" fill="#542788" font-family="Futura" font-size="11">1,1</text>
+<line x1="423" y1="146" x2="423" y2="38" stroke="#e08214" stroke-width="1"/>
+<text x="428.0" y="117" fill="#542788" font-family="Futura" font-size="11">1,1</text>
+<g id="association-Inscrire">
+	<path d="M 455 9 a 14 14 90 0 1 14 14 V 37 h -92 V 23 a 14 14 90 0 1 14 -14" fill="#fdb863" stroke="#fdb863" stroke-width="0"/>
+	<path d="M 469 37.0 v 16 a 14 14 90 0 1 -14 14 H 391 a 14 14 90 0 1 -14 -14 V 37.0 H 92" fill="#fee0b6" stroke="#fee0b6" stroke-width="0"/>
+	<rect x="377" y="9" width="92" height="58" fill="none" rx="14" stroke="#e08214" stroke-width="1.5"/>
+	<line x1="377" y1="37" x2="469" y2="37" stroke="#e08214" stroke-width="1.5"/>
+	<text x="384" y="30.3" fill="#000000" font-family="Copperplate" font-size="18">Inscrire</text>
 </g>
 
-<!-- Association Enseigner -->
-<line x1="210" y1="155" x2="64" y2="155" stroke="#000000" stroke-width="1"/>
-<text x="124" y="171.0" fill="#000000" font-family="Futura" font-size="11">0,N</text>
-<line x1="64" y1="305" x2="64" y2="155" stroke="#000000" stroke-width="1"/>
-<text x="69.0" y="250" fill="#000000" font-family="Futura" font-size="11">1,N</text>
-<line x1="64" y1="47" x2="64" y2="155" stroke="#000000" stroke-width="1"/>
-<text x="69.0" y="101" fill="#000000" font-family="Futura" font-size="11">0,N</text>
-<g id="association-Enseigner">
-	<path d="M 105 126 a 14 14 90 0 1 14 14 V 154 h -110 V 140 a 14 14 90 0 1 14 -14" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-	<path d="M 119 154.0 v 16 a 14 14 90 0 1 -14 14 H 23 a 14 14 90 0 1 -14 -14 V 154.0 H 110" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-	<rect x="9" y="126" width="110" height="58" fill="none" rx="14" stroke="#000000" stroke-width="1.5"/>
-	<line x1="9" y1="154" x2="119" y2="154" stroke="#000000" stroke-width="1.5"/>
-	<text x="16" y="147.3" fill="#000000" font-family="Copperplate" font-size="18">Enseigner</text>
+<!-- Association Définir -->
+<line x1="53" y1="346" x2="53" y2="146" stroke="#e08214" stroke-width="1"/>
+<text x="58.0" y="317" fill="#542788" font-family="Futura" font-size="11">1,1</text>
+<line x1="268" y1="38" x2="53" y2="146" stroke="#e08214" stroke-width="1"/>
+<text x="227.26805299663084" y="75" fill="#542788" font-family="Futura" font-size="11">1,N</text>
+<g id="association-Définir">
+	<path d="M 81 117 a 14 14 90 0 1 14 14 V 145 h -84 V 131 a 14 14 90 0 1 14 -14" fill="#fdb863" stroke="#fdb863" stroke-width="0"/>
+	<path d="M 95 145.0 v 16 a 14 14 90 0 1 -14 14 H 25 a 14 14 90 0 1 -14 -14 V 145.0 H 84" fill="#fee0b6" stroke="#fee0b6" stroke-width="0"/>
+	<rect x="11" y="117" width="84" height="58" fill="none" rx="14" stroke="#e08214" stroke-width="1.5"/>
+	<line x1="11" y1="145" x2="95" y2="145" stroke="#e08214" stroke-width="1.5"/>
+	<text x="18" y="138.3" fill="#000000" font-family="Copperplate" font-size="18">Définir</text>
 </g>
 
-<!-- Association Realiser -->
-<line x1="495" y1="155" x2="349" y2="155" stroke="#000000" stroke-width="1"/>
-<text x="403" y="171.0" fill="#000000" font-family="Futura" font-size="11">1,1</text>
-<line x1="210" y1="155" x2="349" y2="155" stroke="#000000" stroke-width="1"/>
-<text x="277" y="171.0" fill="#000000" font-family="Futura" font-size="11">0,N</text>
-<g id="association-Realiser">
-	<path d="M 383 126 a 14 14 90 0 1 14 14 V 154 h -96 V 140 a 14 14 90 0 1 14 -14" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-	<path d="M 397 154.0 v 16 a 14 14 90 0 1 -14 14 H 315 a 14 14 90 0 1 -14 -14 V 154.0 H 96" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-	<rect x="301" y="126" width="96" height="58" fill="none" rx="14" stroke="#000000" stroke-width="1.5"/>
-	<line x1="301" y1="154" x2="397" y2="154" stroke="#000000" stroke-width="1.5"/>
-	<text x="308" y="147.3" fill="#000000" font-family="Copperplate" font-size="18">Realiser</text>
+<!-- Association Créer -->
+<line x1="423" y1="346" x2="159" y2="146" stroke="#e08214" stroke-width="1"/>
+<text x="394.57536086778106" y="317" fill="#542788" font-family="Futura" font-size="11">1,1</text>
+<line x1="268" y1="38" x2="159" y2="146" stroke="#e08214" stroke-width="1"/>
+<text x="244.78063757362162" y="75" fill="#542788" font-family="Futura" font-size="11">1,N</text>
+<g id="association-Créer">
+	<path d="M 180 117 a 14 14 90 0 1 14 14 V 145 h -70 V 131 a 14 14 90 0 1 14 -14" fill="#fdb863" stroke="#fdb863" stroke-width="0"/>
+	<path d="M 194 145.0 v 16 a 14 14 90 0 1 -14 14 H 138 a 14 14 90 0 1 -14 -14 V 145.0 H 70" fill="#fee0b6" stroke="#fee0b6" stroke-width="0"/>
+	<rect x="124" y="117" width="70" height="58" fill="none" rx="14" stroke="#e08214" stroke-width="1.5"/>
+	<line x1="124" y1="145" x2="194" y2="145" stroke="#e08214" stroke-width="1.5"/>
+	<text x="131" y="138.3" fill="#000000" font-family="Copperplate" font-size="18">Créer</text>
 </g>
 
-<!-- Association Destiner -->
-<line x1="495" y1="155" x2="210" y2="305" stroke="#000000" stroke-width="1"/>
-<text x="403" y="187.42282574978069" fill="#000000" font-family="Futura" font-size="11">1,1</text>
-<line x1="64" y1="305" x2="210" y2="305" stroke="#000000" stroke-width="1"/>
-<text x="109" y="297.0" fill="#000000" font-family="Futura" font-size="11">0,N</text>
-<g id="association-Destiner">
-	<path d="M 244 276 a 14 14 90 0 1 14 14 V 304 h -96 V 290 a 14 14 90 0 1 14 -14" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-	<path d="M 258 304.0 v 16 a 14 14 90 0 1 -14 14 H 176 a 14 14 90 0 1 -14 -14 V 304.0 H 96" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-	<rect x="162" y="276" width="96" height="58" fill="none" rx="14" stroke="#000000" stroke-width="1.5"/>
-	<line x1="162" y1="304" x2="258" y2="304" stroke="#000000" stroke-width="1.5"/>
-	<text x="169" y="297.3" fill="#000000" font-family="Copperplate" font-size="18">Destiner</text>
+<!-- Association Ajouter -->
+<line x1="423" y1="263" x2="268" y2="146" stroke="#e08214" stroke-width="1"/>
+<text x="371.9707278845097" y="217" fill="#542788" font-family="Futura" font-size="11">1,1</text>
+<line x1="268" y1="38" x2="268" y2="146" stroke="#e08214" stroke-width="1"/>
+<text x="273.0" y="75" fill="#542788" font-family="Futura" font-size="11">1,N</text>
+<g id="association-Ajouter">
+	<path d="M 298 117 a 14 14 90 0 1 14 14 V 145 h -88 V 131 a 14 14 90 0 1 14 -14" fill="#fdb863" stroke="#fdb863" stroke-width="0"/>
+	<path d="M 312 145.0 v 16 a 14 14 90 0 1 -14 14 H 238 a 14 14 90 0 1 -14 -14 V 145.0 H 88" fill="#fee0b6" stroke="#fee0b6" stroke-width="0"/>
+	<rect x="224" y="117" width="88" height="58" fill="none" rx="14" stroke="#e08214" stroke-width="1.5"/>
+	<line x1="224" y1="145" x2="312" y2="145" stroke="#e08214" stroke-width="1.5"/>
+	<text x="231" y="138.3" fill="#000000" font-family="Copperplate" font-size="18">Ajouter</text>
 </g>
 
-<!-- Association Evaluer -->
-<line x1="495" y1="155" x2="349" y2="305" stroke="#000000" stroke-width="1"/>
-<text x="447.31745483546973" y="218" fill="#000000" font-family="Futura" font-size="11">1,N</text>
-<line x1="349" y1="413" x2="349" y2="305" stroke="#000000" stroke-width="1"/>
-<text x="354.0" y="350" fill="#000000" font-family="Futura" font-size="11">1,N</text>
-<g id="association-Evaluer">
-	<path d="M 380 276 a 14 14 90 0 1 14 14 V 304 h -90 V 290 a 14 14 90 0 1 14 -14" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-	<path d="M 394 304.0 v 16 a 14 14 90 0 1 -14 14 H 318 a 14 14 90 0 1 -14 -14 V 304.0 H 90" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-	<rect x="304" y="276" width="90" height="58" fill="none" rx="14" stroke="#000000" stroke-width="1.5"/>
-	<line x1="304" y1="304" x2="394" y2="304" stroke="#000000" stroke-width="1.5"/>
-	<text x="311" y="297.3" fill="#000000" font-family="Copperplate" font-size="18">Evaluer</text>
-	<text x="311" y="322.1" fill="#000000" font-family="Gill Sans" font-size="15">note</text>
+<!-- Association Affecter -->
+<line x1="556" y1="146" x2="556" y2="263" stroke="#e08214" stroke-width="1"/>
+<text x="561.0" y="217" fill="#542788" font-family="Futura" font-size="11">0,N</text>
+<line x1="423" y1="263" x2="556" y2="263" stroke="#e08214" stroke-width="1"/>
+<text x="483" y="279.0" fill="#542788" font-family="Futura" font-size="11">0,N</text>
+<line x1="423" y1="346" x2="556" y2="263" stroke="#e08214" stroke-width="1"/>
+<text x="437.4664413096759" y="317" fill="#542788" font-family="Futura" font-size="11">0,N</text>
+<line x1="423" y1="146" x2="556" y2="263" stroke="#e08214" stroke-width="1"/>
+<text x="429.30410770405587" y="183" fill="#542788" font-family="Futura" font-size="11">0,N</text>
+<g id="association-Affecter">
+	<path d="M 591 234 a 14 14 90 0 1 14 14 V 262 h -98 V 248 a 14 14 90 0 1 14 -14" fill="#fdb863" stroke="#fdb863" stroke-width="0"/>
+	<path d="M 605 262.0 v 16 a 14 14 90 0 1 -14 14 H 521 a 14 14 90 0 1 -14 -14 V 262.0 H 98" fill="#fee0b6" stroke="#fee0b6" stroke-width="0"/>
+	<rect x="507" y="234" width="98" height="58" fill="none" rx="14" stroke="#e08214" stroke-width="1.5"/>
+	<line x1="507" y1="262" x2="605" y2="262" stroke="#e08214" stroke-width="1.5"/>
+	<text x="514" y="255.3" fill="#000000" font-family="Copperplate" font-size="18">Affecter</text>
 </g>
 
-<!-- Association Situer -->
-<line x1="495" y1="513" x2="495" y2="305" stroke="#000000" stroke-width="1"/>
-<text x="500.0" y="467" fill="#000000" font-family="Futura" font-size="11">0,N</text>
-<line x1="601" y1="413" x2="495" y2="305" stroke="#000000" stroke-width="1"/>
-<text x="561.7261566701801" y="367" fill="#000000" font-family="Futura" font-size="11">0,N</text>
-<line x1="495" y1="155" x2="495" y2="305" stroke="#000000" stroke-width="1"/>
-<text x="500.0" y="218" fill="#000000" font-family="Futura" font-size="11">1,1</text>
-<g id="association-Situer">
-	<path d="M 519 276 a 14 14 90 0 1 14 14 V 304 h -76 V 290 a 14 14 90 0 1 14 -14" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-	<path d="M 533 304.0 v 16 a 14 14 90 0 1 -14 14 H 471 a 14 14 90 0 1 -14 -14 V 304.0 H 76" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-	<rect x="457" y="276" width="76" height="58" fill="none" rx="14" stroke="#000000" stroke-width="1.5"/>
-	<line x1="457" y1="304" x2="533" y2="304" stroke="#000000" stroke-width="1.5"/>
-	<text x="464" y="297.3" fill="#000000" font-family="Copperplate" font-size="18">Situer</text>
-</g>
-
-<!-- Association Appartenir -->
-<line x1="64" y1="305" x2="210" y2="413" stroke="#000000" stroke-width="1"/>
-<text x="109" y="332.1804588608741" fill="#000000" font-family="Futura" font-size="11">1,N</text>
-<line x1="349" y1="413" x2="210" y2="413" stroke="#000000" stroke-width="1"/>
-<text x="291" y="429.0" fill="#000000" font-family="Futura" font-size="11">1,1</text>
-<g id="association-Appartenir">
-	<path d="M 254 384 a 14 14 90 0 1 14 14 V 412 h -116 V 398 a 14 14 90 0 1 14 -14" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-	<path d="M 268 412.0 v 16 a 14 14 90 0 1 -14 14 H 166 a 14 14 90 0 1 -14 -14 V 412.0 H 116" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-	<rect x="152" y="384" width="116" height="58" fill="none" rx="14" stroke="#000000" stroke-width="1.5"/>
-	<line x1="152" y1="412" x2="268" y2="412" stroke="#000000" stroke-width="1.5"/>
-	<text x="159" y="405.3" fill="#000000" font-family="Copperplate" font-size="18">Appartenir</text>
-</g>
-
-<!-- Association Exister -->
-<line x1="495" y1="513" x2="64" y2="513" stroke="#000000" stroke-width="1"/>
-<text x="394" y="529.0" fill="#000000" font-family="Futura" font-size="11">0,N</text>
-<line x1="64" y1="305" x2="64" y2="513" stroke="#000000" stroke-width="1"/>
-<text x="41.0" y="368" fill="#000000" font-family="Futura" font-size="11">1,1</text>
-<g id="association-Exister">
-	<path d="M 92 484 a 14 14 90 0 1 14 14 V 512 h -84 V 498 a 14 14 90 0 1 14 -14" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-	<path d="M 106 512.0 v 16 a 14 14 90 0 1 -14 14 H 36 a 14 14 90 0 1 -14 -14 V 512.0 H 84" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-	<rect x="22" y="484" width="84" height="58" fill="none" rx="14" stroke="#000000" stroke-width="1.5"/>
-	<line x1="22" y1="512" x2="106" y2="512" stroke="#000000" stroke-width="1.5"/>
-	<text x="29" y="505.3" fill="#000000" font-family="Copperplate" font-size="18">Exister</text>
-</g>
-
-<!-- Entity Discipline -->
-<g id="entity-Discipline">
-	<g id="frame-Discipline">
-		<rect x="9" y="9" width="110" height="30" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-		<rect x="9" y="39.0" width="110" height="46" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-		<rect x="9" y="9" width="110" height="76" fill="none" stroke="#000000" stroke-width="1.5"/>
-		<line x1="9" y1="39" x2="119" y2="39" stroke="#000000" stroke-width="1.5"/>
+<!-- Entity Administrateur -->
+<g id="entity-Administrateur">
+	<g id="frame-Administrateur">
+		<rect x="188" y="17" width="160" height="30" fill="#b2abd2" stroke="#b2abd2" stroke-width="0"/>
+		<rect x="188" y="47.0" width="160" height="12" fill="#d8daeb" stroke="#d8daeb" stroke-width="0"/>
+		<rect x="188" y="17" width="160" height="42" fill="none" stroke="#8073ac" stroke-width="1.5"/>
+		<line x1="188" y1="47" x2="348" y2="47" stroke="#8073ac" stroke-width="1.5"/>
 	</g>
-	<text x="17" y="30.3" fill="#000000" font-family="Copperplate" font-size="18">Discipline</text>
-	<text x="17" y="56.1" fill="#000000" font-family="Gill Sans" font-size="15">discipline_id</text>
-	<line x1="17" y1="59" x2="94" y2="59" stroke="#000000" stroke-width="1"/>
-	<text x="17" y="73.1" fill="#000000" font-family="Gill Sans" font-size="15">nom</text>
+	<text x="196" y="38.3" fill="#000000" font-family="Copperplate" font-size="18">Administrateur</text>
+</g>
+
+<!-- Entity Élève -->
+<g id="entity-Élève">
+	<g id="frame-Élève">
+		<rect x="388" y="125" width="70" height="30" fill="#b2abd2" stroke="#b2abd2" stroke-width="0"/>
+		<rect x="388" y="155.0" width="70" height="12" fill="#d8daeb" stroke="#d8daeb" stroke-width="0"/>
+		<rect x="388" y="125" width="70" height="42" fill="none" stroke="#8073ac" stroke-width="1.5"/>
+		<line x1="388" y1="155" x2="458" y2="155" stroke="#8073ac" stroke-width="1.5"/>
+	</g>
+	<text x="396" y="146.3" fill="#000000" font-family="Copperplate" font-size="18">Élève</text>
 </g>
 
 <!-- Entity Professeur -->
 <g id="entity-Professeur">
 	<g id="frame-Professeur">
-		<rect x="148" y="100" width="124" height="30" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-		<rect x="148" y="130.0" width="124" height="80" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-		<rect x="148" y="100" width="124" height="110" fill="none" stroke="#000000" stroke-width="1.5"/>
-		<line x1="148" y1="130" x2="272" y2="130" stroke="#000000" stroke-width="1.5"/>
+		<rect x="494" y="91" width="124" height="30" fill="#b2abd2" stroke="#b2abd2" stroke-width="0"/>
+		<rect x="494" y="121.0" width="124" height="80" fill="#d8daeb" stroke="#d8daeb" stroke-width="0"/>
+		<rect x="494" y="91" width="124" height="110" fill="none" stroke="#8073ac" stroke-width="1.5"/>
+		<line x1="494" y1="121" x2="618" y2="121" stroke="#8073ac" stroke-width="1.5"/>
 	</g>
-	<text x="156" y="121.3" fill="#000000" font-family="Copperplate" font-size="18">Professeur</text>
-	<text x="156" y="147.1" fill="#000000" font-family="Gill Sans" font-size="15">professeur_id</text>
-	<line x1="156" y1="150" x2="243" y2="150" stroke="#000000" stroke-width="1"/>
-	<text x="156" y="164.1" fill="#000000" font-family="Gill Sans" font-size="15">prenom</text>
-	<text x="156" y="181.1" fill="#000000" font-family="Gill Sans" font-size="15">nom</text>
-	<text x="156" y="198.0" fill="#000000" font-family="Gill Sans" font-size="15">titre</text>
+	<text x="502" y="112.3" fill="#000000" font-family="Copperplate" font-size="18">Professeur</text>
+	<text x="502" y="138.1" fill="#000000" font-family="Gill Sans" font-size="15">professeur_id</text>
+	<line x1="502" y1="141" x2="589" y2="141" stroke="#000000" stroke-width="1"/>
+	<text x="502" y="155.1" fill="#000000" font-family="Gill Sans" font-size="15">prenom</text>
+	<text x="502" y="172.1" fill="#000000" font-family="Gill Sans" font-size="15">nom</text>
+	<text x="502" y="189.0" fill="#000000" font-family="Gill Sans" font-size="15">titre</text>
 </g>
 
-<!-- Entity Evaluation -->
-<g id="entity-Evaluation">
-	<g id="frame-Evaluation">
-		<rect x="426" y="108" width="138" height="30" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-		<rect x="426" y="138.0" width="138" height="64" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-		<rect x="426" y="108" width="138" height="94" fill="none" stroke="#000000" stroke-width="1.5"/>
-		<line x1="426" y1="138" x2="564" y2="138" stroke="#000000" stroke-width="1.5"/>
+<!-- Entity Discipline -->
+<g id="entity-Discipline">
+	<g id="frame-Discipline">
+		<rect x="368" y="225" width="110" height="30" fill="#b2abd2" stroke="#b2abd2" stroke-width="0"/>
+		<rect x="368" y="255.0" width="110" height="46" fill="#d8daeb" stroke="#d8daeb" stroke-width="0"/>
+		<rect x="368" y="225" width="110" height="76" fill="none" stroke="#8073ac" stroke-width="1.5"/>
+		<line x1="368" y1="255" x2="478" y2="255" stroke="#8073ac" stroke-width="1.5"/>
 	</g>
-	<text x="443" y="129.3" fill="#000000" font-family="Copperplate" font-size="18">Evaluation</text>
-	<text x="434" y="155.1" fill="#000000" font-family="Gill Sans" font-size="15">evaluation_id</text>
-	<line x1="434" y1="158" x2="517" y2="158" stroke="#000000" stroke-width="1"/>
-	<text x="434" y="172.1" fill="#000000" font-family="Gill Sans" font-size="15">Date_Contrôle</text>
-	<text x="434" y="189.0" fill="#000000" font-family="Gill Sans" font-size="15">Date_Note_Visible</text>
+	<text x="376" y="246.3" fill="#000000" font-family="Copperplate" font-size="18">Discipline</text>
+	<text x="376" y="272.1" fill="#000000" font-family="Gill Sans" font-size="15">discipline_id</text>
+	<line x1="376" y1="275" x2="453" y2="275" stroke="#000000" stroke-width="1"/>
+	<text x="376" y="289.1" fill="#000000" font-family="Gill Sans" font-size="15">nom</text>
+</g>
+
+<!-- Entity Période -->
+<g id="entity-Période">
+	<g id="frame-Période">
+		<rect x="9" y="325" width="88" height="30" fill="#b2abd2" stroke="#b2abd2" stroke-width="0"/>
+		<rect x="9" y="355.0" width="88" height="12" fill="#d8daeb" stroke="#d8daeb" stroke-width="0"/>
+		<rect x="9" y="325" width="88" height="42" fill="none" stroke="#8073ac" stroke-width="1.5"/>
+		<line x1="9" y1="355" x2="97" y2="355" stroke="#8073ac" stroke-width="1.5"/>
+	</g>
+	<text x="17" y="346.3" fill="#000000" font-family="Copperplate" font-size="18">Période</text>
 </g>
 
 <!-- Entity Classe -->
 <g id="entity-Classe">
 	<g id="frame-Classe">
-		<rect x="24" y="258" width="80" height="30" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-		<rect x="24" y="288.0" width="80" height="64" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-		<rect x="24" y="258" width="80" height="94" fill="none" stroke="#000000" stroke-width="1.5"/>
-		<line x1="24" y1="288" x2="104" y2="288" stroke="#000000" stroke-width="1.5"/>
+		<rect x="383" y="325" width="80" height="30" fill="#b2abd2" stroke="#b2abd2" stroke-width="0"/>
+		<rect x="383" y="355.0" width="80" height="12" fill="#d8daeb" stroke="#d8daeb" stroke-width="0"/>
+		<rect x="383" y="325" width="80" height="42" fill="none" stroke="#8073ac" stroke-width="1.5"/>
+		<line x1="383" y1="355" x2="463" y2="355" stroke="#8073ac" stroke-width="1.5"/>
 	</g>
-	<text x="32" y="279.3" fill="#000000" font-family="Copperplate" font-size="18">Classe</text>
-	<text x="32" y="305.1" fill="#000000" font-family="Gill Sans" font-size="15">classe_id</text>
-	<line x1="32" y1="308" x2="88" y2="308" stroke="#000000" stroke-width="1"/>
-	<text x="32" y="322.1" fill="#000000" font-family="Gill Sans" font-size="15">nom</text>
-	<text x="32" y="339.0" fill="#000000" font-family="Gill Sans" font-size="15">niveau</text>
-</g>
-
-<!-- Entity Eleve -->
-<g id="entity-Eleve">
-	<g id="frame-Eleve">
-		<rect x="314" y="358" width="70" height="30" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-		<rect x="314" y="388.0" width="70" height="80" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-		<rect x="314" y="358" width="70" height="110" fill="none" stroke="#000000" stroke-width="1.5"/>
-		<line x1="314" y1="388" x2="384" y2="388" stroke="#000000" stroke-width="1.5"/>
-	</g>
-	<text x="322" y="379.3" fill="#000000" font-family="Copperplate" font-size="18">Eleve</text>
-	<text x="322" y="405.1" fill="#000000" font-family="Gill Sans" font-size="15">eleve_id</text>
-	<line x1="322" y1="408" x2="375" y2="408" stroke="#000000" stroke-width="1"/>
-	<text x="322" y="422.1" fill="#000000" font-family="Gill Sans" font-size="15">prénom</text>
-	<text x="322" y="439.1" fill="#000000" font-family="Gill Sans" font-size="15">nom</text>
-	<text x="322" y="456.0" fill="#000000" font-family="Gill Sans" font-size="15">genre</text>
-</g>
-
-<!-- Entity Periode -->
-<g id="entity-Periode">
-	<g id="frame-Periode">
-		<rect x="557" y="375" width="88" height="30" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-		<rect x="557" y="405.0" width="88" height="46" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-		<rect x="557" y="375" width="88" height="76" fill="none" stroke="#000000" stroke-width="1.5"/>
-		<line x1="557" y1="405" x2="645" y2="405" stroke="#000000" stroke-width="1.5"/>
-	</g>
-	<text x="565" y="396.3" fill="#000000" font-family="Copperplate" font-size="18">Periode</text>
-	<text x="565" y="422.1" fill="#000000" font-family="Gill Sans" font-size="15">periode_id</text>
-	<line x1="565" y1="425" x2="634" y2="425" stroke="#000000" stroke-width="1"/>
-	<text x="565" y="439.1" fill="#000000" font-family="Gill Sans" font-size="15">nom</text>
-</g>
-
-<!-- Entity AnneeScolaire -->
-<g id="entity-AnneeScolaire">
-	<g id="frame-AnneeScolaire">
-		<rect x="418" y="475" width="154" height="30" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-		<rect x="418" y="505.0" width="154" height="46" fill="#FFFFFF" stroke="#FFFFFF" stroke-width="0"/>
-		<rect x="418" y="475" width="154" height="76" fill="none" stroke="#000000" stroke-width="1.5"/>
-		<line x1="418" y1="505" x2="572" y2="505" stroke="#000000" stroke-width="1.5"/>
-	</g>
-	<text x="426" y="496.3" fill="#000000" font-family="Copperplate" font-size="18">AnneeScolaire</text>
-	<text x="426" y="522.1" fill="#000000" font-family="Gill Sans" font-size="15">annee_id</text>
-	<line x1="426" y1="525" x2="483" y2="525" stroke="#000000" stroke-width="1"/>
-	<text x="426" y="539.1" fill="#000000" font-family="Gill Sans" font-size="15">nom</text>
+	<text x="391" y="346.3" fill="#000000" font-family="Copperplate" font-size="18">Classe</text>
 </g>
 </svg>

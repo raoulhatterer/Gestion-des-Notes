@@ -226,17 +226,15 @@ show warnings;
 -- Création de la table Élève
 CREATE TABLE IF NOT EXISTS Eleve (
 eleve_id int NOT NULL AUTO_INCREMENT,
-FirstName varchar(20) COLLATE utf8_bin NOT NULL,
-LastName varchar(20) COLLATE utf8_bin NOT NULL,
-Gender varchar(10) COLLATE utf8_bin DEFAULT NULL,
+prenom varchar(20) COLLATE utf8_bin NOT NULL,
+nom varchar(20) COLLATE utf8_bin NOT NULL,
+genre varchar(10) COLLATE utf8_bin DEFAULT NULL,
 classe_id varchar(10) COLLATE utf8_bin DEFAULT NULL,
-Birthday date,
-Login varchar(20) COLLATE utf8_bin DEFAULT NULL,
 PRIMARY KEY (eleve_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 
-INSERT INTO Eleve (FirstName, LastName, Gender) VALUES
+INSERT INTO Eleve (prenom, nom, genre) VALUES
 ('Jean', 'Martin', 'M'),
 ('Pierre', 'Bernard', 'M'),
 ('Michel', 'Thomas', 'M'),
