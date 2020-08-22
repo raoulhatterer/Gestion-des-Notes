@@ -46,15 +46,16 @@ def afficher_notebook_gestionnaire():
     """
     afficher_compte_admin()
     notebook.add(f1, text="Disciplines")
-   notebook.add(f2, text="Enseignants")
+    notebook.add(f2, text="Enseignants")
     notebook.add(f3, text="Élèves")
     notebook.add(f4, text="Classes")
     notebook.add(f5, text="Enseignements")
-    notebook.add(f6, text="Années Scolaires")    
+    notebook.add(f6, text="Périodes")    
     afficher_disciplines()
     afficher_professeurs()
     afficher_eleves()
     afficher_classes()
+    afficher_annees_et_periodes()
 
 
 
@@ -386,7 +387,7 @@ def afficher_IHM_connexion():
 def sql_read_disciplines():
     """
     Fonction appelée par 'afficher_disciplines()'
-    Retourne un tupple conteant 'discipline_id' et 'disc_Name'.
+    Retourne un tupple contenant 'discipline_id' et 'disc_Name'.
     discipline_id : liste contenant tous les index générés de façon automatique de
     la table Discipline de la base de données 'bd_gestion_des_notes'.
     disc_Name : liste contenant tous les noms des disciplines (dans l'ordre
@@ -522,7 +523,7 @@ def ajouter_discipline():
 def sql_read_professeurs():
     """
     Fonction appelée par 'afficher_professeurs()'
-    Retourne un tupple conteant: 'professeur_id', 'prof_Name', 'prof_Print'.
+    Retourne un tupple contenant: 'professeur_id', 'prof_Name', 'prof_Print'.
     professeur_id : liste contenant tous les index générés de façon automatique de
     la table 'Professeur' de la base de données 'bd_gestion_des_notes'.
     prof_Name : liste contenant tous les noms des professeurs (dans l'ordre
@@ -676,7 +677,7 @@ def ajouter_professeur():
 def sql_read_eleves():
     """
     Fonction appelée par 'afficher_eleves()'
-    Retourne un tupple conteant 'eleve_id', 'eleves_Name', eleves_Print.
+    Retourne un tupple contenant 'eleve_id', 'eleves_Name', eleves_Print.
     eleve_id : liste contenant tous les index générés de façon automatique de
     la table 'Eleve' de la base de données 'bd_gestion_des_notes'.
     eleves_Name : liste contenant tous les noms des élèves (dans l'ordre
@@ -937,6 +938,272 @@ def ajouter_classe():
 
 
 
+# ------------------------------------------------------------------------------
+# ANNEES SCOLAIRES et PERIODES
+# ------------------------------------------------------------------------------
+
+
+def sql_read_annees():
+    """
+    Fonction appelée par 'afficher_annees_et_periodes()'
+    Retourne un tupple contenant 'annee_id' et 'annee_Name'.
+    annee_id : liste contenant tous les index générés de façon automatique de
+    la table Anneescolaire de la base de données 'bd_gestion_des_notes'.
+    annee_Name : liste contenant tous les noms des annees (dans l'ordre
+    alphabétique) contenus dans la table Anneescolaire de la base de données
+    'bd_gestion_des_notes'.
+    """
+    global GN_password
+    try:
+        print(f"Try to connected to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        print("sql_read_annees")
+        cursor = connection.cursor()
+        cursor.execute("select annee_id, nom from Anneescolaire ORDER BY nom ASC;")
+        records = cursor.fetchall()
+        print(records)
+        print("All annee of Anneescolaire (", cursor.rowcount, "): ")
+        annee_id, annee_Name = list(), list()
+        for row in records:
+            # print("\t", row)
+            annee_id += [row[0]]
+            annee_Name += [[row[1]]]  # liste de liste requise pour un affichage modifiable avec tksheet
+
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        return (annee_id, annee_Name)
+    
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+
+
+def sql_read_periodes():
+    """
+    Fonction appelée par 'afficher_annees_et_periodes()'
+    Retourne un tupple contenant 'periode_id' et 'periode_Name'.
+    periode_id : liste contenant tous les index générés de façon automatique de
+    la table Periode de la base de données 'bd_gestion_des_notes'.
+    periode_Name : liste contenant tous les noms des périodes (dans l'ordre
+    alphabétique) contenus dans la table Periode de la base de données
+    'bd_gestion_des_notes'.
+    """
+    global GN_password
+    try:
+        print(f"Try to connected to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        print("sql_read_periodes")
+        cursor = connection.cursor()
+        cursor.execute("select periode_id, nom from Periode ORDER BY nom ASC;")
+        records = cursor.fetchall()
+        print(records)
+        print("All periode of Periode (", cursor.rowcount, "): ")
+        periode_id, periode_Name = list(), list()
+        for row in records:
+            # print("\t", row)
+            periode_id += [row[0]]
+            periode_Name += [[row[1]]]  # liste de liste requise pour un affichage modifiable avec tksheet
+
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        return (periode_id, periode_Name)
+    
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+
+
+def afficher_annees_et_periodes():
+    """
+    Affiche un tableau de type tableur avec toutes les années scolaires (IHM)
+    """
+    global sheet_annees, annee_id, annee_Name, sheet_periodes, periode_id, periode_Name
+    annee_id, annee_Name = sql_read_annees()
+    frame_annees.grid(row=0, column=0)
+    sheet_annees = Sheet(frame_annees,
+                         data=annee_Name,  # to set sheet data at startup
+                         headers=["Années Scolaires"],
+                         column_width = 250,
+                         height=600,
+                         width=400)
+    sheet_annees.hide("row_index")
+    sheet_annees.hide("top_left")
+    # sheet_annees.hide("header")
+    sheet_annees.grid(row=0, column=0, columnspan=2, sticky="nswe")
+    sheet_annees.enable_bindings(("single_select",  # "single_select" or "toggle_select"
+                                       "arrowkeys",
+                                       "copy",
+                                       "cut",
+                                       "paste",
+                                       "delete",
+                                       "undo",
+                                       "edit_cell"))
+    periode_id, periode_Name = sql_read_periodes()
+    frame_periodes.grid(row=0, column=1)
+    sheet_periodes = Sheet(frame_periodes,
+                           data=periode_Name,  # to set sheet data at startup
+                           headers=["Périodes"],                        
+                           column_width = 250,
+                           height=600,
+                           width=400)
+    sheet_periodes.hide("row_index")
+    sheet_periodes.hide("top_left")
+    # sheet_periodes.hide("header")
+    sheet_periodes.grid(row=0, column=0, columnspan=2, sticky="nswe")
+    sheet_periodes.enable_bindings(("single_select",  # "single_select" or "toggle_select"
+                                       "arrowkeys",
+                                       "copy",
+                                       "cut",
+                                       "paste",
+                                       "delete",
+                                       "undo",
+                                       "edit_cell"))
+
+
+def enregistrer_annees():
+    """
+    Met à jour la base de données en y ajoutant d'éventuelles nouvelles
+    années scolaires puis rafraîchi l'ÌHM 
+    """
+    try:
+        print(f"Try to connected to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        print("enregistrer_annees")
+        cursor = connection.cursor()
+        for index in range(len(annee_Name)):
+            sql = "UPDATE Anneescolaire SET nom = %s WHERE annee_id = %s"
+            annee = (annee_Name[index][0], annee_id[index])
+            cursor.execute(sql, annee)
+            connection.commit()
+        # déconnexion
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        # rafraîchissement IHM
+        sheet_annees.destroy()
+        sheet_periodes.destroy()
+        afficher_annees_et_periodes()
+
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+
+
+def enregistrer_periodes():
+    """
+    Met à jour la base de données en y ajoutant d'éventuelles nouvelles
+    périodes scolaires puis rafraîchi l'ÌHM 
+    """
+    try:
+        print(f"Try to connected to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        print("enregistrer_periodes")
+        cursor = connection.cursor()
+        for index in range(len(periode_Name)):
+            sql = "UPDATE Periode SET nom = %s WHERE periode_id = %s"
+            periode = (periode_Name[index][0], periode_id[index])
+            cursor.execute(sql, periode)
+            connection.commit()
+        # déconnexion
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        # rafraîchissement IHM
+        sheet_annees.destroy()
+        sheet_periodes.destroy()
+        afficher_annees_et_periodes()
+
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+
+
+        
+def ajouter_annee():
+    """
+    Ajoute une année 'À définir' dans le tableau des années (et dans
+    la base de données) et sélectionne la ligne. Commence par enregistrer
+    l'état précédent du tableau dans la base de données dans le cas où
+    l'utilisateur enchaîne les ajouts.
+    """
+    enregistrer_annees()
+    global sheet_annees, sheet_periodes
+    sql = "INSERT INTO Anneescolaire (nom) VALUES ('À définir')"
+    try:
+        print(f"Try to connected to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        print("ajouter_annee")
+        cursor = connection.cursor()
+        cursor.execute(sql)
+        connection.commit()
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+    sheet_annees.destroy()
+    sheet_periodes.destroy()
+    afficher_annees_et_periodes()
+    sheet_annees.select_row(annee_Name.index(['À définir']))
+
+def ajouter_periode():
+    """
+    Ajoute une période 'À définir' dans le tableau des périodes (et dans
+    la base de données) et sélectionne la ligne. Commence par enregistrer
+    l'état précédent du tableau dans la base de données dans le cas où
+    l'utilisateur enchaîne les ajouts.
+    """
+    print("tentons enregistrer_periodes")
+    enregistrer_periodes()
+    print("Enregistrement période réussi")
+    global sheet_annees, sheet_periodes
+    sql = "INSERT INTO Periode (nom) VALUES ('À définir')"
+    try:
+        print(f"Try to connected to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        print("ajouter_periode")
+        cursor = connection.cursor()
+        cursor.execute(sql)
+        connection.commit()
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+    sheet_annees.destroy()
+    sheet_periodes.destroy()
+    afficher_annees_et_periodes()
+    sheet_periodes.select_row(periode_Name.index(['À définir']))
+
+
 
 
     
@@ -963,8 +1230,8 @@ f4 = tk.Frame(notebook, width=800, height=600)  # frame pour les classes
 f5 = tk.Frame(notebook, width=800, height=600)  # frame pour les enseignements
 f6 = tk.Frame(notebook, width=800, height=600)  # frame pour les années scolaires
 
-
-
+frame_annees = tk.Frame(f6)
+frame_periodes = tk.Frame(f6)
 
 
 button_add_discipline = tk.Button(f1, text='Ajouter',
@@ -983,6 +1250,16 @@ button_add_classe = tk.Button(f4, text='Ajouter',
                               command=ajouter_classe)
 button_save_classes = tk.Button(f4, text='Enregistrer',
                                 command=enregistrer_classes)
+button_add_annee = tk.Button(frame_annees, text='Ajouter',
+                              command=ajouter_annee)
+button_save_annees = tk.Button(frame_annees, text='Enregistrer',
+                                command=enregistrer_annees)
+button_add_periode = tk.Button(frame_periodes, text='Ajouter',
+                               command=ajouter_periode)
+button_save_periodes = tk.Button(frame_periodes, text='Enregistrer',
+                                command=enregistrer_periodes)
+
+
 notebook.add(f0, text="Mon compte")
 
 notebook.grid(row=0, column=0, sticky="nw")
@@ -995,6 +1272,10 @@ button_add_eleve.grid(row=1, column=0)
 button_save_eleves.grid(row=1, column=1)
 button_add_classe.grid(row=1, column=0)
 button_save_classes.grid(row=1, column=1)
+button_add_annee.grid(row=1, column=0)
+button_save_annees.grid(row=1, column=1)
+button_add_periode.grid(row=1, column=0)
+button_save_periodes.grid(row=1, column=1)
 
 afficher_IHM_connexion()
 
