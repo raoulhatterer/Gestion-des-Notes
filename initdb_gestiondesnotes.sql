@@ -433,22 +433,21 @@ PRIMARY KEY (classe_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 INSERT INTO Classe (nom, niveau, annee_id) VALUES
-('À définir', 'À définir', 1),
-('S1', 'seconde', 3),
-('S2', 'seconde', 3),
-('S3', 'seconde', 3),
-('S4', 'seconde', 3),
-('S5', 'seconde', 3),
-('P1', 'Première', 3),
-('P2', 'Première', 3),
-('P3', 'Première', 3),
-('P4', 'Première', 3),
-('P5', 'Première', 3),
-('T1', 'Terminale', 3),
-('T2', 'Terminale', 3),
-('T3', 'Terminale', 3),
-('T4', 'Terminale', 3),
-('T5', 'Terminale', 3);
+('S1', 'seconde', 1),
+('S2', 'seconde', 1),
+('S3', 'seconde', 1),
+('S4', 'seconde', 1),
+('S5', 'seconde', 1),
+('P1', 'Première', 1),
+('P2', 'Première', 1),
+('P3', 'Première', 1),
+('P4', 'Première', 1),
+('P5', 'Première', 1),
+('T1', 'Terminale', 1),
+('T2', 'Terminale', 1),
+('T3', 'Terminale', 1),
+('T4', 'Terminale', 1),
+('T5', 'Terminale', 1);
 
 
 
@@ -463,7 +462,6 @@ CREATE OR replace TABLE Periode (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO Periode (nom) VALUES
-('À définir'),
 ('trimestre 1'),
 ('trimestre 2'),
 ('trimestre 3'),
@@ -475,7 +473,7 @@ INSERT INTO Periode (nom) VALUES
 -- ------------------------------------------------
 -- Création de la table AnneeScolaire
 
-CREATE TABLE Anneescolaire (
+CREATE OR replace TABLE Anneescolaire (
   annee_id int NOT NULL AUTO_INCREMENT,
   nom VARCHAR(20) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`annee_id`)
@@ -483,11 +481,8 @@ CREATE TABLE Anneescolaire (
 
 
 INSERT INTO Anneescolaire (nom) VALUES
-('À définir'),
 ('2019-2020'),
-('2020-2021'),
-('2021-2022');
-
+('2020-2021');
 
 -- ------------------------------------------------
 -- Clés étrangères

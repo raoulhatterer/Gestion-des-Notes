@@ -35,6 +35,14 @@ GN_database = 'bd_gestion_des_notes'
 GN_user = None
 user_role = None
 
+# ------------------------------------------------------------------------------
+# Sélections
+# ------------------------------------------------------------------------------
+
+annee_selected = None
+classe_selected = None
+professeur_selected = None
+discipline_selected = None
 
 # ------------------------------------------------------------------------------
 # AFFICHAGE NOTEBOOK
@@ -46,7 +54,7 @@ def afficher_notebook_gestionnaire():
     """
     afficher_compte_admin()
     notebook.add(f1, text="Disciplines")
-    notebook.add(f2, text="Enseignants")
+    notebook.add(f2, text="Professeurs")
     notebook.add(f3, text="Élèves")
     notebook.add(f4, text="Classes")
     notebook.add(f5, text="Enseignements")
@@ -440,8 +448,10 @@ def afficher_disciplines():
     # sheet_disciplines.hide("row_index")
     sheet_disciplines.hide("top_left")
     sheet_disciplines.hide("header")
-    sheet_disciplines.grid(row=0, column=0, columnspan=2, sticky="nswe")
-    sheet_disciplines.enable_bindings(("single_select",  # "single_select" or "toggle_select"
+    sheet_disciplines.grid(row=0, column=0, columnspan=2, sticky="we")
+    sheet_disciplines.extra_bindings([ ("cell_select", select_discipline)])        
+    sheet_disciplines.enable_bindings(("cell_select",
+                                       "single_select",  # "single_select" or "toggle_select"
                                        "arrowkeys",
                                        "copy",
                                        "cut",
@@ -572,13 +582,14 @@ def afficher_professeurs():
     professeur_id, prof_Name, prof_Print = sql_read_professeurs()
     sheet_professeurs = Sheet(f2,
                               data=prof_Print,  # to set sheet data at startup
-                              headers=["Titre", "Nom", "Prénom"],
+                              headers=["Titre", "Prénom", "Nom"],
                               height=600,
                               width=800)
     # sheet_professeurs.hide("row_index")
     sheet_professeurs.hide("top_left")
     #sheet_professeurs.hide("header")
     sheet_professeurs.grid(row=0, column=0, columnspan=2, sticky="nswe")
+    sheet_professeurs.extra_bindings([ ("cell_select", select_professeur)])        
     sheet_professeurs.enable_bindings(("single_select",  # "single_select" or "toggle_select"
                                        "arrowkeys",
                                        "copy",
@@ -642,11 +653,9 @@ def ajouter_professeur():
     l'utilisateur enchaîne les ajouts.
     """
     enregistrer_professeurs()
-    global sheet_professeurs, disc_Name, discipline_id
-    if ['À définir'] not in disc_Name:
-        ajouter_discipline()
-    sql = "INSERT INTO Professeurs (prenom, nom, discipline_id) VALUES (%s, %s, %s)"
-    prof_nouveau = ('* Prénom ? *', '* Nom ? *', discipline_id[disc_Name.index(['À définir'])])
+    global sheet_professeurs, disc_Name
+    sql = "INSERT INTO Professeur (prenom, nom) VALUES (%s, %s)"
+    prof_nouveau = ('* Prénom ? *', '* Nom ? *')
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
@@ -727,7 +736,7 @@ def afficher_eleves():
     # sheet_eleves.hide("row_index")
     sheet_eleves.hide("top_left")
     # sheet_eleves.hide("header")
-    sheet_eleves.grid(row=0, column=0, columnspan=2, sticky="nswe")
+    sheet_eleves.grid(row=0, column=0, columnspan=2, sticky="we")
     sheet_eleves.enable_bindings(("single_select",  # "single_select" or "toggle_select"
                                        "arrowkeys",
                                        "copy",
@@ -742,35 +751,43 @@ def enregistrer_eleves():
     """
     Met à jour la base de données en y ajoutant d'éventuelles modifications puis rafraîchi l'IHM
     """
-    try:
-        print(f"Try to connected to MySQL Server as {GN_user}")
-        connection = mysql.connector.connect(host=GN_host,
-                                             database=GN_database,
-                                             user=GN_user,
-                                             password=GN_password)
-        db_Info = connection.get_server_info()
-        print("Connected to MySQL Server version", db_Info)
-        print("enregistrer_eleves")
-        cursor = connection.cursor()
-        for index in range(len(eleves_Name)):
-            sql = "UPDATE Eleve SET prenom=%s, nom=%s, genre=%s, classe_id=%s WHERE eleve_id = %s"
-            eleve = (eleves_Print[index][1],  # prenom
-                     eleves_Print[index][0],  # nom
-                     eleves_Print[index][2],  # genre
-                     eleves_Print[index][3],  # classe_id
-                     eleve_id[index])
-            # print(eleve)
-            cursor.execute(sql, eleve)
-            connection.commit()
-        cursor.close()
-        connection.close()
-        print("MySQL connection is closed")
-        # Rafraîchissement
-        sheet_eleves.destroy()
-        afficher_eleves()
-
-    except Error as e:
-        print("Error while connecting to MySQL", e)
+    # Contrôle l'existence des classes saisies pour les élèves
+    classes_toutes_valides = True
+    for index in range(len(eleves_Name)):
+        if eleves_Print[index][3] not in classe_Name:
+            classes_toutes_valides = False
+            sheet_eleves.select_cell(index, 3)
+            messagebox.showerror("Erreur", f"Cette classe n'est pas encore enregistrée: {eleves_Print[index][3]}")
+    if classes_toutes_valides:
+        try:
+            print(f"Try to connected to MySQL Server as {GN_user}")
+            connection = mysql.connector.connect(host=GN_host,
+                                                 database=GN_database,
+                                                 user=GN_user,
+                                                 password=GN_password)
+            db_Info = connection.get_server_info()
+            print("Connected to MySQL Server version", db_Info)
+            print("enregistrer_eleves")
+            cursor = connection.cursor()
+            for index in range(len(eleves_Name)):
+                sql = "UPDATE Eleve SET prenom=%s, nom=%s, genre=%s, classe_id=%s WHERE eleve_id = %s"
+                eleve = (eleves_Print[index][1],  # prenom
+                         eleves_Print[index][0],  # nom
+                         eleves_Print[index][2],  # genre
+                         classe_id[classe_Name.index(eleves_Print[index][3])],  # classe_id
+                         eleve_id[index])
+                # print(eleve)
+                cursor.execute(sql, eleve)
+                connection.commit()
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+            # Rafraîchissement
+            sheet_eleves.destroy()
+            afficher_eleves()
+    
+        except Error as e:
+            print("Error while connecting to MySQL", e)
 
 
 def ajouter_eleve():
@@ -782,7 +799,7 @@ def ajouter_eleve():
     """
     enregistrer_eleves()
     global sheet_eleves, disc_Name, discipline_id
-    sql = "INSERT INTO Eleve (prenom, nom, genre) VALUES (%s, %s, %s)"
+    sql = "INSERT INTO Eleve (prenom, nom, genre, classe_id) VALUES (%s, %s, %s, 1)"
     eleve_nouveau = ('* Prénom ? *', '* Nom ? *', 'M ou F')
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")
@@ -864,7 +881,8 @@ def afficher_classes():
     # sheet_classes.hide("row_index")
     sheet_classes.hide("top_left")
     # sheet_classes.hide("header")
-    sheet_classes.grid(row=0, column=0, columnspan=2, sticky="nswe")
+    sheet_classes.grid(row=0, column=0, columnspan=2, sticky="we")
+    sheet_classes.extra_bindings([ ("cell_select", select_classe)])    
     sheet_classes.enable_bindings(("single_select",  # "single_select" or "toggle_select"
                                    "arrowkeys",
                                    "copy",
@@ -880,29 +898,37 @@ def enregistrer_classes():
     Met à jour la base de données en y ajoutant d'éventuelles nouvelles
     classes.
     """
-    try:
-        print(f"Try to connected to MySQL Server as {GN_user}")
-        connection = mysql.connector.connect(host=GN_host,
-                                             database=GN_database,
-                                             user=GN_user,
-                                             password=GN_password)
-        db_Info = connection.get_server_info()
-        print("Connected to MySQL Server version", db_Info)
-        print("enregistrer_classes")
-        cursor = connection.cursor()
-        for index in range(len(classe_Name)):
-            sql = "UPDATE Classe SET nom = %s, niveau = %s, annee_id = %s WHERE classe_id = %s"
-            classe = (classe_Print[index][0], classe_Print[index][1], classe_Print[index][2],  classe_id[index])
-            cursor.execute(sql, classe)
-            connection.commit()
-        cursor.close()
-        connection.close()
-        print("MySQL connection is closed")
-    except Error as e:
-        print("Error while connecting to MySQL", e)
-    sheet_classes.destroy()
-    afficher_classes()
-
+    # Contrôle l'existence des années scolaires saisies pour les classes
+    annees_toutes_valides = True
+    for index in range(len(classe_Name)):
+        if [classe_Print[index][2]] not in annee_Name:
+            annees_toutes_valides = False
+            sheet_classes.select_cell(index, 2)
+            messagebox.showerror("Erreur", f"Cette année scolaire n'est pas enregistrée: {classe_Print[index][2]}")
+    if annees_toutes_valides:        
+        try:
+            print(f"Try to connected to MySQL Server as {GN_user}")
+            connection = mysql.connector.connect(host=GN_host,
+                                                 database=GN_database,
+                                                 user=GN_user,
+                                                 password=GN_password)
+            db_Info = connection.get_server_info()
+            print("Connected to MySQL Server version", db_Info)
+            print("enregistrer_classes")
+            cursor = connection.cursor()
+            for index in range(len(classe_Name)):
+                sql = "UPDATE Classe SET nom = %s, niveau = %s, annee_id = %s WHERE classe_id = %s"
+                classe = (classe_Print[index][0], classe_Print[index][1], annee_id[annee_Name.index([classe_Print[index][2]])], # from annee_Name to annee_id
+                classe_id[index])
+                cursor.execute(sql, classe)
+                connection.commit()
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+        except Error as e:
+            print("Error while connecting to MySQL", e)
+        sheet_classes.destroy()
+        afficher_classes()
 
 def ajouter_classe():
     """
@@ -913,7 +939,7 @@ def ajouter_classe():
     """
     enregistrer_classes()
     global sheet_classes
-    sql = "INSERT INTO Classe (nom, niveau, annee_id) VALUES ('À définir', 'À définir', 'À définir')"
+    sql = "INSERT INTO Classe (nom, niveau, annee_id) VALUES ('À définir', 'À définir', 1)"
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
@@ -966,7 +992,7 @@ def sql_read_annees():
         cursor = connection.cursor()
         cursor.execute("select annee_id, nom from Anneescolaire ORDER BY nom ASC;")
         records = cursor.fetchall()
-        print(records)
+        # print(records)
         print("All annee of Anneescolaire (", cursor.rowcount, "): ")
         annee_id, annee_Name = list(), list()
         for row in records:
@@ -1006,7 +1032,7 @@ def sql_read_periodes():
         cursor = connection.cursor()
         cursor.execute("select periode_id, nom from Periode ORDER BY nom ASC;")
         records = cursor.fetchall()
-        print(records)
+        # print(records)
         print("All periode of Periode (", cursor.rowcount, "): ")
         periode_id, periode_Name = list(), list()
         for row in records:
@@ -1029,7 +1055,7 @@ def afficher_annees_et_periodes():
     """
     global sheet_annees, annee_id, annee_Name, sheet_periodes, periode_id, periode_Name
     annee_id, annee_Name = sql_read_annees()
-    frame_annees.grid(row=0, column=0)
+    frame_annees.grid(row=0, column=0, sticky='we')
     sheet_annees = Sheet(frame_annees,
                          data=annee_Name,  # to set sheet data at startup
                          headers=["Années Scolaires"],
@@ -1039,7 +1065,9 @@ def afficher_annees_et_periodes():
     sheet_annees.hide("row_index")
     sheet_annees.hide("top_left")
     # sheet_annees.hide("header")
-    sheet_annees.grid(row=0, column=0, columnspan=2, sticky="nswe")
+    sheet_annees.grid(row=0, column=0, columnspan=2, sticky="we")
+    
+    sheet_annees.extra_bindings([ ("cell_select", select_annee)])
     sheet_annees.enable_bindings(("single_select",  # "single_select" or "toggle_select"
                                        "arrowkeys",
                                        "copy",
@@ -1049,7 +1077,7 @@ def afficher_annees_et_periodes():
                                        "undo",
                                        "edit_cell"))
     periode_id, periode_Name = sql_read_periodes()
-    frame_periodes.grid(row=0, column=1)
+    frame_periodes.grid(row=0, column=1, sticky='we')
     sheet_periodes = Sheet(frame_periodes,
                            data=periode_Name,  # to set sheet data at startup
                            headers=["Périodes"],                        
@@ -1059,7 +1087,7 @@ def afficher_annees_et_periodes():
     sheet_periodes.hide("row_index")
     sheet_periodes.hide("top_left")
     # sheet_periodes.hide("header")
-    sheet_periodes.grid(row=0, column=0, columnspan=2, sticky="nswe")
+    sheet_periodes.grid(row=0, column=0, columnspan=2,  sticky="we")
     sheet_periodes.enable_bindings(("single_select",  # "single_select" or "toggle_select"
                                        "arrowkeys",
                                        "copy",
@@ -1070,6 +1098,8 @@ def afficher_annees_et_periodes():
                                        "edit_cell"))
 
 
+
+    
 def enregistrer_annees():
     """
     Met à jour la base de données en y ajoutant d'éventuelles nouvelles
@@ -1205,12 +1235,58 @@ def ajouter_periode():
 
 
 
-
     
-def cell_select(self, response):
+    
+def select_annee(response):
+    """
+    Mémorise l'année par clic dans la case du tableau des années scolaires 
+    """
+    global annee_selected
+    index = response[1]
+    annee_selected = annee_Name[index][0]
+    print((annee_selected,
+           classe_selected,
+           professeur_selected,
+           discipline_selected))
+
+
+def select_classe(response):
+    """
+    Mémorise la classe par clic dans la case du tableau des classes
+    """
+    global classe_selected
+    index = response[1]
+    classe_selected = classe_Name[index]
+    print((annee_selected,
+           classe_selected,
+           professeur_selected,
+           discipline_selected))
+
+def select_professeur(response):
+    """
+    Mémorise le professeur par clic dans la case du tableau des professeurs
+    """
+    global professeur_selected
     print(response)
+    index = response[1]
+    professeur_selected = prof_Name[index]
+    print((annee_selected,
+           classe_selected,
+           professeur_selected,
+           discipline_selected))
 
-
+def select_discipline(response):
+    """
+    Mémorise la discipline par clic dans la case du tableau des disciplines
+    """
+    global discipline_selected
+    index = response[1]
+    discipline_selected = disc_Name[index][0]
+    print((annee_selected,
+           classe_selected,
+           professeur_selected,
+           discipline_selected))
+    
 
 # Application 
 
@@ -1262,7 +1338,8 @@ button_save_periodes = tk.Button(frame_periodes, text='Enregistrer',
 
 notebook.add(f0, text="Mon compte")
 
-notebook.grid(row=0, column=0, sticky="nw")
+notebook.grid(row=0, column=0, sticky="nswe")
+
 
 button_add_discipline.grid(row=1, column=0)
 button_save_disciplines.grid(row=1, column=1)
