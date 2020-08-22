@@ -428,27 +428,28 @@ CREATE or replace TABLE Classe (
 classe_id int NOT NULL AUTO_INCREMENT,
 nom varchar(20) COLLATE utf8_bin NOT NULL,
 niveau varchar(20) COLLATE utf8_bin DEFAULT NULL,
-annee_id varchar(20) COLLATE utf8_bin DEFAULT NULL,
+annee_id int,
 PRIMARY KEY (classe_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 INSERT INTO Classe (nom, niveau, annee_id) VALUES
-('S1', 'seconde', '2019-2020'),
-('S2', 'seconde', '2019-2020'),
-('S3', 'seconde', '2019-2020'),
-('S4', 'seconde', '2019-2020'),
-('S5', 'seconde', '2019-2020'),
-('P1', 'seconde', '2019-2020'),
-('P2', 'seconde', '2019-2020'),
-('P3', 'seconde', '2019-2020'),
-('P4', 'seconde', '2019-2020'),
-('P5', 'seconde', '2019-2020'),
-('T1', 'seconde', '2019-2020'),
-('T2', 'seconde', '2019-2020'),
-('T3', 'seconde', '2019-2020'),
-('T4', 'seconde', '2019-2020'),
-('T5', 'seconde', '2019-2020'),
-('À définir', 'À définir', '2019-2020');
+('À définir', 'À définir', 1),
+('S1', 'seconde', 3),
+('S2', 'seconde', 3),
+('S3', 'seconde', 3),
+('S4', 'seconde', 3),
+('S5', 'seconde', 3),
+('P1', 'Première', 3),
+('P2', 'Première', 3),
+('P3', 'Première', 3),
+('P4', 'Première', 3),
+('P5', 'Première', 3),
+('T1', 'Terminale', 3),
+('T2', 'Terminale', 3),
+('T3', 'Terminale', 3),
+('T4', 'Terminale', 3),
+('T5', 'Terminale', 3);
+
 
 
 
@@ -462,12 +463,13 @@ CREATE OR replace TABLE Periode (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO Periode (nom) VALUES
+('À définir'),
 ('trimestre 1'),
 ('trimestre 2'),
 ('trimestre 3'),
 ('semestre 1'),
-('semestre 2'),
-('À définir');
+('semestre 2');
+
 
 
 -- ------------------------------------------------
@@ -481,9 +483,30 @@ CREATE TABLE Anneescolaire (
 
 
 INSERT INTO Anneescolaire (nom) VALUES
+('À définir'),
 ('2019-2020'),
 ('2020-2021'),
-('À définir');
+('2021-2022');
+
+
+-- ------------------------------------------------
+-- Clés étrangères
+-- ALTER TABLE Enseigner ADD FOREIGN KEY (discipline_id) REFERENCES Discipline (discipline_id);
+-- ALTER TABLE Enseigner ADD FOREIGN KEY (classe_id) REFERENCES Classe (classe_id);
+-- ALTER TABLE Enseigner ADD FOREIGN KEY (professeur_id) REFERENCES Professeur (professeur_id);
+-- ALTER TABLE Evaluation ADD FOREIGN KEY (periode_id) REFERENCES Periode (periode_id);
+-- ALTER TABLE Evaluation ADD FOREIGN KEY (annee_id) REFERENCES Anneescolaire (annee_id);
+-- ALTER TABLE Evaluation ADD FOREIGN KEY (classe_id) REFERENCES Classe (classe_id);
+-- ALTER TABLE Evaluation ADD FOREIGN KEY (professeur_id) REFERENCES Professeur (professeur_id);
+-- ALTER TABLE Evaluation ADD FOREIGN KEY (discipline_id) REFERENCES Discipline (discipline_id);
+ALTER TABLE Classe ADD FOREIGN KEY (annee_id) REFERENCES Anneescolaire (annee_id);
+-- ALTER TABLE Evaluer ADD FOREIGN KEY (eleve_id) REFERENCES Eleve (eleve_id);
+-- ALTER TABLE Evaluer ADD FOREIGN KEY (evaluation_id) REFERENCES Evaluation (evaluation_id);
+ALTER TABLE Eleve ADD FOREIGN KEY (classe_id) REFERENCES Classe (classe_id);
+
+
+
+
 
 
 
