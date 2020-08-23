@@ -41,7 +41,7 @@ TO role_gestionnaire;
 -- ------------------------------------------------
 -- Création de différents utilisateurs
 
-CREATE OR replace USER  stil@localhost IDENTIFIED BY 'stilstil';                 
+CREATE OR replace USER  stil@localhost IDENTIFIED BY 's';                 
 GRANT role_gestionnaire
 TO stil@localhost;
 SET DEFAULT ROLE role_gestionnaire FOR stil@localhost;
@@ -203,12 +203,11 @@ show warnings;
 -- Création de la table Discipline
 CREATE or replace TABLE Discipline (
 discipline_id int NOT NULL AUTO_INCREMENT,
-Disc_Name varchar(50) COLLATE utf8_bin NOT NULL,
+nom varchar(50) COLLATE utf8_bin NOT NULL,
 PRIMARY KEY (discipline_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO Discipline (Disc_Name) VALUES
-('À définir'),
+INSERT INTO Discipline (nom) VALUES
 ('Histoire - Géographie'),
 ('Sciences économiques et sociales'),
 ('Sciences de la vie et de la Terre'),

@@ -132,6 +132,7 @@ def afficher_notebook_gestionnaire():
     afficher_classes()
     afficher_annees_et_periodes()
     afficher_selections()
+    afficher_enseignements()
 
 
 
@@ -481,7 +482,7 @@ def sql_read_disciplines():
         print("Connected to MySQL Server version", db_Info)
         print("sql_read_disciplines")
         cursor = connection.cursor()
-        cursor.execute("select discipline_id, Disc_Name from Discipline ORDER BY Disc_Name ASC;")
+        cursor.execute("select discipline_id, nom from Discipline ORDER BY nom ASC;")
         records = cursor.fetchall()
         # print(records)
         print("All discipline of Discipline (", cursor.rowcount, "): ")
@@ -545,7 +546,7 @@ def enregistrer_disciplines():
         print("enregistrer_disciplines")
         cursor = connection.cursor()
         for index in range(len(disc_Name)):
-            sql = "UPDATE Discipline SET Disc_Name = %s WHERE discipline_id = %s"
+            sql = "UPDATE Discipline SET nom = %s WHERE discipline_id = %s"
             discipline = (disc_Name[index][0], discipline_id[index])
             cursor.execute(sql, discipline)
             connection.commit()
@@ -565,33 +566,34 @@ def enregistrer_disciplines():
 def ajouter_discipline():
     """
     Ajoute une discipline 'À définir' dans le tableau des disciplines (et dans
-    la base de données) et sélectionne la ligne. Commence par enregistrer
-    l'état précédent du tableau dans la base de données dans le cas où
-    l'utilisateur enchaîne les ajouts.
+    la base de données) et sélectionne la ligne. 
     """
-    enregistrer_disciplines()
     global sheet_disciplines
-    sql = "INSERT INTO Discipline (Disc_Name) VALUES ('À définir')"
-    try:
-        print(f"Try to connected to MySQL Server as {GN_user}")
-        connection = mysql.connector.connect(host=GN_host,
-                                             database=GN_database,
-                                             user=GN_user,
-                                             password=GN_password)
-        db_Info = connection.get_server_info()
-        print("Connected to MySQL Server version", db_Info)
-        print("ajouter_discipline")
-        cursor = connection.cursor()
-        cursor.execute(sql)
-        connection.commit()
-        cursor.close()
-        connection.close()
-        print("MySQL connection is closed")
-    except Error as e:
-        print("Error while connecting to MySQL", e)
-    sheet_disciplines.destroy()
-    afficher_disciplines()
-    sheet_disciplines.select_row(disc_Name.index(['À définir']))
+    if ['À définir'] in disc_Name:
+        messagebox.showerror("L'ajout précédent reste à définir", "Avant d'ajouter une nouvelle discipline, veuillez au préalable terminer l'ajout de la discipline précédente.")        
+        sheet_disciplines.select_row(classe_Name.index('À définir')) 
+    else: 
+        sql = "INSERT INTO Discipline (nom) VALUES ('À définir')"
+        try:
+            print(f"Try to connected to MySQL Server as {GN_user}")
+            connection = mysql.connector.connect(host=GN_host,
+                                                 database=GN_database,
+                                                 user=GN_user,
+                                                 password=GN_password)
+            db_Info = connection.get_server_info()
+            print("Connected to MySQL Server version", db_Info)
+            print("ajouter_discipline")
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            connection.commit()
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+        except Error as e:
+            print("Error while connecting to MySQL", e)
+        sheet_disciplines.destroy()
+        afficher_disciplines()
+        sheet_disciplines.select_row(disc_Name.index(['À définir']))
 
 
 # ------------------------------------------------------------------------------
@@ -1317,6 +1319,47 @@ def ajouter_periode():
         sheet_periodes.select_row(periode_Name.index(['À définir']))
     
 
+
+
+
+# ------------------------------------------------------------------------------
+# ENSEIGNEMENTS
+# ------------------------------------------------------------------------------
+
+        
+def sql_read_enseignements():
+    """
+    Se connecte à Mysql et retourne les données concernant les Enseignements
+    """
+    try:
+        print(f"Try to connected to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print(f"Connected to MySQL Server version {db_Info}")
+        print("sql_read_enseignements")
+        cursor = connection.cursor()
+        sql = "SELECT *  FROM Enseigner INNER JOIN Professeur   ;"
+        cursor.execute(sql)
+        records = cursor.fetchall()
+        print(records)
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        return(records)
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+        messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
+
+def afficher_enseignements():
+    """
+    Affiche l'IHM des Enseignements
+    """
+    records = sql_read_enseignements()
+
+        
 
 
 # Application 
