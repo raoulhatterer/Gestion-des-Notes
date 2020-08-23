@@ -36,13 +36,65 @@ GN_user = None
 user_role = None
 
 # ------------------------------------------------------------------------------
-# Sélections
+# SÉLECTIONS
 # ------------------------------------------------------------------------------
 
 annee_selected = None
 classe_selected = None
 professeur_selected = None
 discipline_selected = None
+    
+def select_annee(response):
+    """
+    Mémorise l'année par clic dans la case du tableau des années scolaires 
+    """
+    global annee_selected
+    index = response[1]
+    annee_selected = (annee_id[index], annee_Name[index][0])
+    print((annee_selected,
+           classe_selected,
+           professeur_selected,
+           discipline_selected))
+
+
+def select_classe(response):
+    """
+    Mémorise la classe par clic dans la case du tableau des classes
+    """
+    global classe_selected
+    index = response[1]
+    classe_selected = (classe_id[index], classe_Name[index])
+    print((annee_selected,
+           classe_selected,
+           professeur_selected,
+           discipline_selected))
+
+def select_professeur(response):
+    """
+    Mémorise le professeur par clic dans la case du tableau des professeurs
+    """
+    global professeur_selected
+    print(response)
+    index = response[1]
+    professeur_selected = (professeur_id[index], prof_Name[index])
+    print((annee_selected,
+           classe_selected,
+           professeur_selected,
+           discipline_selected))
+
+def select_discipline(response):
+    """
+    Mémorise la discipline par clic dans la case du tableau des disciplines
+    """
+    global discipline_selected
+    index = response[1]
+    discipline_selected = (discipline_id[index], disc_Name[index][0])
+    print((annee_selected,
+           classe_selected,
+           professeur_selected,
+           discipline_selected))
+    
+
 
 # ------------------------------------------------------------------------------
 # AFFICHAGE NOTEBOOK
@@ -937,29 +989,33 @@ def ajouter_classe():
     l'état précédent du tableau dans la base de données dans le cas où
     l'utilisateur enchaîne les ajouts.
     """
-    enregistrer_classes()
-    global sheet_classes
-    sql = "INSERT INTO Classe (nom, niveau, annee_id) VALUES ('À définir', 'À définir', 1)"
-    try:
-        print(f"Try to connected to MySQL Server as {GN_user}")
-        connection = mysql.connector.connect(host=GN_host,
-                                             database=GN_database,
-                                             user=GN_user,
-                                             password=GN_password)
-        db_Info = connection.get_server_info()
-        print("Connected to MySQL Server version", db_Info)
-        print("ajouter_classe")
-        cursor = connection.cursor()
-        cursor.execute(sql)
-        connection.commit()
-        cursor.close()
-        connection.close()
-        print("MySQL connection is closed")
-        sheet_classes.destroy()
-        afficher_classes()
-        sheet_classes.select_row(classe_Name.index('À définir'))
-    except Error as e:
-        print("Error while connecting to MySQL", e)
+    if annee_selected:
+        enregistrer_classes()
+        global sheet_classes
+        sql = "INSERT INTO Classe (nom, niveau, annee_id) VALUES ('À définir', 'À définir', %s)"
+        annee = (annee_selected[0],)
+        try:
+            print(f"Try to connected to MySQL Server as {GN_user}")
+            connection = mysql.connector.connect(host=GN_host,
+                                                 database=GN_database,
+                                                 user=GN_user,
+                                                 password=GN_password)
+            db_Info = connection.get_server_info()
+            print("Connected to MySQL Server version", db_Info)
+            print("ajouter_classe")
+            cursor = connection.cursor()
+            cursor.execute(sql, annee)
+            connection.commit()
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+            sheet_classes.destroy()
+            afficher_classes()
+            sheet_classes.select_row(classe_Name.index('À définir'))
+        except Error as e:
+            print("Error while connecting to MySQL", e)
+    else:
+        messagebox.showerror("Année scolaire à définir", "Avant d'ajouter une classe, veuillez au préalable sélectionner l'année scolaire dans l'onglet « Périodes »")
 
 
 
@@ -1235,58 +1291,6 @@ def ajouter_periode():
 
 
 
-    
-    
-def select_annee(response):
-    """
-    Mémorise l'année par clic dans la case du tableau des années scolaires 
-    """
-    global annee_selected
-    index = response[1]
-    annee_selected = annee_Name[index][0]
-    print((annee_selected,
-           classe_selected,
-           professeur_selected,
-           discipline_selected))
-
-
-def select_classe(response):
-    """
-    Mémorise la classe par clic dans la case du tableau des classes
-    """
-    global classe_selected
-    index = response[1]
-    classe_selected = classe_Name[index]
-    print((annee_selected,
-           classe_selected,
-           professeur_selected,
-           discipline_selected))
-
-def select_professeur(response):
-    """
-    Mémorise le professeur par clic dans la case du tableau des professeurs
-    """
-    global professeur_selected
-    print(response)
-    index = response[1]
-    professeur_selected = prof_Name[index]
-    print((annee_selected,
-           classe_selected,
-           professeur_selected,
-           discipline_selected))
-
-def select_discipline(response):
-    """
-    Mémorise la discipline par clic dans la case du tableau des disciplines
-    """
-    global discipline_selected
-    index = response[1]
-    discipline_selected = disc_Name[index][0]
-    print((annee_selected,
-           classe_selected,
-           professeur_selected,
-           discipline_selected))
-    
 
 # Application 
 
