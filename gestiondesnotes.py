@@ -51,10 +51,7 @@ def select_annee(response):
     global annee_selected
     index = response[1]
     annee_selected = (annee_id[index], annee_Name[index][0])
-    print((annee_selected,
-           classe_selected,
-           professeur_selected,
-           discipline_selected))
+    print(annee_selected)
 
 
 def select_classe(response):
@@ -64,11 +61,9 @@ def select_classe(response):
     global classe_selected
     index = response[1]
     classe_selected = (classe_id[index], classe_Name[index])
-    print((annee_selected,
-           classe_selected,
-           professeur_selected,
-           discipline_selected))
-
+    frame_selection.destroy()    
+    afficher_selections()
+    
 def select_professeur(response):
     """
     Mémorise le professeur par clic dans la case du tableau des professeurs
@@ -77,10 +72,9 @@ def select_professeur(response):
     print(response)
     index = response[1]
     professeur_selected = (professeur_id[index], prof_Name[index])
-    print((annee_selected,
-           classe_selected,
-           professeur_selected,
-           discipline_selected))
+    frame_selection.destroy()
+    afficher_selections()
+    
 
 def select_discipline(response):
     """
@@ -89,13 +83,34 @@ def select_discipline(response):
     global discipline_selected
     index = response[1]
     discipline_selected = (discipline_id[index], disc_Name[index][0])
-    print((annee_selected,
-           classe_selected,
-           professeur_selected,
-           discipline_selected))
+    frame_selection.destroy()    
+    afficher_selections()
     
+def afficher_selections():
+    """
+    Affiche le professeur, la classe et la discipline sélectionnées
+    """
+    global frame_selection
+    print((professeur_selected, classe_selected, discipline_selected))
+    frame_selection = tk.LabelFrame(f5, text=' (id SQL) Sélection ')
+    frame_selection.grid(row=0, column=0)
+    
+    lbl_professeur = tk.Label(frame_selection, text = 'Professeur:')
+    lbl_professeur.grid(row=0, column=0, sticky=tk.E)
+    lbl_professeur_selected = tk.Label(frame_selection, text = professeur_selected)
+    lbl_professeur_selected.grid(row=0, column=1, sticky=tk.W)
 
+    lbl_classe = tk.Label(frame_selection, text = 'Classe:')
+    lbl_classe.grid(row=1, column=0, sticky=tk.E)
+    lbl_classe_selected = tk.Label(frame_selection, text = classe_selected)
+    lbl_classe_selected.grid(row=1, column=1, sticky=tk.W)
 
+    lbl_discipline = tk.Label(frame_selection, text = 'Discipline:')
+    lbl_discipline.grid(row=2, column=0, sticky=tk.E)
+    lbl_discipline_selected = tk.Label(frame_selection, text = discipline_selected)
+    lbl_discipline_selected.grid(row=2, column=1, sticky=tk.W)
+
+    
 # ------------------------------------------------------------------------------
 # AFFICHAGE NOTEBOOK
 # ------------------------------------------------------------------------------
@@ -116,6 +131,7 @@ def afficher_notebook_gestionnaire():
     afficher_eleves()
     afficher_classes()
     afficher_annees_et_periodes()
+    afficher_selections()
 
 
 
