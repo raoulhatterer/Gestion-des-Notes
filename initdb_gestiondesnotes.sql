@@ -450,7 +450,7 @@ INSERT INTO Classe (nom, niveau, annee_id) VALUES
 ('T5', 'Terminale', 1);
 
 
-
+show warnings;
 
 -- ------------------------------------------------
 -- Création de la table Periode
@@ -468,7 +468,7 @@ INSERT INTO Periode (nom) VALUES
 ('semestre 1'),
 ('semestre 2');
 
-
+show warnings;
 
 -- ------------------------------------------------
 -- Création de la table AnneeScolaire
@@ -484,11 +484,32 @@ INSERT INTO Anneescolaire (nom) VALUES
 ('2019-2020'),
 ('2020-2021');
 
+show warnings;
+
+-- ------------------------------------------------
+-- Création de la table Enseigner
+CREATE TABLE Enseigner (
+ professeur_id INT,
+ classe_id INT,
+ discipline_id INT,
+PRIMARY KEY (professeur_id, classe_id, discipline_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO Enseigner VALUES
+(1, 1, 1),
+(1, 1, 2),
+(2, 1, 1),
+(2, 1, 3),
+(2, 2, 1),
+(2, 3, 4);
+
+show warnings;
+
 -- ------------------------------------------------
 -- Clés étrangères
--- ALTER TABLE Enseigner ADD FOREIGN KEY (discipline_id) REFERENCES Discipline (discipline_id);
--- ALTER TABLE Enseigner ADD FOREIGN KEY (classe_id) REFERENCES Classe (classe_id);
--- ALTER TABLE Enseigner ADD FOREIGN KEY (professeur_id) REFERENCES Professeur (professeur_id);
+ALTER TABLE Enseigner ADD FOREIGN KEY (discipline_id) REFERENCES Discipline (discipline_id);
+ALTER TABLE Enseigner ADD FOREIGN KEY (classe_id) REFERENCES Classe (classe_id);
+ALTER TABLE Enseigner ADD FOREIGN KEY (professeur_id) REFERENCES Professeur (professeur_id);
 -- ALTER TABLE Evaluation ADD FOREIGN KEY (periode_id) REFERENCES Periode (periode_id);
 -- ALTER TABLE Evaluation ADD FOREIGN KEY (annee_id) REFERENCES Anneescolaire (annee_id);
 -- ALTER TABLE Evaluation ADD FOREIGN KEY (classe_id) REFERENCES Classe (classe_id);
@@ -533,6 +554,10 @@ SELECT * FROM Periode;
 SELECT "Description de la TABLE Anneescolaire";
 DESCRIBE Anneescolaire;
 SELECT * FROM Anneescolaire;
+SELECT "Description de la TABLE Enseigner";
+DESCRIBE Enseigner;
+SELECT * FROM Enseigner;
+
 
 SELECT "UTILISATEURS";
 select host, USER, password from mysql.user;

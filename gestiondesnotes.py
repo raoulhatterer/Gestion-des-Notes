@@ -704,33 +704,37 @@ def ajouter_professeur():
     l'état précédent du tableau dans la base de données dans le cas où
     l'utilisateur enchaîne les ajouts.
     """
-    enregistrer_professeurs()
-    global sheet_professeurs, disc_Name
-    sql = "INSERT INTO Professeur (prenom, nom) VALUES (%s, %s)"
-    prof_nouveau = ('* Prénom ? *', '* Nom ? *')
-    try:
-        print(f"Try to connected to MySQL Server as {GN_user}")
-        connection = mysql.connector.connect(host=GN_host,
-                                             database=GN_database,
-                                             user=GN_user,
-                                             password=GN_password)
-        db_Info = connection.get_server_info()
-        print("Connected to MySQL Server version", db_Info)
-        print("ajouter_professeur")
-        cursor = connection.cursor()
-        cursor.execute(sql, prof_nouveau)
-        connection.commit()
-        cursor.close()
-        connection.close()
-        print("MySQL connection is closed")
-        sheet_professeurs.destroy()
-        afficher_professeurs()
+    global sheet_professeurs, prof_Name
+    if '* Nom ? *' in prof_Name:
+        messagebox.showerror("L'ajout précédent reste à définir", "Avant d'ajouter un nouvel enseignant, veuillez au préalable terminer l'ajout de l'enseignant précédent.")        
         row_index = prof_Name.index('* Nom ? *')
         sheet_professeurs.select_row(row_index)
-
-    except Error as e:
-        print("Error while connecting to MySQL", e)
-
+    else:
+        sql = "INSERT INTO Professeur (prenom, nom) VALUES (%s, %s)"
+        prof_nouveau = ('* Prénom ? *', '* Nom ? *')
+        try:
+            print(f"Try to connected to MySQL Server as {GN_user}")
+            connection = mysql.connector.connect(host=GN_host,
+                                                 database=GN_database,
+                                                 user=GN_user,
+                                                 password=GN_password)
+            db_Info = connection.get_server_info()
+            print("Connected to MySQL Server version", db_Info)
+            print("ajouter_professeur")
+            cursor = connection.cursor()
+            cursor.execute(sql, prof_nouveau)
+            connection.commit()
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+            sheet_professeurs.destroy()
+            afficher_professeurs()
+            row_index = prof_Name.index('* Nom ? *')
+            sheet_professeurs.select_row(row_index)
+    
+        except Error as e:
+            print("Error while connecting to MySQL", e)
+    
 # ------------------------------------------------------------------------------
 # ÉLÈVES
 # ------------------------------------------------------------------------------
