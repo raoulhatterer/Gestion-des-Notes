@@ -845,37 +845,43 @@ def enregistrer_eleves():
 def ajouter_eleve():
     """
     Ajoute un nouvel élève dans le tableau des élèves (et dans
-    la base de données) et sélectionne la ligne. Commence par enregistrer
-    l'état précédent du tableau dans la base de données dans le cas où
-    l'utilisateur enchaîne les ajouts.
+    la base de données) et sélectionne la ligne.
     """
-    enregistrer_eleves()
     global sheet_eleves, disc_Name, discipline_id
-    sql = "INSERT INTO Eleve (prenom, nom, genre, classe_id) VALUES (%s, %s, %s, 1)"
-    eleve_nouveau = ('* Prénom ? *', '* Nom ? *', 'M ou F')
-    try:
-        print(f"Try to connected to MySQL Server as {GN_user}")
-        connection = mysql.connector.connect(host=GN_host,
-                                             database=GN_database,
-                                             user=GN_user,
-                                             password=GN_password)
-        db_Info = connection.get_server_info()
-        print("Connected to MySQL Server version", db_Info)
-        print("ajouter_eleve")
-        cursor = connection.cursor()
-        cursor.execute(sql, eleve_nouveau)
-        connection.commit()
-        cursor.close()
-        connection.close()
-        print("MySQL connection is closed")
-        # Rafraîchissement
-        sheet_eleves.destroy()
-        afficher_eleves()
+    if '* Nom ? *' in eleves_Name:
+        messagebox.showerror("L'ajout précédent reste à définir", "Avant d'ajouter un nouvel élève, veuillez au préalable terminer l'ajout de l'élève précédent.")        
         row_index = eleves_Name.index('* Nom ? *')
         sheet_eleves.select_row(row_index)
-
-    except Error as e:
-        print("Error while connecting to MySQL", e)
+    else:
+        if classe_selected:
+            sql = "INSERT INTO Eleve (prenom, nom, genre, classe_id) VALUES (%s, %s, %s, %s)"
+            eleve_nouveau = ('* Prénom ? *', '* Nom ? *', 'M ou F', classe_selected[0])
+            try:
+                print(f"Try to connected to MySQL Server as {GN_user}")
+                connection = mysql.connector.connect(host=GN_host,
+                                                     database=GN_database,
+                                                     user=GN_user,
+                                                     password=GN_password)
+                db_Info = connection.get_server_info()
+                print("Connected to MySQL Server version", db_Info)
+                print("ajouter_eleve")
+                cursor = connection.cursor()
+                cursor.execute(sql, eleve_nouveau)
+                connection.commit()
+                cursor.close()
+                connection.close()
+                print("MySQL connection is closed")
+                # Rafraîchissement
+                sheet_eleves.destroy()
+                afficher_eleves()
+                row_index = eleves_Name.index('* Nom ? *')
+                sheet_eleves.select_row(row_index)
+        
+            except Error as e:
+                print("Error while connecting to MySQL", e)
+        else:
+            messagebox.showerror("Classe à définir", "Avant d'ajouter un élève, veuillez au préalable sélectionner la classe dans l'onglet « Classes »")
+        
 
 # ------------------------------------------------------------------------------
 # CLASSES
@@ -985,37 +991,38 @@ def enregistrer_classes():
 def ajouter_classe():
     """
     Ajoute une 'À définir' dans le tableau des disciplines (et dans
-    la base de données) et sélectionne la ligne. Commence par enregistrer
-    l'état précédent du tableau dans la base de données dans le cas où
-    l'utilisateur enchaîne les ajouts.
+    la base de données) et sélectionne la ligne.
     """
-    if annee_selected:
-        enregistrer_classes()
-        global sheet_classes
-        sql = "INSERT INTO Classe (nom, niveau, annee_id) VALUES ('À définir', 'À définir', %s)"
-        annee = (annee_selected[0],)
-        try:
-            print(f"Try to connected to MySQL Server as {GN_user}")
-            connection = mysql.connector.connect(host=GN_host,
-                                                 database=GN_database,
-                                                 user=GN_user,
-                                                 password=GN_password)
-            db_Info = connection.get_server_info()
-            print("Connected to MySQL Server version", db_Info)
-            print("ajouter_classe")
-            cursor = connection.cursor()
-            cursor.execute(sql, annee)
-            connection.commit()
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
-            sheet_classes.destroy()
-            afficher_classes()
-            sheet_classes.select_row(classe_Name.index('À définir'))
-        except Error as e:
-            print("Error while connecting to MySQL", e)
-    else:
-        messagebox.showerror("Année scolaire à définir", "Avant d'ajouter une classe, veuillez au préalable sélectionner l'année scolaire dans l'onglet « Périodes »")
+    global sheet_classes
+    if 'À définir' in classe_Name:
+        messagebox.showerror("L'ajout précédent reste à définir", "Avant d'ajouter une nouvelle classe, veuillez au préalable terminer l'ajout de la classe précédente.")        
+        sheet_classes.select_row(classe_Name.index('À définir')) 
+    else: 
+        if annee_selected:
+            sql = "INSERT INTO Classe (nom, niveau, annee_id) VALUES ('À définir', 'À définir', %s)"
+            annee = (annee_selected[0],)
+            try:
+                print(f"Try to connected to MySQL Server as {GN_user}")
+                connection = mysql.connector.connect(host=GN_host,
+                                                     database=GN_database,
+                                                     user=GN_user,
+                                                     password=GN_password)
+                db_Info = connection.get_server_info()
+                print("Connected to MySQL Server version", db_Info)
+                print("ajouter_classe")
+                cursor = connection.cursor()
+                cursor.execute(sql, annee)
+                connection.commit()
+                cursor.close()
+                connection.close()
+                print("MySQL connection is closed")
+                sheet_classes.destroy()
+                afficher_classes()
+                sheet_classes.select_row(classe_Name.index('À définir'))
+            except Error as e:
+                print("Error while connecting to MySQL", e)
+        else:
+            messagebox.showerror("Année scolaire à définir", "Avant d'ajouter une classe, veuillez au préalable sélectionner l'année scolaire dans l'onglet « Périodes »")
 
 
 
