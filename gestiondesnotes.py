@@ -1233,69 +1233,69 @@ def enregistrer_periodes():
 def ajouter_annee():
     """
     Ajoute une année 'À définir' dans le tableau des années (et dans
-    la base de données) et sélectionne la ligne. Commence par enregistrer
-    l'état précédent du tableau dans la base de données dans le cas où
-    l'utilisateur enchaîne les ajouts.
+    la base de données) et sélectionne la ligne. 
     """
-    enregistrer_annees()
     global sheet_annees, sheet_periodes
-    sql = "INSERT INTO Anneescolaire (nom) VALUES ('À définir')"
-    try:
-        print(f"Try to connected to MySQL Server as {GN_user}")
-        connection = mysql.connector.connect(host=GN_host,
-                                             database=GN_database,
-                                             user=GN_user,
-                                             password=GN_password)
-        db_Info = connection.get_server_info()
-        print("Connected to MySQL Server version", db_Info)
-        print("ajouter_annee")
-        cursor = connection.cursor()
-        cursor.execute(sql)
-        connection.commit()
-        cursor.close()
-        connection.close()
-        print("MySQL connection is closed")
-    except Error as e:
-        print("Error while connecting to MySQL", e)
-    sheet_annees.destroy()
-    sheet_periodes.destroy()
-    afficher_annees_et_periodes()
-    sheet_annees.select_row(annee_Name.index(['À définir']))
+    if ['À définir'] in annee_Name:
+        messagebox.showerror("L'ajout précédent reste à définir", "Avant d'ajouter une nouvelle années scolaire, veuillez au préalable terminer l'ajout de la précédente.")
+        sheet_annees.select_row(annee_Name.index(['À définir']))
+    else:
+        sql = "INSERT INTO Anneescolaire (nom) VALUES ('À définir')"
+        try:
+            print(f"Try to connected to MySQL Server as {GN_user}")
+            connection = mysql.connector.connect(host=GN_host,
+                                                 database=GN_database,
+                                                 user=GN_user,
+                                                 password=GN_password)
+            db_Info = connection.get_server_info()
+            print("Connected to MySQL Server version", db_Info)
+            print("ajouter_annee")
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            connection.commit()
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+        except Error as e:
+            print("Error while connecting to MySQL", e)
+        sheet_annees.destroy()
+        sheet_periodes.destroy()
+        afficher_annees_et_periodes()
+        sheet_annees.select_row(annee_Name.index(['À définir']))
 
 def ajouter_periode():
     """
     Ajoute une période 'À définir' dans le tableau des périodes (et dans
-    la base de données) et sélectionne la ligne. Commence par enregistrer
-    l'état précédent du tableau dans la base de données dans le cas où
-    l'utilisateur enchaîne les ajouts.
+    la base de données) et sélectionne la ligne.
     """
-    print("tentons enregistrer_periodes")
-    enregistrer_periodes()
-    print("Enregistrement période réussi")
     global sheet_annees, sheet_periodes
-    sql = "INSERT INTO Periode (nom) VALUES ('À définir')"
-    try:
-        print(f"Try to connected to MySQL Server as {GN_user}")
-        connection = mysql.connector.connect(host=GN_host,
-                                             database=GN_database,
-                                             user=GN_user,
-                                             password=GN_password)
-        db_Info = connection.get_server_info()
-        print("Connected to MySQL Server version", db_Info)
-        print("ajouter_periode")
-        cursor = connection.cursor()
-        cursor.execute(sql)
-        connection.commit()
-        cursor.close()
-        connection.close()
-        print("MySQL connection is closed")
-    except Error as e:
-        print("Error while connecting to MySQL", e)
-    sheet_annees.destroy()
-    sheet_periodes.destroy()
-    afficher_annees_et_periodes()
-    sheet_periodes.select_row(periode_Name.index(['À définir']))
-
+    if ['À définir'] in periode_Name:
+        messagebox.showerror("L'ajout précédent reste à définir", "Avant d'ajouter une nouvelle période scolaire, veuillez au préalable terminer l'ajout de la précédente.")
+        sheet_periodes.select_row(periode_Name.index(['À définir']))
+    else:
+        sql = "INSERT INTO Periode (nom) VALUES ('À définir')"
+        try:
+            print(f"Try to connected to MySQL Server as {GN_user}")
+            connection = mysql.connector.connect(host=GN_host,
+                                                 database=GN_database,
+                                                 user=GN_user,
+                                                 password=GN_password)
+            db_Info = connection.get_server_info()
+            print("Connected to MySQL Server version", db_Info)
+            print("ajouter_periode")
+            cursor = connection.cursor()
+            cursor.execute(sql)
+            connection.commit()
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+        except Error as e:
+            print("Error while connecting to MySQL", e)
+        sheet_annees.destroy()
+        sheet_periodes.destroy()
+        afficher_annees_et_periodes()
+        sheet_periodes.select_row(periode_Name.index(['À définir']))
+    
 
 
 
