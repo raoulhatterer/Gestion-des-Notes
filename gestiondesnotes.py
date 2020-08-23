@@ -511,7 +511,7 @@ def afficher_disciplines():
     discipline_id, disc_Name = sql_read_disciplines()
     sheet_disciplines = Sheet(f1,
                               data=disc_Name,  # to set sheet data at startup
-                              column_width = 250,
+                              set_all_heights_and_widths = True,
                               height=600,
                               width=800)
     # sheet_disciplines.hide("row_index")
@@ -653,6 +653,7 @@ def afficher_professeurs():
     sheet_professeurs = Sheet(f2,
                               data=prof_Print,  # to set sheet data at startup
                               headers=["Titre", "Prénom", "Nom"],
+                              set_all_heights_and_widths = True,
                               height=600,
                               width=800)
     # sheet_professeurs.hide("row_index")
@@ -805,6 +806,7 @@ def afficher_eleves():
     sheet_eleves = Sheet(f3,
                          data=eleves_Print,  # to set sheet data at startup
                          headers=["Nom", "Prénom", "Genre", "Classe"],
+                         set_all_heights_and_widths = True,
                          height=600,
                          width=800)
     # sheet_eleves.hide("row_index")
@@ -956,6 +958,7 @@ def afficher_classes():
     sheet_classes = Sheet(f4,
                           data=classe_Print,  # to set sheet data at startup
                           headers=["Classe", "Niveau", "Année scolaire"],
+                          set_all_heights_and_widths = True,
                           height=600,
                           width=800)
     # sheet_classes.hide("row_index")
@@ -1144,7 +1147,7 @@ def afficher_annees_et_periodes():
     sheet_annees = Sheet(frame_annees,
                          data=annee_Name,  # to set sheet data at startup
                          headers=["Années Scolaires"],
-                         column_width = 250,
+                         set_all_heights_and_widths = True,
                          height=600,
                          width=400)
     sheet_annees.hide("row_index")
@@ -1165,8 +1168,8 @@ def afficher_annees_et_periodes():
     frame_periodes.grid(row=0, column=1, sticky='we')
     sheet_periodes = Sheet(frame_periodes,
                            data=periode_Name,  # to set sheet data at startup
-                           headers=["Périodes"],                        
-                           column_width = 250,
+                           headers=["Périodes"],
+                           set_all_heights_and_widths = True,
                            height=600,
                            width=400)
     sheet_periodes.hide("row_index")
@@ -1341,10 +1344,9 @@ def sql_read_enseignements():
         print(f"Connected to MySQL Server version {db_Info}")
         print("sql_read_enseignements")
         cursor = connection.cursor()
-        sql = "SELECT *  FROM Enseigner INNER JOIN Professeur   ;"
+        sql = "SELECT *  FROM Enseigner;"
         cursor.execute(sql)
         records = cursor.fetchall()
-        print(records)
         cursor.close()
         connection.close()
         print("MySQL connection is closed")
@@ -1353,13 +1355,57 @@ def sql_read_enseignements():
         print("Error while connecting to MySQL", e)
         messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
 
+
+def sql_read_enseignements_traduits():
+    """
+    Se connecte à Mysql et retourne les données concernant les Enseignements
+    """
+    try:
+        print(f"Try to connected to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print(f"Connected to MySQL Server version {db_Info}")
+        print("sql_read_enseignements")
+        cursor = connection.cursor()
+        sql = "SELECT Professeur.nom,  Professeur.prenom, Classe.nom AS Classe, Anneescolaire.nom AS Annee, Discipline.nom AS Discipline FROM Enseigner JOIN Professeur ON Enseigner.professeur_id = Professeur.professeur_id JOIN Classe ON Enseigner.classe_id = Classe.classe_id JOIN Discipline ON Enseigner.discipline_id = Discipline.discipline_id JOIN Anneescolaire;"
+        cursor.execute(sql)
+        records = cursor.fetchall()
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        return(records)
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+        messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
+
+
+        
 def afficher_enseignements():
     """
     Affiche l'IHM des Enseignements
     """
     records = sql_read_enseignements()
+    # print(records)
+    for row in records:
+        print(row)
+    records = sql_read_enseignements_traduits()
+    # print(records)
+    for row in records:
+        print(row)
+    frame_enseignements = tk.Frame(f5)
+    frame_enseignements.grid()
+    sheet_enseignements = Sheet(f5,
+                                data=records,
+                                headers=["Nom Professeur", "Prénom", "Classe", "Année scolaire", "Discipline"],
+                                set_all_heights_and_widths = True,
+                                height=300,
+                                width=800)
+    sheet_enseignements.grid()
 
-        
+
 
 
 # Application 
