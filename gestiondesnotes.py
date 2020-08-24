@@ -63,7 +63,21 @@ def select_classe(response):
     classe_selected = (classe_id[index], classe_Name[index])
     frame_selection.destroy()    
     afficher_selections()
+    sheet_enseignements.destroy()
+    afficher_enseignements()
     
+def deselect_classe():
+    """
+    Désélectionne la classe 
+    """
+    global classe_selected
+    classe_selected = None
+    frame_selection.destroy()    
+    afficher_selections()
+    sheet_enseignements.destroy()
+    afficher_enseignements()
+    
+
 def select_professeur(response):
     """
     Mémorise le professeur par clic dans la case du tableau des professeurs
@@ -74,8 +88,21 @@ def select_professeur(response):
     professeur_selected = (professeur_id[index], prof_Name[index])
     frame_selection.destroy()
     afficher_selections()
+    sheet_enseignements.destroy()
+    afficher_enseignements()
     
+def deselect_prof():
+    """
+    Désélectionne le professeur
+    """
+    global professeur_selected
+    professeur_selected = None
+    frame_selection.destroy()    
+    afficher_selections()
+    sheet_enseignements.destroy()
+    afficher_enseignements()
 
+    
 def select_discipline(response):
     """
     Mémorise la discipline par clic dans la case du tableau des disciplines
@@ -85,13 +112,26 @@ def select_discipline(response):
     discipline_selected = (discipline_id[index], disc_Name[index][0])
     frame_selection.destroy()    
     afficher_selections()
+    sheet_enseignements.destroy()
+    afficher_enseignements()
     
+def deselect_discipline():
+    """
+    Désélectionne la discipline 
+    """
+    global discipline_selected
+    discipline_selected = None
+    frame_selection.destroy()    
+    afficher_selections()
+    sheet_enseignements.destroy()
+    afficher_enseignements()
+
 def afficher_selections():
     """
     Affiche le professeur, la classe et la discipline sélectionnées
     """
     global frame_selection
-    print((professeur_selected, classe_selected, discipline_selected))
+    # print((professeur_selected, classe_selected, discipline_selected))
     frame_selection = tk.LabelFrame(f5, text=' (id SQL) Sélection ')
     frame_selection.grid(row=0, column=0)
     
@@ -99,16 +139,22 @@ def afficher_selections():
     lbl_professeur.grid(row=0, column=0, sticky=tk.E)
     lbl_professeur_selected = tk.Label(frame_selection, text = professeur_selected)
     lbl_professeur_selected.grid(row=0, column=1, sticky=tk.W)
+    button_deselect_prof = tk.Button(frame_selection, text="Désélectionner", command=deselect_prof)
+    button_deselect_prof.grid(row=0,column=2)
 
     lbl_classe = tk.Label(frame_selection, text = 'Classe:')
     lbl_classe.grid(row=1, column=0, sticky=tk.E)
     lbl_classe_selected = tk.Label(frame_selection, text = classe_selected)
     lbl_classe_selected.grid(row=1, column=1, sticky=tk.W)
+    button_deselect_classe = tk.Button(frame_selection, text="Désélectionner", command=deselect_classe)
+    button_deselect_classe.grid(row=1,column=2)
 
     lbl_discipline = tk.Label(frame_selection, text = 'Discipline:')
     lbl_discipline.grid(row=2, column=0, sticky=tk.E)
     lbl_discipline_selected = tk.Label(frame_selection, text = discipline_selected)
     lbl_discipline_selected.grid(row=2, column=1, sticky=tk.W)
+    button_deselect_discipline = tk.Button(frame_selection, text="Désélectionner", command=deselect_discipline)
+    button_deselect_discipline.grid(row=2,column=2)
 
     
 # ------------------------------------------------------------------------------
@@ -514,7 +560,7 @@ def afficher_disciplines():
                               set_all_heights_and_widths = True,
                               height=600,
                               width=800)
-    # sheet_disciplines.hide("row_index")
+    sheet_disciplines.hide("row_index")
     sheet_disciplines.hide("top_left")
     sheet_disciplines.hide("header")
     sheet_disciplines.grid(row=0, column=0, columnspan=2, sticky="we")
@@ -656,7 +702,7 @@ def afficher_professeurs():
                               set_all_heights_and_widths = True,
                               height=600,
                               width=800)
-    # sheet_professeurs.hide("row_index")
+    sheet_professeurs.hide("row_index")
     sheet_professeurs.hide("top_left")
     #sheet_professeurs.hide("header")
     sheet_professeurs.grid(row=0, column=0, columnspan=2, sticky="nswe")
@@ -809,7 +855,7 @@ def afficher_eleves():
                          set_all_heights_and_widths = True,
                          height=600,
                          width=800)
-    # sheet_eleves.hide("row_index")
+    sheet_eleves.hide("row_index")
     sheet_eleves.hide("top_left")
     # sheet_eleves.hide("header")
     sheet_eleves.grid(row=0, column=0, columnspan=2, sticky="we")
@@ -961,7 +1007,7 @@ def afficher_classes():
                           set_all_heights_and_widths = True,
                           height=600,
                           width=800)
-    # sheet_classes.hide("row_index")
+    sheet_classes.hide("row_index")
     sheet_classes.hide("top_left")
     # sheet_classes.hide("header")
     sheet_classes.grid(row=0, column=0, columnspan=2, sticky="we")
@@ -1332,8 +1378,32 @@ def ajouter_periode():
         
 def sql_read_enseignements():
     """
-    Se connecte à Mysql et retourne les données concernant les Enseignements
+    Se connecte à Mysql et retourne les données brutes concernant les Enseignements
     """
+    if not(professeur_selected) and not(classe_selected) and not(discipline_selected):
+        sql = "SELECT *  FROM Enseigner;"
+        tuple_selection = "" 
+    elif professeur_selected and not(classe_selected) and not(discipline_selected):
+        sql = "SELECT *  FROM Enseigner WHERE professeur_id=%s;"
+        tuple_selection = (professeur_selected[0],)
+    elif not(professeur_selected) and classe_selected and not(discipline_selected):
+        sql = "SELECT *  FROM Enseigner WHERE classe_id=%s;"
+        tuple_selection = (classe_selected[0],)
+    elif professeur_selected and classe_selected and not(discipline_selected):
+        sql = "SELECT *  FROM Enseigner WHERE professeur_id=%s AND classe_id=%s;"
+        tuple_selection = (professeur_selected[0], classe_selected[0])
+    elif not(professeur_selected) and not(classe_selected) and discipline_selected:
+        sql = "SELECT *  FROM Enseigner WHERE discipline_id=%s;"
+        tuple_selection = (discipline_selected[0],)
+    elif professeur_selected and not(classe_selected) and discipline_selected:
+        sql = "SELECT *  FROM Enseigner WHERE professeur_id=%s AND discipline_id=%s;"
+        tuple_selection = (professeur_selected[0], discipline_selected[0])
+    elif not(professeur_selected) and classe_selected and discipline_selected:
+        sql = "SELECT *  FROM Enseigner WHERE classe_id=%s AND discipline_id=%s;"
+        tuple_selection = (classe_selected[0], discipline_selected[0])
+    else:
+        sql = "SELECT *  FROM Enseigner WHERE professeur_id=%s AND classe_id=%s AND discipline_id=%s;"
+        tuple_selection = (professeur_selected[0], classe_selected[0], discipline_selected[0])
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
@@ -1344,8 +1414,7 @@ def sql_read_enseignements():
         print(f"Connected to MySQL Server version {db_Info}")
         print("sql_read_enseignements")
         cursor = connection.cursor()
-        sql = "SELECT *  FROM Enseigner;"
-        cursor.execute(sql)
+        cursor.execute(sql, tuple_selection)
         records = cursor.fetchall()
         cursor.close()
         connection.close()
@@ -1358,8 +1427,32 @@ def sql_read_enseignements():
 
 def sql_read_enseignements_traduits():
     """
-    Se connecte à Mysql et retourne les données concernant les Enseignements
+    Se connecte à Mysql et retourne les données traduites concernant les Enseignements
     """
+    if not(professeur_selected) and not(classe_selected) and not(discipline_selected):
+        sql = "SELECT Professeur.nom,  Professeur.prenom, Classe.nom AS Classe, Anneescolaire.nom AS Annee, Discipline.nom AS Discipline FROM Enseigner JOIN Professeur ON Enseigner.professeur_id = Professeur.professeur_id JOIN Classe ON Enseigner.classe_id = Classe.classe_id JOIN Discipline ON Enseigner.discipline_id = Discipline.discipline_id JOIN Anneescolaire ON Classe.annee_id = Anneescolaire.annee_id;"
+        tuple_selection ="" 
+    elif professeur_selected and not(classe_selected) and not(discipline_selected):
+        sql = "SELECT Professeur.nom,  Professeur.prenom, Classe.nom AS Classe, Anneescolaire.nom AS Annee, Discipline.nom AS Discipline FROM Enseigner JOIN Professeur ON Enseigner.professeur_id = Professeur.professeur_id JOIN Classe ON Enseigner.classe_id = Classe.classe_id JOIN Discipline ON Enseigner.discipline_id = Discipline.discipline_id JOIN Anneescolaire ON Classe.annee_id = Anneescolaire.annee_id WHERE Enseigner.professeur_id=%s;"
+        tuple_selection = (professeur_selected[0],)
+    elif not(professeur_selected) and classe_selected and not(discipline_selected):
+        sql = "SELECT Professeur.nom,  Professeur.prenom, Classe.nom AS Classe, Anneescolaire.nom AS Annee, Discipline.nom AS Discipline FROM Enseigner JOIN Professeur ON Enseigner.professeur_id = Professeur.professeur_id JOIN Classe ON Enseigner.classe_id = Classe.classe_id JOIN Discipline ON Enseigner.discipline_id = Discipline.discipline_id JOIN Anneescolaire ON Classe.annee_id = Anneescolaire.annee_id WHERE Enseigner.classe_id=%s;"
+        tuple_selection = (classe_selected[0],)
+    elif professeur_selected and classe_selected and not(discipline_selected):
+        sql = "SELECT Professeur.nom,  Professeur.prenom, Classe.nom AS Classe, Anneescolaire.nom AS Annee, Discipline.nom AS Discipline FROM Enseigner JOIN Professeur ON Enseigner.professeur_id = Professeur.professeur_id JOIN Classe ON Enseigner.classe_id = Classe.classe_id JOIN Discipline ON Enseigner.discipline_id = Discipline.discipline_id JOIN Anneescolaire ON Classe.annee_id = Anneescolaire.annee_id WHERE Enseigner.professeur_id=%s AND  Enseigner.classe_id=%s;"
+        tuple_selection = (professeur_selected[0], classe_selected[0])
+    elif not(professeur_selected) and not(classe_selected) and discipline_selected:
+        sql = "SELECT Professeur.nom,  Professeur.prenom, Classe.nom AS Classe, Anneescolaire.nom AS Annee, Discipline.nom AS Discipline FROM Enseigner JOIN Professeur ON Enseigner.professeur_id = Professeur.professeur_id JOIN Classe ON Enseigner.classe_id = Classe.classe_id JOIN Discipline ON Enseigner.discipline_id = Discipline.discipline_id JOIN Anneescolaire ON Classe.annee_id = Anneescolaire.annee_id WHERE Enseigner.discipline_id=%s;"
+        tuple_selection = (discipline_selected[0],)
+    elif professeur_selected and not(classe_selected) and discipline_selected:
+        sql = "SELECT Professeur.nom,  Professeur.prenom, Classe.nom AS Classe, Anneescolaire.nom AS Annee, Discipline.nom AS Discipline FROM Enseigner JOIN Professeur ON Enseigner.professeur_id = Professeur.professeur_id JOIN Classe ON Enseigner.classe_id = Classe.classe_id JOIN Discipline ON Enseigner.discipline_id = Discipline.discipline_id JOIN Anneescolaire ON Classe.annee_id = Anneescolaire.annee_id WHERE Enseigner.professeur_id=%s AND  Enseigner.discipline_id=%s;"
+        tuple_selection = (professeur_selected[0], discipline_selected[0])
+    elif not(professeur_selected) and classe_selected and discipline_selected:
+        sql = "SELECT Professeur.nom,  Professeur.prenom, Classe.nom AS Classe, Anneescolaire.nom AS Annee, Discipline.nom AS Discipline FROM Enseigner JOIN Professeur ON Enseigner.professeur_id = Professeur.professeur_id JOIN Classe ON Enseigner.classe_id = Classe.classe_id JOIN Discipline ON Enseigner.discipline_id = Discipline.discipline_id JOIN Anneescolaire ON Classe.annee_id = Anneescolaire.annee_id WHERE Enseigner.classe_id=%s AND  Enseigner.discipline_id=%s;"
+        tuple_selection = (classe_selected[0], discipline_selected[0])
+    else:
+        sql = "SELECT Professeur.nom,  Professeur.prenom, Classe.nom AS Classe, Anneescolaire.nom AS Annee, Discipline.nom AS Discipline FROM Enseigner JOIN Professeur ON Enseigner.professeur_id = Professeur.professeur_id JOIN Classe ON Enseigner.classe_id = Classe.classe_id JOIN Discipline ON Enseigner.discipline_id = Discipline.discipline_id JOIN Anneescolaire ON Classe.annee_id = Anneescolaire.annee_id WHERE Enseigner.professeur_id=%s AND Enseigner.classe_id=%s AND  Enseigner.discipline_id=%s;"
+        tuple_selection = (professeur_selected[0], classe_selected[0], discipline_selected[0])
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
@@ -1368,10 +1461,9 @@ def sql_read_enseignements_traduits():
                                              password=GN_password)
         db_Info = connection.get_server_info()
         print(f"Connected to MySQL Server version {db_Info}")
-        print("sql_read_enseignements")
+        print("sql_read_enseignements_traduits")
         cursor = connection.cursor()
-        sql = "SELECT Professeur.nom,  Professeur.prenom, Classe.nom AS Classe, Anneescolaire.nom AS Annee, Discipline.nom AS Discipline FROM Enseigner JOIN Professeur ON Enseigner.professeur_id = Professeur.professeur_id JOIN Classe ON Enseigner.classe_id = Classe.classe_id JOIN Discipline ON Enseigner.discipline_id = Discipline.discipline_id JOIN Anneescolaire;"
-        cursor.execute(sql)
+        cursor.execute(sql, tuple_selection)
         records = cursor.fetchall()
         cursor.close()
         connection.close()
@@ -1382,29 +1474,67 @@ def sql_read_enseignements_traduits():
         messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
 
 
+def sql_add_enseignement():
+    """
+    Se connecte à Mysql et ajoute l'enseignement à partir du professeur, de la classe et de la discipline sélectionnés.
+    """
+    sql = "INSERT INTO Enseigner (professeur_id, classe_id, discipline_id) VALUES (%s, %s, %s);"
+    tuple_selection = (professeur_selected[0], classe_selected[0], discipline_selected[0])
+    try:
+        print(f"Try to connected to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print(f"Connected to MySQL Server version {db_Info}")
+        print("sql_add_enseignement")
+        cursor = connection.cursor()
+        cursor.execute(sql, tuple_selection)
+        connection.commit()
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+        messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
+
+        
         
 def afficher_enseignements():
     """
     Affiche l'IHM des Enseignements
     """
-    records = sql_read_enseignements()
-    # print(records)
-    for row in records:
+    global sheet_enseignements
+    enseignements = sql_read_enseignements()
+    print("Enseignements:")
+    for row in enseignements:
         print(row)
-    records = sql_read_enseignements_traduits()
-    # print(records)
-    for row in records:
-        print(row)
+    enseignements_traduits = sql_read_enseignements_traduits()
     frame_enseignements = tk.Frame(f5)
     frame_enseignements.grid()
     sheet_enseignements = Sheet(f5,
-                                data=records,
+                                data=enseignements_traduits,
                                 headers=["Nom Professeur", "Prénom", "Classe", "Année scolaire", "Discipline"],
                                 set_all_heights_and_widths = True,
-                                height=300,
+                                height=500,
                                 width=800)
-    sheet_enseignements.grid()
+    sheet_enseignements.hide("row_index")
+    sheet_enseignements.grid(row=1, column=0)
 
+def ajouter_enseignement():
+    """
+    Crée un enseignement à partir du professeur, de la classe et de la discipline sélectionnés.
+    """
+    if professeur_selected and classe_selected and discipline_selected and not(sql_read_enseignements()):
+        print(f"Ajout de l'enseignement: {professeur_selected} {classe_selected} {discipline_selected}")
+        sql_add_enseignement()
+        sheet_enseignements.destroy()
+        afficher_enseignements()
+    elif professeur_selected and classe_selected and discipline_selected:
+        messagebox.showerror("Ajout impossible", "Cet enseignement existe déjà")
+    else:
+        messagebox.showwarning("Opération non valide", "Veuillez sélectionner un professeur, une classe et une discipline dans leurs onglets respectifs.")
 
 
 
@@ -1454,6 +1584,8 @@ button_add_periode = tk.Button(frame_periodes, text='Ajouter',
                                command=ajouter_periode)
 button_save_periodes = tk.Button(frame_periodes, text='Enregistrer',
                                 command=enregistrer_periodes)
+button_add_enseignement = tk.Button(f5, text='Ajouter',
+                                    command=ajouter_enseignement)
 
 
 notebook.add(f0, text="Mon compte")
@@ -1473,6 +1605,7 @@ button_add_annee.grid(row=1, column=0)
 button_save_annees.grid(row=1, column=1)
 button_add_periode.grid(row=1, column=0)
 button_save_periodes.grid(row=1, column=1)
+button_add_enseignement.grid(row=2,column=0)
 
 afficher_IHM_connexion()
 
