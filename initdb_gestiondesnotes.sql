@@ -42,18 +42,15 @@ TO role_professeur;
 -- Création de différents utilisateurs avec le rôle de gestionnaire
 
 CREATE OR replace USER  stil@localhost IDENTIFIED BY 's';                 
-GRANT role_gestionnaire
-TO stil@localhost;
+GRANT role_gestionnaire TO stil@localhost;
 SET DEFAULT ROLE role_gestionnaire FOR stil@localhost;
 
 CREATE OR replace USER  proviseur@localhost IDENTIFIED BY 'p';                 
-GRANT role_gestionnaire
-TO proviseur@localhost;
+GRANT role_gestionnaire TO proviseur@localhost;
 SET DEFAULT ROLE role_gestionnaire FOR proviseur@localhost;
 
 CREATE OR replace USER  noel_gest@localhost IDENTIFIED BY 'noel';                 
-GRANT role_gestionnaire
-TO noel_gest@localhost;
+GRANT role_gestionnaire TO noel_gest@localhost;
 SET DEFAULT ROLE role_gestionnaire FOR noel_gest@localhost;
 
 -- CREATE OR replace USER  first_connection@localhost       
@@ -71,6 +68,21 @@ SET DEFAULT ROLE role_gestionnaire FOR noel_gest@localhost;
 
 
 -- FLUSH PRIVILEGES;
+
+-- ------------------------------------------------
+-- Création de différents utilisateurs avec le rôle de professeur
+CREATE OR replace USER KunihikoKodaira@localhost identified BY 'p';
+GRANT role_professeur TO KunihikoKodaira@localhost;
+SET DEFAULT ROLE role_professeur FOR KunihikoKodaira@localhost;
+
+CREATE OR replace USER PierreSerre@localhost identified BY 'p';
+GRANT role_professeur TO PierreSerre@localhost;
+SET DEFAULT ROLE role_professeur FOR PierreSerre@localhost;
+
+CREATE OR replace USER KlausRoth@localhost identified BY 'p';
+GRANT role_professeur TO KlausRoth@localhost;
+SET DEFAULT ROLE role_professeur FOR KlausRoth@localhost;
+
 
 
 
@@ -91,11 +103,6 @@ INSERT INTO Fonction (Func_Id, Func_Name) VALUES
 ('P2', 'Proviseur-adjoint'),
 ('S', 'Secrétaire de direction'),
 ('ST', 'STIL'),
-('Prof', 'Professeur'),
-('E', 'Élève'),
-('Par', 'Parent'),
-('A', 'Agent'),
-('C', 'CPE'),
 ('DIU', 'Professeur DIU');
 
 show warnings;
