@@ -232,7 +232,7 @@ def sql_read_role():
         
 def sql_read_admin():
     """
-    Se connecte à Mysql et retourne les données concernant le gestionnaire à partir de la jonction des deux tables Àdministraterus`et `Fonctions`. 
+    Se connecte à Mysql et retourne les données concernant le gestionnaire à partir de la jonction des deux tables Àdministrateur`et `Fonction`. 
     """
     try:
         print(f"Try to connected to MySQL Server as {GN_user}")
@@ -244,7 +244,7 @@ def sql_read_admin():
         print(f"Connected to MySQL Server version {db_Info}")
         print("sql_read_admin")
         cursor = connection.cursor()
-        sql = "SELECT FirstName, LastName, Gender ,Birthday , Func_Name, Login FROM Administrateurs INNER JOIN Fonctions WHERE Administrateurs.Func_Id=Fonctions.Func_Id AND Login=%s;"
+        sql = "SELECT FirstName, LastName, Gender ,Birthday , Func_Name, Login FROM Administrateur INNER JOIN Fonction WHERE Administrateur.Func_Id=Fonction.Func_Id AND Login=%s;"
         tuple_login =  (GN_user,)
         cursor.execute(sql, tuple_login)
         records = cursor.fetchall()
@@ -442,7 +442,7 @@ def sql_save_compte_admin():
         print("Connected to MySQL Server version", db_Info)
         print("sql_save_compte_admin")
         cursor = connection.cursor()
-        sql = "UPDATE Administrateurs SET FirstName=%s, LastName=%s, Gender=%s, Birthday=%s WHERE Login=%s "
+        sql = "UPDATE Administrateur SET FirstName=%s, LastName=%s, Gender=%s, Birthday=%s WHERE Login=%s "
         date = datetime.strptime(naissance_entry_text.get(),'%d/%m/%Y').strftime('%Y-%m-%d')
         administrateur = (prenom_entry_text.get(), nom_entry_text.get(), combobox_genre.get(), date, login_entry_text.get())
         print(administrateur)

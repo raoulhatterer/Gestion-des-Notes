@@ -1,71 +1,84 @@
 #!/usr/bin/env python
 # encoding: utf-8
-# Généré par Mocodo 2.3.8 le Fri, 21 Aug 2020 19:00:08
+# Généré par Mocodo 2.3.8 le Tue, 25 Aug 2020 12:21:56
 
 from __future__ import division
 from math import hypot
 
 import time, codecs
 
-(width,height) = (627,376)
+(width,height) = (654,560)
 cx = {
-    u"Administrateur":  268,
-    u"Inscrire"      :  423,
-    u"Définir"       :   53,
-    u"Créer"         :  159,
-    u"Ajouter"       :  268,
-    u"Élève"         :  423,
-    u"Professeur"    :  556,
-    u"Discipline"    :  423,
-    u"Affecter"      :  556,
-    u"Période"       :   53,
-    u"Classe"        :  423,
+    u"Discipline"   :   64,
+    u"Porter"       :  210,
+    u"Enseigner"    :   64,
+    u"Professeur"   :  210,
+    u"Realiser"     :  349,
+    u"Evaluation"   :  495,
+    u"Classe"       :   64,
+    u"Destiner"     :  210,
+    u"Evaluer"      :  349,
+    u"Situer"       :  495,
+    u"Appartenir"   :  210,
+    u"Eleve"        :  349,
+    u"Periode"      :  601,
+    u"Exister"      :   64,
+    u"AnneeScolaire":  495,
 }
 cy = {
-    u"Administrateur":   38,
-    u"Inscrire"      :   38,
-    u"Définir"       :  146,
-    u"Créer"         :  146,
-    u"Ajouter"       :  146,
-    u"Élève"         :  146,
-    u"Professeur"    :  146,
-    u"Discipline"    :  263,
-    u"Affecter"      :  263,
-    u"Période"       :  346,
-    u"Classe"        :  346,
+    u"Discipline"   :   47,
+    u"Porter"       :   47,
+    u"Enseigner"    :  155,
+    u"Professeur"   :  155,
+    u"Realiser"     :  155,
+    u"Evaluation"   :  155,
+    u"Classe"       :  305,
+    u"Destiner"     :  305,
+    u"Evaluer"      :  305,
+    u"Situer"       :  305,
+    u"Appartenir"   :  413,
+    u"Eleve"        :  413,
+    u"Periode"      :  413,
+    u"Exister"      :  513,
+    u"AnneeScolaire":  513,
 }
 shift = {
-    u"Inscrire,Administrateur,-1.0":    0,
-    u"Inscrire,Administrateur,1.0" :    0,
-    u"Inscrire,Professeur"         :    0,
-    u"Inscrire,Élève"              :    0,
-    u"Définir,Période"             :    0,
-    u"Définir,Administrateur"      :    0,
-    u"Créer,Classe"                :    0,
-    u"Créer,Administrateur"        :    0,
-    u"Ajouter,Discipline"          :    0,
-    u"Ajouter,Administrateur"      :    0,
-    u"Affecter,Professeur"         :    0,
-    u"Affecter,Discipline"         :    0,
-    u"Affecter,Classe"             :    0,
-    u"Affecter,Élève"              :    0,
+    u"Porter,Evaluation"    :    0,
+    u"Porter,Discipline"    :    0,
+    u"Enseigner,Professeur" :    0,
+    u"Enseigner,Discipline" :    0,
+    u"Enseigner,Classe"     :    0,
+    u"Realiser,Evaluation"  :    0,
+    u"Realiser,Professeur"  :    0,
+    u"Destiner,Evaluation"  :    0,
+    u"Destiner,Classe"      :    0,
+    u"Evaluer,Evaluation"   :    0,
+    u"Evaluer,Eleve"        :    0,
+    u"Situer,AnneeScolaire" :    0,
+    u"Situer,Periode"       :    0,
+    u"Situer,Evaluation"    :    0,
+    u"Appartenir,Classe"    :    0,
+    u"Appartenir,Eleve"     :    0,
+    u"Exister,AnneeScolaire":    0,
+    u"Exister,Classe"       :    0,
 }
 colors = {
-    u"annotation_color"                : '#b35806',
-    u"annotation_text_color"           : '#f7f7f7',
+    u"annotation_color"                : '#000000',
+    u"annotation_text_color"           : '#FFFFFF',
     u"association_attribute_text_color": '#000000',
-    u"association_cartouche_color"     : '#fdb863',
+    u"association_cartouche_color"     : '#FFFFFF',
     u"association_cartouche_text_color": '#000000',
-    u"association_color"               : '#fee0b6',
-    u"association_stroke_color"        : '#e08214',
-    u"background_color"                : '#f7f7f7',
-    u"card_text_color"                 : '#542788',
+    u"association_color"               : '#FFFFFF',
+    u"association_stroke_color"        : '#000000',
+    u"background_color"                : 'none',
+    u"card_text_color"                 : '#000000',
     u"entity_attribute_text_color"     : '#000000',
-    u"entity_cartouche_color"          : '#b2abd2',
+    u"entity_cartouche_color"          : '#FFFFFF',
     u"entity_cartouche_text_color"     : '#000000',
-    u"entity_color"                    : '#d8daeb',
-    u"entity_stroke_color"             : '#8073ac',
-    u"leg_stroke_color"                : '#e08214',
+    u"entity_color"                    : '#FFFFFF',
+    u"entity_stroke_color"             : '#000000',
+    u"label_text_color"                : '#000000',
+    u"leg_stroke_color"                : '#000000',
     u"transparent_color"               : 'none',
 }
 card_max_width = 19
@@ -226,160 +239,206 @@ lines += '\n\n<svg width="%s" height="%s" view_box="0 0 %s %s"\nxmlns="http://ww
 lines += u'\\n\\n<desc>Généré par Mocodo 2.3.8 le %s</desc>' % time.strftime("%a, %d %b %Y %H:%M:%S", time.localtime())
 lines += '\n\n<rect id="frame" x="0" y="0" width="%s" height="%s" fill="%s" stroke="none" stroke-width="0"/>' % (width,height,colors['background_color'] if colors['background_color'] else "none")
 
-lines += u"""\n\n<!-- Association Inscrire -->"""
-(x,y) = (cx[u"Inscrire"],cy[u"Inscrire"])
-(ex,ey) = (cx[u"Administrateur"],cy[u"Administrateur"])
-leg=curved_leg_factory(ex,ey,80,21,x,y,46,29,19+2*card_margin,14+2*card_margin,-1.0)
-(x0, y0, x1, y1, x2, y2, x3, y3)=leg.points
-lines += u"""\n<path d="M%(x0)s %(y0)s C %(x1)s %(y1)s %(x2)s %(y2)s %(x3)s %(y3)s" fill="none" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'x0': x0, 'y0': y0, 'x1': x1, 'y1': y1, 'x2': x2, 'y2': y2, 'x3': x3, 'y3': y3, 'stroke_color': colors['leg_stroke_color']}
-(tx,ty)=offset(*leg.card_pos(shift[u"Inscrire,Administrateur,-1.0"]))
-lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">1,N</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
-(ex,ey) = (cx[u"Administrateur"],cy[u"Administrateur"])
-leg=curved_leg_factory(ex,ey,80,21,x,y,46,29,18+2*card_margin,14+2*card_margin,1.0)
-(x0, y0, x1, y1, x2, y2, x3, y3)=leg.points
-lines += u"""\n<path d="M%(x0)s %(y0)s C %(x1)s %(y1)s %(x2)s %(y2)s %(x3)s %(y3)s" fill="none" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'x0': x0, 'y0': y0, 'x1': x1, 'y1': y1, 'x2': x2, 'y2': y2, 'x3': x3, 'y3': y3, 'stroke_color': colors['leg_stroke_color']}
-(tx,ty)=offset(*leg.card_pos(shift[u"Inscrire,Administrateur,1.0"]))
-lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">1,1</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
-(ex,ey) = (cx[u"Professeur"],cy[u"Professeur"])
-leg=straight_leg_factory(ex,ey,62,55,x,y,46,29,18+2*card_margin,14+2*card_margin)
+lines += u"""\n\n<!-- Association Porter -->"""
+(x,y) = (cx[u"Porter"],cy[u"Porter"])
+(ex,ey) = (cx[u"Evaluation"],cy[u"Evaluation"])
+leg=straight_leg_factory(ex,ey,69,47,x,y,40,29,18+2*card_margin,14+2*card_margin)
 lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
-(tx,ty)=offset(*leg.card_pos(False,shift[u"Inscrire,Professeur"]))
+(tx,ty)=offset(*leg.card_pos(False,shift[u"Porter,Evaluation"]))
 lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">1,1</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
-(ex,ey) = (cx[u"Élève"],cy[u"Élève"])
-leg=straight_leg_factory(ex,ey,35,21,x,y,46,29,18+2*card_margin,14+2*card_margin)
+(ex,ey) = (cx[u"Discipline"],cy[u"Discipline"])
+leg=straight_leg_factory(ex,ey,55,38,x,y,40,29,19+2*card_margin,14+2*card_margin)
 lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
-(tx,ty)=offset(*leg.card_pos(False,shift[u"Inscrire,Élève"]))
-lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">1,1</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
-lines += u"""\n<g id="association-Inscrire">""" % {}
-path = upper_round_rect(-46+x,-29+y,92,28,14)
+(tx,ty)=offset(*leg.card_pos(False,shift[u"Porter,Discipline"]))
+lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">0,N</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
+lines += u"""\n<g id="association-Porter">""" % {}
+path = upper_round_rect(-40+x,-29+y,80,28,14)
 lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_cartouche_color'], 'stroke_color': colors['association_cartouche_color']}
-path = lower_round_rect(-46+x,-1.0+y,92,30,14)
+path = lower_round_rect(-40+x,-1.0+y,80,30,14)
 lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_color'], 'stroke_color': colors['association_color']}
-lines += u"""\n	<rect x="%(x)s" y="%(y)s" width="92" height="58" fill="%(color)s" rx="14" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -46+x, 'y': -29+y, 'color': colors['transparent_color'], 'stroke_color': colors['association_stroke_color']}
-lines += u"""\n	<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -46+x, 'y0': -1+y, 'x1': 46+x, 'y1': -1+y, 'stroke_color': colors['association_stroke_color']}
-lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Inscrire</text>""" % {'x': -39+x, 'y': -7.7+y, 'text_color': colors['association_cartouche_text_color']}
+lines += u"""\n	<rect x="%(x)s" y="%(y)s" width="80" height="58" fill="%(color)s" rx="14" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -40+x, 'y': -29+y, 'color': colors['transparent_color'], 'stroke_color': colors['association_stroke_color']}
+lines += u"""\n	<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -40+x, 'y0': -1+y, 'x1': 40+x, 'y1': -1+y, 'stroke_color': colors['association_stroke_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Porter</text>""" % {'x': -33+x, 'y': -7.7+y, 'text_color': colors['association_cartouche_text_color']}
 lines += u"""\n</g>""" % {}
 
-lines += u"""\n\n<!-- Association Définir -->"""
-(x,y) = (cx[u"Définir"],cy[u"Définir"])
-(ex,ey) = (cx[u"Période"],cy[u"Période"])
-leg=straight_leg_factory(ex,ey,44,21,x,y,42,29,18+2*card_margin,14+2*card_margin)
+lines += u"""\n\n<!-- Association Enseigner -->"""
+(x,y) = (cx[u"Enseigner"],cy[u"Enseigner"])
+(ex,ey) = (cx[u"Professeur"],cy[u"Professeur"])
+leg=straight_leg_factory(ex,ey,62,55,x,y,55,29,19+2*card_margin,14+2*card_margin)
 lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
-(tx,ty)=offset(*leg.card_pos(False,shift[u"Définir,Période"]))
-lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">1,1</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
-(ex,ey) = (cx[u"Administrateur"],cy[u"Administrateur"])
-leg=straight_leg_factory(ex,ey,80,21,x,y,42,29,19+2*card_margin,14+2*card_margin)
+(tx,ty)=offset(*leg.card_pos(False,shift[u"Enseigner,Professeur"]))
+lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">0,N</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
+(ex,ey) = (cx[u"Discipline"],cy[u"Discipline"])
+leg=straight_leg_factory(ex,ey,55,38,x,y,55,29,19+2*card_margin,14+2*card_margin)
 lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
-(tx,ty)=offset(*leg.card_pos(False,shift[u"Définir,Administrateur"]))
+(tx,ty)=offset(*leg.card_pos(False,shift[u"Enseigner,Discipline"]))
+lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">0,N</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
+(ex,ey) = (cx[u"Classe"],cy[u"Classe"])
+leg=straight_leg_factory(ex,ey,40,47,x,y,55,29,19+2*card_margin,14+2*card_margin)
+lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
+(tx,ty)=offset(*leg.card_pos(False,shift[u"Enseigner,Classe"]))
 lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">1,N</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
-lines += u"""\n<g id="association-Définir">""" % {}
+lines += u"""\n<g id="association-Enseigner">""" % {}
+path = upper_round_rect(-55+x,-29+y,110,28,14)
+lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_cartouche_color'], 'stroke_color': colors['association_cartouche_color']}
+path = lower_round_rect(-55+x,-1.0+y,110,30,14)
+lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_color'], 'stroke_color': colors['association_color']}
+lines += u"""\n	<rect x="%(x)s" y="%(y)s" width="110" height="58" fill="%(color)s" rx="14" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -55+x, 'y': -29+y, 'color': colors['transparent_color'], 'stroke_color': colors['association_stroke_color']}
+lines += u"""\n	<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -55+x, 'y0': -1+y, 'x1': 55+x, 'y1': -1+y, 'stroke_color': colors['association_stroke_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Enseigner</text>""" % {'x': -48+x, 'y': -7.7+y, 'text_color': colors['association_cartouche_text_color']}
+lines += u"""\n</g>""" % {}
+
+lines += u"""\n\n<!-- Association Realiser -->"""
+(x,y) = (cx[u"Realiser"],cy[u"Realiser"])
+(ex,ey) = (cx[u"Evaluation"],cy[u"Evaluation"])
+leg=straight_leg_factory(ex,ey,69,47,x,y,48,29,18+2*card_margin,14+2*card_margin)
+lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
+(tx,ty)=offset(*leg.card_pos(False,shift[u"Realiser,Evaluation"]))
+lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">1,1</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
+(ex,ey) = (cx[u"Professeur"],cy[u"Professeur"])
+leg=straight_leg_factory(ex,ey,62,55,x,y,48,29,19+2*card_margin,14+2*card_margin)
+lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
+(tx,ty)=offset(*leg.card_pos(False,shift[u"Realiser,Professeur"]))
+lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">0,N</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
+lines += u"""\n<g id="association-Realiser">""" % {}
+path = upper_round_rect(-48+x,-29+y,96,28,14)
+lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_cartouche_color'], 'stroke_color': colors['association_cartouche_color']}
+path = lower_round_rect(-48+x,-1.0+y,96,30,14)
+lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_color'], 'stroke_color': colors['association_color']}
+lines += u"""\n	<rect x="%(x)s" y="%(y)s" width="96" height="58" fill="%(color)s" rx="14" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -48+x, 'y': -29+y, 'color': colors['transparent_color'], 'stroke_color': colors['association_stroke_color']}
+lines += u"""\n	<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -48+x, 'y0': -1+y, 'x1': 48+x, 'y1': -1+y, 'stroke_color': colors['association_stroke_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Realiser</text>""" % {'x': -41+x, 'y': -7.7+y, 'text_color': colors['association_cartouche_text_color']}
+lines += u"""\n</g>""" % {}
+
+lines += u"""\n\n<!-- Association Destiner -->"""
+(x,y) = (cx[u"Destiner"],cy[u"Destiner"])
+(ex,ey) = (cx[u"Evaluation"],cy[u"Evaluation"])
+leg=straight_leg_factory(ex,ey,69,47,x,y,48,29,18+2*card_margin,14+2*card_margin)
+lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
+(tx,ty)=offset(*leg.card_pos(False,shift[u"Destiner,Evaluation"]))
+lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">1,1</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
+(ex,ey) = (cx[u"Classe"],cy[u"Classe"])
+leg=straight_leg_factory(ex,ey,40,47,x,y,48,29,19+2*card_margin,14+2*card_margin)
+lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
+(tx,ty)=offset(*leg.card_pos(True,shift[u"Destiner,Classe"]))
+lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">0,N</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
+lines += u"""\n<g id="association-Destiner">""" % {}
+path = upper_round_rect(-48+x,-29+y,96,28,14)
+lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_cartouche_color'], 'stroke_color': colors['association_cartouche_color']}
+path = lower_round_rect(-48+x,-1.0+y,96,30,14)
+lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_color'], 'stroke_color': colors['association_color']}
+lines += u"""\n	<rect x="%(x)s" y="%(y)s" width="96" height="58" fill="%(color)s" rx="14" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -48+x, 'y': -29+y, 'color': colors['transparent_color'], 'stroke_color': colors['association_stroke_color']}
+lines += u"""\n	<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -48+x, 'y0': -1+y, 'x1': 48+x, 'y1': -1+y, 'stroke_color': colors['association_stroke_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Destiner</text>""" % {'x': -41+x, 'y': -7.7+y, 'text_color': colors['association_cartouche_text_color']}
+lines += u"""\n</g>""" % {}
+
+lines += u"""\n\n<!-- Association Evaluer -->"""
+(x,y) = (cx[u"Evaluer"],cy[u"Evaluer"])
+(ex,ey) = (cx[u"Evaluation"],cy[u"Evaluation"])
+leg=straight_leg_factory(ex,ey,69,47,x,y,45,29,19+2*card_margin,14+2*card_margin)
+lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
+(tx,ty)=offset(*leg.card_pos(False,shift[u"Evaluer,Evaluation"]))
+lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">1,N</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
+(ex,ey) = (cx[u"Eleve"],cy[u"Eleve"])
+leg=straight_leg_factory(ex,ey,35,55,x,y,45,29,19+2*card_margin,14+2*card_margin)
+lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
+(tx,ty)=offset(*leg.card_pos(False,shift[u"Evaluer,Eleve"]))
+lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">1,N</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
+lines += u"""\n<g id="association-Evaluer">""" % {}
+path = upper_round_rect(-45+x,-29+y,90,28,14)
+lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_cartouche_color'], 'stroke_color': colors['association_cartouche_color']}
+path = lower_round_rect(-45+x,-1.0+y,90,30,14)
+lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_color'], 'stroke_color': colors['association_color']}
+lines += u"""\n	<rect x="%(x)s" y="%(y)s" width="90" height="58" fill="%(color)s" rx="14" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -45+x, 'y': -29+y, 'color': colors['transparent_color'], 'stroke_color': colors['association_stroke_color']}
+lines += u"""\n	<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -45+x, 'y0': -1+y, 'x1': 45+x, 'y1': -1+y, 'stroke_color': colors['association_stroke_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Evaluer</text>""" % {'x': -38+x, 'y': -7.7+y, 'text_color': colors['association_cartouche_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">note</text>""" % {'x': -38+x, 'y': 17.1+y, 'text_color': colors['association_attribute_text_color']}
+lines += u"""\n</g>""" % {}
+
+lines += u"""\n\n<!-- Association Situer -->"""
+(x,y) = (cx[u"Situer"],cy[u"Situer"])
+(ex,ey) = (cx[u"AnneeScolaire"],cy[u"AnneeScolaire"])
+leg=straight_leg_factory(ex,ey,77,38,x,y,38,29,19+2*card_margin,14+2*card_margin)
+lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
+(tx,ty)=offset(*leg.card_pos(False,shift[u"Situer,AnneeScolaire"]))
+lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">0,N</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
+(ex,ey) = (cx[u"Periode"],cy[u"Periode"])
+leg=straight_leg_factory(ex,ey,44,38,x,y,38,29,19+2*card_margin,14+2*card_margin)
+lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
+(tx,ty)=offset(*leg.card_pos(False,shift[u"Situer,Periode"]))
+lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">0,N</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
+(ex,ey) = (cx[u"Evaluation"],cy[u"Evaluation"])
+leg=straight_leg_factory(ex,ey,69,47,x,y,38,29,18+2*card_margin,14+2*card_margin)
+lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
+(tx,ty)=offset(*leg.card_pos(False,shift[u"Situer,Evaluation"]))
+lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">1,1</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
+lines += u"""\n<g id="association-Situer">""" % {}
+path = upper_round_rect(-38+x,-29+y,76,28,14)
+lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_cartouche_color'], 'stroke_color': colors['association_cartouche_color']}
+path = lower_round_rect(-38+x,-1.0+y,76,30,14)
+lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_color'], 'stroke_color': colors['association_color']}
+lines += u"""\n	<rect x="%(x)s" y="%(y)s" width="76" height="58" fill="%(color)s" rx="14" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -38+x, 'y': -29+y, 'color': colors['transparent_color'], 'stroke_color': colors['association_stroke_color']}
+lines += u"""\n	<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -38+x, 'y0': -1+y, 'x1': 38+x, 'y1': -1+y, 'stroke_color': colors['association_stroke_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Situer</text>""" % {'x': -31+x, 'y': -7.7+y, 'text_color': colors['association_cartouche_text_color']}
+lines += u"""\n</g>""" % {}
+
+lines += u"""\n\n<!-- Association Appartenir -->"""
+(x,y) = (cx[u"Appartenir"],cy[u"Appartenir"])
+(ex,ey) = (cx[u"Classe"],cy[u"Classe"])
+leg=straight_leg_factory(ex,ey,40,47,x,y,58,29,19+2*card_margin,14+2*card_margin)
+lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
+(tx,ty)=offset(*leg.card_pos(False,shift[u"Appartenir,Classe"]))
+lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">1,N</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
+(ex,ey) = (cx[u"Eleve"],cy[u"Eleve"])
+leg=straight_leg_factory(ex,ey,35,55,x,y,58,29,18+2*card_margin,14+2*card_margin)
+lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
+(tx,ty)=offset(*leg.card_pos(False,shift[u"Appartenir,Eleve"]))
+lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">1,1</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
+lines += u"""\n<g id="association-Appartenir">""" % {}
+path = upper_round_rect(-58+x,-29+y,116,28,14)
+lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_cartouche_color'], 'stroke_color': colors['association_cartouche_color']}
+path = lower_round_rect(-58+x,-1.0+y,116,30,14)
+lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_color'], 'stroke_color': colors['association_color']}
+lines += u"""\n	<rect x="%(x)s" y="%(y)s" width="116" height="58" fill="%(color)s" rx="14" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -58+x, 'y': -29+y, 'color': colors['transparent_color'], 'stroke_color': colors['association_stroke_color']}
+lines += u"""\n	<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -58+x, 'y0': -1+y, 'x1': 58+x, 'y1': -1+y, 'stroke_color': colors['association_stroke_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Appartenir</text>""" % {'x': -51+x, 'y': -7.7+y, 'text_color': colors['association_cartouche_text_color']}
+lines += u"""\n</g>""" % {}
+
+lines += u"""\n\n<!-- Association Exister -->"""
+(x,y) = (cx[u"Exister"],cy[u"Exister"])
+(ex,ey) = (cx[u"AnneeScolaire"],cy[u"AnneeScolaire"])
+leg=straight_leg_factory(ex,ey,77,38,x,y,42,29,19+2*card_margin,14+2*card_margin)
+lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
+(tx,ty)=offset(*leg.card_pos(False,shift[u"Exister,AnneeScolaire"]))
+lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">0,N</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
+(ex,ey) = (cx[u"Classe"],cy[u"Classe"])
+leg=straight_leg_factory(ex,ey,40,47,x,y,42,29,18+2*card_margin,14+2*card_margin)
+lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
+(tx,ty)=offset(*leg.card_pos(True,shift[u"Exister,Classe"]))
+lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">1,1</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
+lines += u"""\n<g id="association-Exister">""" % {}
 path = upper_round_rect(-42+x,-29+y,84,28,14)
 lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_cartouche_color'], 'stroke_color': colors['association_cartouche_color']}
 path = lower_round_rect(-42+x,-1.0+y,84,30,14)
 lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_color'], 'stroke_color': colors['association_color']}
 lines += u"""\n	<rect x="%(x)s" y="%(y)s" width="84" height="58" fill="%(color)s" rx="14" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -42+x, 'y': -29+y, 'color': colors['transparent_color'], 'stroke_color': colors['association_stroke_color']}
 lines += u"""\n	<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -42+x, 'y0': -1+y, 'x1': 42+x, 'y1': -1+y, 'stroke_color': colors['association_stroke_color']}
-lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Définir</text>""" % {'x': -35+x, 'y': -7.7+y, 'text_color': colors['association_cartouche_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Exister</text>""" % {'x': -35+x, 'y': -7.7+y, 'text_color': colors['association_cartouche_text_color']}
 lines += u"""\n</g>""" % {}
 
-lines += u"""\n\n<!-- Association Créer -->"""
-(x,y) = (cx[u"Créer"],cy[u"Créer"])
-(ex,ey) = (cx[u"Classe"],cy[u"Classe"])
-leg=straight_leg_factory(ex,ey,40,21,x,y,35,29,18+2*card_margin,14+2*card_margin)
-lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
-(tx,ty)=offset(*leg.card_pos(False,shift[u"Créer,Classe"]))
-lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">1,1</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
-(ex,ey) = (cx[u"Administrateur"],cy[u"Administrateur"])
-leg=straight_leg_factory(ex,ey,80,21,x,y,35,29,19+2*card_margin,14+2*card_margin)
-lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
-(tx,ty)=offset(*leg.card_pos(False,shift[u"Créer,Administrateur"]))
-lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">1,N</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
-lines += u"""\n<g id="association-Créer">""" % {}
-path = upper_round_rect(-35+x,-29+y,70,28,14)
-lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_cartouche_color'], 'stroke_color': colors['association_cartouche_color']}
-path = lower_round_rect(-35+x,-1.0+y,70,30,14)
-lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_color'], 'stroke_color': colors['association_color']}
-lines += u"""\n	<rect x="%(x)s" y="%(y)s" width="70" height="58" fill="%(color)s" rx="14" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -35+x, 'y': -29+y, 'color': colors['transparent_color'], 'stroke_color': colors['association_stroke_color']}
-lines += u"""\n	<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -35+x, 'y0': -1+y, 'x1': 35+x, 'y1': -1+y, 'stroke_color': colors['association_stroke_color']}
-lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Créer</text>""" % {'x': -28+x, 'y': -7.7+y, 'text_color': colors['association_cartouche_text_color']}
-lines += u"""\n</g>""" % {}
-
-lines += u"""\n\n<!-- Association Ajouter -->"""
-(x,y) = (cx[u"Ajouter"],cy[u"Ajouter"])
-(ex,ey) = (cx[u"Discipline"],cy[u"Discipline"])
-leg=straight_leg_factory(ex,ey,55,38,x,y,44,29,18+2*card_margin,14+2*card_margin)
-lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
-(tx,ty)=offset(*leg.card_pos(False,shift[u"Ajouter,Discipline"]))
-lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">1,1</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
-(ex,ey) = (cx[u"Administrateur"],cy[u"Administrateur"])
-leg=straight_leg_factory(ex,ey,80,21,x,y,44,29,19+2*card_margin,14+2*card_margin)
-lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
-(tx,ty)=offset(*leg.card_pos(False,shift[u"Ajouter,Administrateur"]))
-lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">1,N</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
-lines += u"""\n<g id="association-Ajouter">""" % {}
-path = upper_round_rect(-44+x,-29+y,88,28,14)
-lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_cartouche_color'], 'stroke_color': colors['association_cartouche_color']}
-path = lower_round_rect(-44+x,-1.0+y,88,30,14)
-lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_color'], 'stroke_color': colors['association_color']}
-lines += u"""\n	<rect x="%(x)s" y="%(y)s" width="88" height="58" fill="%(color)s" rx="14" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -44+x, 'y': -29+y, 'color': colors['transparent_color'], 'stroke_color': colors['association_stroke_color']}
-lines += u"""\n	<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -44+x, 'y0': -1+y, 'x1': 44+x, 'y1': -1+y, 'stroke_color': colors['association_stroke_color']}
-lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Ajouter</text>""" % {'x': -37+x, 'y': -7.7+y, 'text_color': colors['association_cartouche_text_color']}
-lines += u"""\n</g>""" % {}
-
-lines += u"""\n\n<!-- Association Affecter -->"""
-(x,y) = (cx[u"Affecter"],cy[u"Affecter"])
-(ex,ey) = (cx[u"Professeur"],cy[u"Professeur"])
-leg=straight_leg_factory(ex,ey,62,55,x,y,49,29,19+2*card_margin,14+2*card_margin)
-lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
-(tx,ty)=offset(*leg.card_pos(False,shift[u"Affecter,Professeur"]))
-lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">0,N</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
-(ex,ey) = (cx[u"Discipline"],cy[u"Discipline"])
-leg=straight_leg_factory(ex,ey,55,38,x,y,49,29,19+2*card_margin,14+2*card_margin)
-lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
-(tx,ty)=offset(*leg.card_pos(False,shift[u"Affecter,Discipline"]))
-lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">0,N</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
-(ex,ey) = (cx[u"Classe"],cy[u"Classe"])
-leg=straight_leg_factory(ex,ey,40,21,x,y,49,29,19+2*card_margin,14+2*card_margin)
-lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
-(tx,ty)=offset(*leg.card_pos(False,shift[u"Affecter,Classe"]))
-lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">0,N</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
-(ex,ey) = (cx[u"Élève"],cy[u"Élève"])
-leg=straight_leg_factory(ex,ey,35,21,x,y,49,29,19+2*card_margin,14+2*card_margin)
-lines += u"""\n<line x1="%(ex)s" y1="%(ey)s" x2="%(ax)s" y2="%(ay)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'ex': ex, 'ey': ey, 'ax': x, 'ay': y, 'stroke_color': colors['leg_stroke_color']}
-(tx,ty)=offset(*leg.card_pos(False,shift[u"Affecter,Élève"]))
-lines += u"""\n<text x="%(tx)s" y="%(ty)s" fill="%(text_color)s" font-family="Futura" font-size="11">0,N</text>""" % {'tx': tx, 'ty': ty, 'text_color': colors['card_text_color']}
-lines += u"""\n<g id="association-Affecter">""" % {}
-path = upper_round_rect(-49+x,-29+y,98,28,14)
-lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_cartouche_color'], 'stroke_color': colors['association_cartouche_color']}
-path = lower_round_rect(-49+x,-1.0+y,98,30,14)
-lines += u"""\n	<path d="%(path)s" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'path': path, 'color': colors['association_color'], 'stroke_color': colors['association_color']}
-lines += u"""\n	<rect x="%(x)s" y="%(y)s" width="98" height="58" fill="%(color)s" rx="14" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -49+x, 'y': -29+y, 'color': colors['transparent_color'], 'stroke_color': colors['association_stroke_color']}
-lines += u"""\n	<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -49+x, 'y0': -1+y, 'x1': 49+x, 'y1': -1+y, 'stroke_color': colors['association_stroke_color']}
-lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Affecter</text>""" % {'x': -42+x, 'y': -7.7+y, 'text_color': colors['association_cartouche_text_color']}
-lines += u"""\n</g>""" % {}
-
-lines += u"""\n\n<!-- Entity Administrateur -->"""
-(x,y) = (cx[u"Administrateur"],cy[u"Administrateur"])
-lines += u"""\n<g id="entity-Administrateur">""" % {}
-lines += u"""\n	<g id="frame-Administrateur">""" % {}
-lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="160" height="30" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -80+x, 'y': -21+y, 'color': colors['entity_cartouche_color'], 'stroke_color': colors['entity_cartouche_color']}
-lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="160" height="12" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -80+x, 'y': 9.0+y, 'color': colors['entity_color'], 'stroke_color': colors['entity_color']}
-lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="160" height="42" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -80+x, 'y': -21+y, 'color': colors['transparent_color'], 'stroke_color': colors['entity_stroke_color']}
-lines += u"""\n		<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -80+x, 'y0': 9+y, 'x1': 80+x, 'y1': 9+y, 'stroke_color': colors['entity_stroke_color']}
+lines += u"""\n\n<!-- Entity Discipline -->"""
+(x,y) = (cx[u"Discipline"],cy[u"Discipline"])
+lines += u"""\n<g id="entity-Discipline">""" % {}
+lines += u"""\n	<g id="frame-Discipline">""" % {}
+lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="110" height="30" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -55+x, 'y': -38+y, 'color': colors['entity_cartouche_color'], 'stroke_color': colors['entity_cartouche_color']}
+lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="110" height="46" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -55+x, 'y': -8.0+y, 'color': colors['entity_color'], 'stroke_color': colors['entity_color']}
+lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="110" height="76" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -55+x, 'y': -38+y, 'color': colors['transparent_color'], 'stroke_color': colors['entity_stroke_color']}
+lines += u"""\n		<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -55+x, 'y0': -8+y, 'x1': 55+x, 'y1': -8+y, 'stroke_color': colors['entity_stroke_color']}
 lines += u"""\n	</g>""" % {}
-lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Administrateur</text>""" % {'x': -72+x, 'y': 0.3+y, 'text_color': colors['entity_cartouche_text_color']}
-lines += u"""\n</g>""" % {}
-
-lines += u"""\n\n<!-- Entity Élève -->"""
-(x,y) = (cx[u"Élève"],cy[u"Élève"])
-lines += u"""\n<g id="entity-Élève">""" % {}
-lines += u"""\n	<g id="frame-Élève">""" % {}
-lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="70" height="30" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -35+x, 'y': -21+y, 'color': colors['entity_cartouche_color'], 'stroke_color': colors['entity_cartouche_color']}
-lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="70" height="12" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -35+x, 'y': 9.0+y, 'color': colors['entity_color'], 'stroke_color': colors['entity_color']}
-lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="70" height="42" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -35+x, 'y': -21+y, 'color': colors['transparent_color'], 'stroke_color': colors['entity_stroke_color']}
-lines += u"""\n		<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -35+x, 'y0': 9+y, 'x1': 35+x, 'y1': 9+y, 'stroke_color': colors['entity_stroke_color']}
-lines += u"""\n	</g>""" % {}
-lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Élève</text>""" % {'x': -27+x, 'y': 0.3+y, 'text_color': colors['entity_cartouche_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Discipline</text>""" % {'x': -47+x, 'y': -16.7+y, 'text_color': colors['entity_cartouche_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">discipline_id</text>""" % {'x': -47+x, 'y': 9.1+y, 'text_color': colors['entity_attribute_text_color']}
+lines += u"""\n	<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'x0': -47+x, 'y0': 12+y, 'x1': 30+x, 'y1': 12+y, 'stroke_color': colors['entity_attribute_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">nom</text>""" % {'x': -47+x, 'y': 26.1+y, 'text_color': colors['entity_attribute_text_color']}
 lines += u"""\n</g>""" % {}
 
 lines += u"""\n\n<!-- Entity Professeur -->"""
@@ -399,43 +458,83 @@ lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gil
 lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">titre</text>""" % {'x': -54+x, 'y': 43.0+y, 'text_color': colors['entity_attribute_text_color']}
 lines += u"""\n</g>""" % {}
 
-lines += u"""\n\n<!-- Entity Discipline -->"""
-(x,y) = (cx[u"Discipline"],cy[u"Discipline"])
-lines += u"""\n<g id="entity-Discipline">""" % {}
-lines += u"""\n	<g id="frame-Discipline">""" % {}
-lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="110" height="30" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -55+x, 'y': -38+y, 'color': colors['entity_cartouche_color'], 'stroke_color': colors['entity_cartouche_color']}
-lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="110" height="46" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -55+x, 'y': -8.0+y, 'color': colors['entity_color'], 'stroke_color': colors['entity_color']}
-lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="110" height="76" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -55+x, 'y': -38+y, 'color': colors['transparent_color'], 'stroke_color': colors['entity_stroke_color']}
-lines += u"""\n		<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -55+x, 'y0': -8+y, 'x1': 55+x, 'y1': -8+y, 'stroke_color': colors['entity_stroke_color']}
+lines += u"""\n\n<!-- Entity Evaluation -->"""
+(x,y) = (cx[u"Evaluation"],cy[u"Evaluation"])
+lines += u"""\n<g id="entity-Evaluation">""" % {}
+lines += u"""\n	<g id="frame-Evaluation">""" % {}
+lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="138" height="30" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -69+x, 'y': -47+y, 'color': colors['entity_cartouche_color'], 'stroke_color': colors['entity_cartouche_color']}
+lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="138" height="64" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -69+x, 'y': -17.0+y, 'color': colors['entity_color'], 'stroke_color': colors['entity_color']}
+lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="138" height="94" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -69+x, 'y': -47+y, 'color': colors['transparent_color'], 'stroke_color': colors['entity_stroke_color']}
+lines += u"""\n		<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -69+x, 'y0': -17+y, 'x1': 69+x, 'y1': -17+y, 'stroke_color': colors['entity_stroke_color']}
 lines += u"""\n	</g>""" % {}
-lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Discipline</text>""" % {'x': -47+x, 'y': -16.7+y, 'text_color': colors['entity_cartouche_text_color']}
-lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">discipline_id</text>""" % {'x': -47+x, 'y': 9.1+y, 'text_color': colors['entity_attribute_text_color']}
-lines += u"""\n	<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'x0': -47+x, 'y0': 12+y, 'x1': 30+x, 'y1': 12+y, 'stroke_color': colors['entity_attribute_text_color']}
-lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">nom</text>""" % {'x': -47+x, 'y': 26.1+y, 'text_color': colors['entity_attribute_text_color']}
-lines += u"""\n</g>""" % {}
-
-lines += u"""\n\n<!-- Entity Période -->"""
-(x,y) = (cx[u"Période"],cy[u"Période"])
-lines += u"""\n<g id="entity-Période">""" % {}
-lines += u"""\n	<g id="frame-Période">""" % {}
-lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="88" height="30" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -44+x, 'y': -21+y, 'color': colors['entity_cartouche_color'], 'stroke_color': colors['entity_cartouche_color']}
-lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="88" height="12" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -44+x, 'y': 9.0+y, 'color': colors['entity_color'], 'stroke_color': colors['entity_color']}
-lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="88" height="42" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -44+x, 'y': -21+y, 'color': colors['transparent_color'], 'stroke_color': colors['entity_stroke_color']}
-lines += u"""\n		<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -44+x, 'y0': 9+y, 'x1': 44+x, 'y1': 9+y, 'stroke_color': colors['entity_stroke_color']}
-lines += u"""\n	</g>""" % {}
-lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Période</text>""" % {'x': -36+x, 'y': 0.3+y, 'text_color': colors['entity_cartouche_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Evaluation</text>""" % {'x': -52+x, 'y': -25.7+y, 'text_color': colors['entity_cartouche_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">evaluation_id</text>""" % {'x': -61+x, 'y': 0.1+y, 'text_color': colors['entity_attribute_text_color']}
+lines += u"""\n	<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'x0': -61+x, 'y0': 3+y, 'x1': 22+x, 'y1': 3+y, 'stroke_color': colors['entity_attribute_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">Date_Contrôle</text>""" % {'x': -61+x, 'y': 17.1+y, 'text_color': colors['entity_attribute_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">Date_Note_Visible</text>""" % {'x': -61+x, 'y': 34.0+y, 'text_color': colors['entity_attribute_text_color']}
 lines += u"""\n</g>""" % {}
 
 lines += u"""\n\n<!-- Entity Classe -->"""
 (x,y) = (cx[u"Classe"],cy[u"Classe"])
 lines += u"""\n<g id="entity-Classe">""" % {}
 lines += u"""\n	<g id="frame-Classe">""" % {}
-lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="80" height="30" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -40+x, 'y': -21+y, 'color': colors['entity_cartouche_color'], 'stroke_color': colors['entity_cartouche_color']}
-lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="80" height="12" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -40+x, 'y': 9.0+y, 'color': colors['entity_color'], 'stroke_color': colors['entity_color']}
-lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="80" height="42" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -40+x, 'y': -21+y, 'color': colors['transparent_color'], 'stroke_color': colors['entity_stroke_color']}
-lines += u"""\n		<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -40+x, 'y0': 9+y, 'x1': 40+x, 'y1': 9+y, 'stroke_color': colors['entity_stroke_color']}
+lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="80" height="30" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -40+x, 'y': -47+y, 'color': colors['entity_cartouche_color'], 'stroke_color': colors['entity_cartouche_color']}
+lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="80" height="64" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -40+x, 'y': -17.0+y, 'color': colors['entity_color'], 'stroke_color': colors['entity_color']}
+lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="80" height="94" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -40+x, 'y': -47+y, 'color': colors['transparent_color'], 'stroke_color': colors['entity_stroke_color']}
+lines += u"""\n		<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -40+x, 'y0': -17+y, 'x1': 40+x, 'y1': -17+y, 'stroke_color': colors['entity_stroke_color']}
 lines += u"""\n	</g>""" % {}
-lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Classe</text>""" % {'x': -32+x, 'y': 0.3+y, 'text_color': colors['entity_cartouche_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Classe</text>""" % {'x': -32+x, 'y': -25.7+y, 'text_color': colors['entity_cartouche_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">classe_id</text>""" % {'x': -32+x, 'y': 0.1+y, 'text_color': colors['entity_attribute_text_color']}
+lines += u"""\n	<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'x0': -32+x, 'y0': 3+y, 'x1': 24+x, 'y1': 3+y, 'stroke_color': colors['entity_attribute_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">nom</text>""" % {'x': -32+x, 'y': 17.1+y, 'text_color': colors['entity_attribute_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">niveau</text>""" % {'x': -32+x, 'y': 34.0+y, 'text_color': colors['entity_attribute_text_color']}
+lines += u"""\n</g>""" % {}
+
+lines += u"""\n\n<!-- Entity Eleve -->"""
+(x,y) = (cx[u"Eleve"],cy[u"Eleve"])
+lines += u"""\n<g id="entity-Eleve">""" % {}
+lines += u"""\n	<g id="frame-Eleve">""" % {}
+lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="70" height="30" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -35+x, 'y': -55+y, 'color': colors['entity_cartouche_color'], 'stroke_color': colors['entity_cartouche_color']}
+lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="70" height="80" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -35+x, 'y': -25.0+y, 'color': colors['entity_color'], 'stroke_color': colors['entity_color']}
+lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="70" height="110" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -35+x, 'y': -55+y, 'color': colors['transparent_color'], 'stroke_color': colors['entity_stroke_color']}
+lines += u"""\n		<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -35+x, 'y0': -25+y, 'x1': 35+x, 'y1': -25+y, 'stroke_color': colors['entity_stroke_color']}
+lines += u"""\n	</g>""" % {}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Eleve</text>""" % {'x': -27+x, 'y': -33.7+y, 'text_color': colors['entity_cartouche_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">eleve_id</text>""" % {'x': -27+x, 'y': -7.9+y, 'text_color': colors['entity_attribute_text_color']}
+lines += u"""\n	<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'x0': -27+x, 'y0': -5+y, 'x1': 26+x, 'y1': -5+y, 'stroke_color': colors['entity_attribute_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">prénom</text>""" % {'x': -27+x, 'y': 9.1+y, 'text_color': colors['entity_attribute_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">nom</text>""" % {'x': -27+x, 'y': 26.1+y, 'text_color': colors['entity_attribute_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">genre</text>""" % {'x': -27+x, 'y': 43.0+y, 'text_color': colors['entity_attribute_text_color']}
+lines += u"""\n</g>""" % {}
+
+lines += u"""\n\n<!-- Entity Periode -->"""
+(x,y) = (cx[u"Periode"],cy[u"Periode"])
+lines += u"""\n<g id="entity-Periode">""" % {}
+lines += u"""\n	<g id="frame-Periode">""" % {}
+lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="88" height="30" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -44+x, 'y': -38+y, 'color': colors['entity_cartouche_color'], 'stroke_color': colors['entity_cartouche_color']}
+lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="88" height="46" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -44+x, 'y': -8.0+y, 'color': colors['entity_color'], 'stroke_color': colors['entity_color']}
+lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="88" height="76" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -44+x, 'y': -38+y, 'color': colors['transparent_color'], 'stroke_color': colors['entity_stroke_color']}
+lines += u"""\n		<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -44+x, 'y0': -8+y, 'x1': 44+x, 'y1': -8+y, 'stroke_color': colors['entity_stroke_color']}
+lines += u"""\n	</g>""" % {}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">Periode</text>""" % {'x': -36+x, 'y': -16.7+y, 'text_color': colors['entity_cartouche_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">periode_id</text>""" % {'x': -36+x, 'y': 9.1+y, 'text_color': colors['entity_attribute_text_color']}
+lines += u"""\n	<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'x0': -36+x, 'y0': 12+y, 'x1': 33+x, 'y1': 12+y, 'stroke_color': colors['entity_attribute_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">nom</text>""" % {'x': -36+x, 'y': 26.1+y, 'text_color': colors['entity_attribute_text_color']}
+lines += u"""\n</g>""" % {}
+
+lines += u"""\n\n<!-- Entity AnneeScolaire -->"""
+(x,y) = (cx[u"AnneeScolaire"],cy[u"AnneeScolaire"])
+lines += u"""\n<g id="entity-AnneeScolaire">""" % {}
+lines += u"""\n	<g id="frame-AnneeScolaire">""" % {}
+lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="154" height="30" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -77+x, 'y': -38+y, 'color': colors['entity_cartouche_color'], 'stroke_color': colors['entity_cartouche_color']}
+lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="154" height="46" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="0"/>""" % {'x': -77+x, 'y': -8.0+y, 'color': colors['entity_color'], 'stroke_color': colors['entity_color']}
+lines += u"""\n		<rect x="%(x)s" y="%(y)s" width="154" height="76" fill="%(color)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x': -77+x, 'y': -38+y, 'color': colors['transparent_color'], 'stroke_color': colors['entity_stroke_color']}
+lines += u"""\n		<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1.5"/>""" % {'x0': -77+x, 'y0': -8+y, 'x1': 77+x, 'y1': -8+y, 'stroke_color': colors['entity_stroke_color']}
+lines += u"""\n	</g>""" % {}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Copperplate" font-size="18">AnneeScolaire</text>""" % {'x': -69+x, 'y': -16.7+y, 'text_color': colors['entity_cartouche_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">annee_id</text>""" % {'x': -69+x, 'y': 9.1+y, 'text_color': colors['entity_attribute_text_color']}
+lines += u"""\n	<line x1="%(x0)s" y1="%(y0)s" x2="%(x1)s" y2="%(y1)s" stroke="%(stroke_color)s" stroke-width="1"/>""" % {'x0': -69+x, 'y0': 12+y, 'x1': -12+x, 'y1': 12+y, 'stroke_color': colors['entity_attribute_text_color']}
+lines += u"""\n	<text x="%(x)s" y="%(y)s" fill="%(text_color)s" font-family="Gill Sans" font-size="15">nom</text>""" % {'x': -69+x, 'y': 26.1+y, 'text_color': colors['entity_attribute_text_color']}
 lines += u"""\n</g>""" % {}
 lines += u'\n</svg>'
 

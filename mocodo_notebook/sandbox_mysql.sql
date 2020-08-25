@@ -9,9 +9,9 @@ CREATE TABLE `DISCIPLINE` (
 
 CREATE TABLE `ENSEIGNER` (
   `professeur_id` VARCHAR(42),
-  `classe_id` VARCHAR(42),
   `discipline_id` VARCHAR(42),
-  PRIMARY KEY (`professeur_id`, `classe_id`, `discipline_id`)
+  `classe_id` VARCHAR(42),
+  PRIMARY KEY (`professeur_id`, `discipline_id`, `classe_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `PROFESSEUR` (
@@ -70,8 +70,8 @@ CREATE TABLE `ANNEESCOLAIRE` (
   PRIMARY KEY (`annee_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-ALTER TABLE `ENSEIGNER` ADD FOREIGN KEY (`discipline_id`) REFERENCES `DISCIPLINE` (`discipline_id`);
 ALTER TABLE `ENSEIGNER` ADD FOREIGN KEY (`classe_id`) REFERENCES `CLASSE` (`classe_id`);
+ALTER TABLE `ENSEIGNER` ADD FOREIGN KEY (`discipline_id`) REFERENCES `DISCIPLINE` (`discipline_id`);
 ALTER TABLE `ENSEIGNER` ADD FOREIGN KEY (`professeur_id`) REFERENCES `PROFESSEUR` (`professeur_id`);
 ALTER TABLE `EVALUATION` ADD FOREIGN KEY (`periode_id`) REFERENCES `PERIODE` (`periode_id`);
 ALTER TABLE `EVALUATION` ADD FOREIGN KEY (`annee_id`) REFERENCES `ANNEESCOLAIRE` (`annee_id`);

@@ -15,8 +15,10 @@ SET time_zone = "+01:00";
 -- Création de la base de données
 -- Efface l'ancienne bd si elle existait
 -- et en crée une nouvelle
+SET FOREIGN_KEY_CHECKS=0;
 CREATE OR REPLACE DATABASE bd_gestion_des_notes;
 USE bd_gestion_des_notes;
+SET FOREIGN_KEY_CHECKS=1; -- to re-enable them
 
 -- ------------------------------------------------
 -- Création de différents rôles
@@ -25,31 +27,34 @@ GRANT ALL
 ON bd_gestion_des_notes.* 
 TO role_gestionnaire;
 
--- CREATE ROLE role_personnel;
--- GRANT CREATE TABLE, CREATE VIEW
--- TO user_personnel;
 
--- CREATE ROLE role_professeur;
--- GRANT CREATE VIEW
--- TO role_professeur;
+CREATE OR replace ROLE role_professeur;
+GRANT SELECT
+ON bd_gestion_des_notes.*
+TO role_professeur;
 
 -- CREATE ROLE role_eleve;
--- GRANT CREATE VIEW
+-- GRANT à définir
 -- TO role_eleve;
 
 
 -- ------------------------------------------------
--- Création de différents utilisateurs
+-- Création de différents utilisateurs avec le rôle de gestionnaire
 
 CREATE OR replace USER  stil@localhost IDENTIFIED BY 's';                 
 GRANT role_gestionnaire
 TO stil@localhost;
 SET DEFAULT ROLE role_gestionnaire FOR stil@localhost;
 
-CREATE OR replace USER  proviseur@localhost IDENTIFIED BY 'propro';                 
+CREATE OR replace USER  proviseur@localhost IDENTIFIED BY 'p';                 
 GRANT role_gestionnaire
 TO proviseur@localhost;
 SET DEFAULT ROLE role_gestionnaire FOR proviseur@localhost;
+
+CREATE OR replace USER  noel_gest@localhost IDENTIFIED BY 'noel';                 
+GRANT role_gestionnaire
+TO noel_gest@localhost;
+SET DEFAULT ROLE role_gestionnaire FOR noel_gest@localhost;
 
 -- CREATE OR replace USER  first_connection@localhost       
 -- IDENTIFIED BY 'first_connection';                 
@@ -75,13 +80,13 @@ SET DEFAULT ROLE role_gestionnaire FOR proviseur@localhost;
 -- ------------------------------------------------
 -- Création de la table des fonctions
 -- des gestionnaires de la base de données
-CREATE TABLE IF NOT EXISTS Fonctions(
+CREATE TABLE IF NOT EXISTS Fonction(
 Func_Id varchar(10) COLLATE utf8_bin NOT NULL,
 Func_Name varchar(30) COLLATE utf8_bin NOT NULL,
 PRIMARY KEY (Func_Id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO Fonctions (Func_Id, Func_Name) VALUES
+INSERT INTO Fonction (Func_Id, Func_Name) VALUES
 ('P1', 'Proviseur'),
 ('P2', 'Proviseur-adjoint'),
 ('S', 'Secrétaire de direction'),
@@ -90,12 +95,13 @@ INSERT INTO Fonctions (Func_Id, Func_Name) VALUES
 ('E', 'Élève'),
 ('Par', 'Parent'),
 ('A', 'Agent'),
-('C', 'CPE');
+('C', 'CPE'),
+('DIU', 'Professeur DIU');
 
 show warnings;
 -- ------------------------------------------------
--- Création de la table du personnel non enseignant
-CREATE TABLE IF NOT EXISTS Administrateurs(
+-- Création de la table Administrateur
+CREATE TABLE IF NOT EXISTS Administrateur(
 Admin_Id int NOT NULL AUTO_INCREMENT,
 FirstName varchar(30) COLLATE utf8_bin DEFAULT NULL,
 LastName varchar(30) COLLATE utf8_bin DEFAULT NULL,
@@ -106,8 +112,9 @@ Login varchar(30) COLLATE utf8_bin DEFAULT NULL,
 PRIMARY KEY (Admin_Id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO Administrateurs(FirstName, LastName, Func_Id, Gender, Birthday, Login) VALUES
+INSERT INTO Administrateur(FirstName, LastName, Func_Id, Gender, Birthday, Login) VALUES
 ('Prénom', 'Nom', 'P1', 'M', '1966-04-20',  'proviseur'),
+('Noël', 'Novelli', 'DIU', 'M', '2020-08-25',  'noel_gest'),
 ('Raoul', 'Hatterer', 'ST', 'M', '1966-04-20',  'stil');
 
 show warnings;
@@ -120,6 +127,8 @@ nom varchar(30) COLLATE utf8_bin NOT NULL,
 titre char DEFAULT NULL,
 PRIMARY KEY (professeur_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+
 
 INSERT INTO Professeur (prenom, nom, titre) VALUES
 ('Kunihiko', 'Kodaira', 'M'),
@@ -196,8 +205,6 @@ INSERT INTO Professeur (prenom, nom, titre) VALUES
 ('Youyou', 'Tu', 'F');
 
 show warnings;
-
-
 
 -- ------------------------------------------------
 -- Création de la table Discipline
@@ -489,17 +496,20 @@ show warnings;
 -- Création de la table Enseigner
 CREATE TABLE Enseigner (
  professeur_id INT,
- classe_id INT,
  discipline_id INT,
-PRIMARY KEY (professeur_id, classe_id, discipline_id)
+ classe_id INT,
+PRIMARY KEY (professeur_id, discipline_id, classe_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 INSERT INTO Enseigner VALUES
 (1, 1, 1),
 (1, 1, 2),
-(2, 1, 1),
-(2, 1, 3),
+(1, 1, 5),
+(1, 1, 6),
 (2, 2, 1),
+(2, 2, 2),
+(2, 2, 3),
+(2, 2, 4),
 (2, 3, 4);
 
 show warnings;
@@ -533,11 +543,11 @@ SELECT "Description de la TABLE Discipline";
 DESCRIBE Discipline;
 SELECT * FROM Discipline;
 SELECT "Description de la TABLE des Fonctions du personnel";
-DESCRIBE Fonctions;
-SELECT * FROM Fonctions;
-SELECT "Description de la TABLE Administrateurs";
-DESCRIBE Administrateurs;
-SELECT * FROM Administrateurs;
+DESCRIBE Fonction;
+SELECT * FROM Fonction;
+SELECT "Description de la TABLE Administrateur";
+DESCRIBE Administrateur;
+SELECT * FROM Administrateur;
 SELECT "Description de la TABLE Professeur";
 DESCRIBE Professeur;
 SELECT * FROM Professeur;

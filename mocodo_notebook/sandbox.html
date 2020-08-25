@@ -10,16 +10,17 @@
 </head>
 <body>
 <div id='mld'>
-<!--
 <div>
-  <span class='relation'>Administrateur</span> (
-    <span class='foreign'>professeur_id</span>
+  <span class='relation'>Discipline</span> (
+    <span class='primary'>discipline_id</span>,
+    <span class='normal'>nom</span>
   )
 </div>
--->
 <div>
-  <span class='relation'>Élève</span> (
-    
+  <span class='relation'>Enseigner</span> (
+    <span class='primary'>#professeur_id</span>,
+    <span class='primary'>#discipline_id</span>,
+    <span class='primary'>#classe_id</span>
   )
 </div>
 <div>
@@ -31,25 +32,51 @@
   )
 </div>
 <div>
-  <span class='relation'>Discipline</span> (
-    <span class='primary'>discipline_id</span>,
-    <span class='normal'>nom</span>
-  )
-</div>
-<div>
-  <span class='relation'>Affecter</span> (
-    <span class='foreign primary'>professeur_id</span>,
-    <span class='foreign primary'>discipline_id</span>
-  )
-</div>
-<div>
-  <span class='relation'>Période</span> (
-    
+  <span class='relation'>Evaluation</span> (
+    <span class='primary'>evaluation_id</span>,
+    <span class='normal'>Date_Contrôle</span>,
+    <span class='normal'>Date_Note_Visible</span>,
+    <span class='normal'>#discipline_id</span>,
+    <span class='normal'>#professeur_id</span>,
+    <span class='normal'>#classe_id</span>,
+    <span class='normal'>#annee_id</span>,
+    <span class='normal'>#periode_id</span>
   )
 </div>
 <div>
   <span class='relation'>Classe</span> (
-    
+    <span class='primary'>classe_id</span>,
+    <span class='normal'>nom</span>,
+    <span class='normal'>niveau</span>,
+    <span class='normal'>#annee_id</span>
+  )
+</div>
+<div>
+  <span class='relation'>Evaluer</span> (
+    <span class='primary'>#evaluation_id</span>,
+    <span class='primary'>#eleve_id</span>,
+    <span class='normal'>note</span>
+  )
+</div>
+<div>
+  <span class='relation'>Eleve</span> (
+    <span class='primary'>eleve_id</span>,
+    <span class='normal'>prénom</span>,
+    <span class='normal'>nom</span>,
+    <span class='normal'>genre</span>,
+    <span class='normal'>#classe_id</span>
+  )
+</div>
+<div>
+  <span class='relation'>Periode</span> (
+    <span class='primary'>periode_id</span>,
+    <span class='normal'>nom</span>
+  )
+</div>
+<div>
+  <span class='relation'>AnneeScolaire</span> (
+    <span class='primary'>annee_id</span>,
+    <span class='normal'>nom</span>
   )
 </div>
 </div>

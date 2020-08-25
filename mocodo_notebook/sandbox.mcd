@@ -1,20 +1,27 @@
 
+Discipline: discipline_id, nom
+Porter, 11 Evaluation, 0N Discipline
+::
 
+Enseigner,  0N Professeur, 0N Discipline, 1N Classe
+Professeur: professeur_id, prenom, nom, titre
+Realiser, 11 Evaluation,  0N Professeur
+Evaluation: evaluation_id, Date_Contrôle, Date_Note_Visible
 
 :
-Administrateur: 
-Inscrire, 1N Administrateur, 11 Administrateur, 11 Professeur, 11 Élève
+    
+Classe: classe_id, nom, niveau
+Destiner, 11 Evaluation, 0N Classe
+Evaluer, 1N Evaluation, 1N Eleve: note
+Situer, 0N AnneeScolaire, 0N Periode, 11 Evaluation
 
-Définir, 11 Période, 1N Administrateur
-Créer, 11 Classe, 1N Administrateur
-Ajouter, 11 Discipline, 1N Administrateur
-Élève: 
-Professeur : professeur_id, prenom, nom, titre
+:
+Appartenir, 1N Classe, 11 Eleve
+Eleve: eleve_id, prénom, nom, genre
+:
+Periode: periode_id, nom
 
-:::
-Discipline : discipline_id, nom 
-Affecter, 0N Professeur, 0N Discipline, 0N Classe, 0N Élève
-
-Période: 
+Exister, 0N AnneeScolaire, 11 Classe
 ::
-Classe: 
+AnneeScolaire: annee_id, nom
+:
