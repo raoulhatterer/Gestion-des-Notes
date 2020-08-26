@@ -171,7 +171,8 @@ def afficher_notebook_professeur():
     notebook.add(f3, text="Élèves")
     notebook.add(f4, text="Classes")
     notebook.add(f5, text="Enseignements")
-    notebook.add(f6, text="Périodes")    
+    notebook.add(f6, text="Périodes")
+    notebook.add(f7, text="Évaluations")    
     afficher_disciplines()
     afficher_professeurs()
     afficher_eleves()
@@ -179,6 +180,7 @@ def afficher_notebook_professeur():
     afficher_annees_et_periodes()
     afficher_selections()
     afficher_enseignements()
+    afficher_evaluations()
 
 
 
@@ -1528,8 +1530,69 @@ def ajouter_enseignement():
         messagebox.showwarning("Opération non valide", "Veuillez sélectionner un professeur, une classe et une discipline dans leurs onglets respectifs.")
 
 
+# ------------------------------------------------------------------------------
+# EVALUATIONS
+# ------------------------------------------------------------------------------
 
-# Application 
+
+def sql_read_evaluations():
+    """
+    Se connecte à Mysql et retourne les données brutes concernant les Evaluations
+    """
+    sql = "SELECT * FROM Evaluation WHERE professeur_id=%s;"
+    tuple_selection = (current_user_id ,)
+    try:
+        print(f"Try to connect to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print(f"Connected to MySQL Server version {db_Info}")
+        print("sql_read_evaluations")
+        cursor = connection.cursor()
+        cursor.execute(sql, tuple_selection)
+        records = cursor.fetchall()
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        return(records)
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+        messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
+
+
+    
+def afficher_evaluations():
+    """
+    Affiche l'IHM des Evaluations
+    """
+    global sheet_evaluations
+    evaluations = sql_read_evaluations()
+    print("Evaluations:")
+    for row in evaluations:
+        print(row)
+    evaluations_traduits = sql_read_enseignements_traduits()
+    frame_evaluations = tk.Frame(f7)
+    frame_evaluations.grid()
+    sheet_evaluations = Sheet(f7,
+                                data=evaluations_traduits,
+                                headers=["Nom Professeur", "Prénom", "Classe", "Année scolaire", "Discipline"],
+                                set_all_heights_and_widths = True,
+                                height=500,
+                                width=800)
+    sheet_evaluations.hide("row_index")
+    sheet_evaluations.grid(row=1, column=0)
+
+
+
+
+
+
+        
+# ------------------------------------------------------------------------------
+# Application
+# ------------------------------------------------------------------------------
 
 root = tk.Tk()
 root.title("Gestion des notes (R. Hatterer) CLIENT PROFESSEUR")
@@ -1546,6 +1609,7 @@ f3 = tk.Frame(notebook, width=800, height=600)  # frame pour les élèves
 f4 = tk.Frame(notebook, width=800, height=600)  # frame pour les classes
 f5 = tk.Frame(notebook, width=800, height=600)  # frame pour les enseignements
 f6 = tk.Frame(notebook, width=800, height=600)  # frame pour les années scolaires
+f7 = tk.Frame(notebook, width=800, height=600)  # frame pour les évaluations
 
 frame_annees = tk.Frame(f6)
 frame_periodes = tk.Frame(f6)

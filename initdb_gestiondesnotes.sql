@@ -521,8 +521,35 @@ INSERT INTO Enseigner VALUES
 
 show warnings;
 
+
+
+
+-- ------------------------------------------------
+-- Création de la table Evaluation
+
+CREATE TABLE Evaluation (
+  evaluation_id int NOT NULL AUTO_INCREMENT,
+  date_controle DATE,
+  date_visible DATE,
+  discipline_id INT,
+  professeur_id INT,
+  classe_id INT,
+  periode_id INT,
+  PRIMARY KEY (evaluation_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+INSERT INTO Evaluation (date_controle, date_visible, discipline_id, professeur_id, classe_id, periode_id)  VALUES
+('2020-10-5', '2020-10-12', 2, 2, 3, 1);
+
+
+show warnings;
+
+
+
+
 -- ------------------------------------------------
 -- Clés étrangères
+
 ALTER TABLE Enseigner ADD FOREIGN KEY (discipline_id) REFERENCES Discipline (discipline_id);
 ALTER TABLE Enseigner ADD FOREIGN KEY (classe_id) REFERENCES Classe (classe_id);
 ALTER TABLE Enseigner ADD FOREIGN KEY (professeur_id) REFERENCES Professeur (professeur_id);
@@ -535,12 +562,6 @@ ALTER TABLE Classe ADD FOREIGN KEY (annee_id) REFERENCES Anneescolaire (annee_id
 -- ALTER TABLE Evaluer ADD FOREIGN KEY (eleve_id) REFERENCES Eleve (eleve_id);
 -- ALTER TABLE Evaluer ADD FOREIGN KEY (evaluation_id) REFERENCES Evaluation (evaluation_id);
 ALTER TABLE Eleve ADD FOREIGN KEY (classe_id) REFERENCES Classe (classe_id);
-
-
-
-
-
-
 
 -- ------------------------------------------------
 -- DESCRIPTIONS
@@ -573,6 +594,9 @@ SELECT * FROM Anneescolaire;
 SELECT "Description de la TABLE Enseigner";
 DESCRIBE Enseigner;
 SELECT * FROM Enseigner;
+SELECT "Description de la TABLE Evaluation";
+DESCRIBE Evaluation;
+SELECT * FROM Evaluation;
 
 
 SELECT "UTILISATEURS";

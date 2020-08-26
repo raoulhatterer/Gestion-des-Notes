@@ -1,7 +1,7 @@
 Discipline (_discipline_id_, nom)
 Enseigner (_#professeur_id_, _#discipline_id_, _#classe_id_)
 Professeur (_professeur_id_, prenom, nom, titre)
-Evaluation (_evaluation_id_, Date_Contrôle, Date_Note_Visible, #discipline_id, #professeur_id, #classe_id, #annee_id, #periode_id)
+Evaluation (_evaluation_id_, Date_Controle, Date_Visible, #discipline_id, #professeur_id, #classe_id, #annee_id, #periode_id)
 Classe (_classe_id_, nom, niveau, #annee_id)
 Evaluer (_#evaluation_id_, _#eleve_id_, note)
 Eleve (_eleve_id_, prénom, nom, genre, #classe_id)
