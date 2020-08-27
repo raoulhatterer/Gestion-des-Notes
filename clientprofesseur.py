@@ -1418,7 +1418,7 @@ def sql_read_enseignements():
         messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
 
 
-def sql_read_enseignements_traduits():
+def sql_traduis_enseignements():
     """
     Se connecte à Mysql et retourne les données traduites concernant les Enseignements
     """
@@ -1454,7 +1454,7 @@ def sql_read_enseignements_traduits():
                                              password=GN_password)
         db_Info = connection.get_server_info()
         print(f"Connected to MySQL Server version {db_Info}")
-        print("sql_read_enseignements_traduits")
+        print("sql_traduis_enseignements")
         cursor = connection.cursor()
         cursor.execute(sql, tuple_selection)
         records = cursor.fetchall()
@@ -1503,7 +1503,7 @@ def afficher_enseignements():
     print("Enseignements: (PDC)")
     for row in enseignements:
         print(row)
-    enseignements_traduits = sql_read_enseignements_traduits()
+    enseignements_traduits = sql_traduis_enseignements()
     frame_enseignements = tk.Frame(f5)
     frame_enseignements.grid()
     sheet_enseignements = Sheet(f5,
@@ -1537,7 +1537,7 @@ def ajouter_enseignement():
 
 def sql_read_evaluations():
     """
-    Se connecte à Mysql et retourne les données brutes concernant les Evaluations
+    Se connecte à Mysql et retourne les données brutes concernant les Evaluations réalisées par le professeur connecté
     """
     sql = "SELECT * FROM Evaluation WHERE professeur_id=%s;"
     tuple_selection = (current_user_id ,)
@@ -1561,6 +1561,32 @@ def sql_read_evaluations():
         print("Error while connecting to MySQL", e)
         messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
 
+def sql_traduis_evaluations():
+    """
+    Se connecte à Mysql et retourne les données traduites concernant les évaluations réalisées par le professeur connecté
+    """
+
+    sql = "SELECT Evaluation.evaluation_id, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.professeur_id=%s  AND Evaluation.Classe_id=Enseigner.classe_id ;"
+    tuple_selection=(current_user_id,)
+    try:
+        print(f"Try to connect to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print(f"Connected to MySQL Server version {db_Info}")
+        print("sql_traduis_evaluations")
+        cursor = connection.cursor()
+        cursor.execute(sql, tuple_selection)
+        records = cursor.fetchall()
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        return(records)
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+        messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
 
     
 def afficher_evaluations():
@@ -1570,17 +1596,18 @@ def afficher_evaluations():
     global sheet_evaluations
     evaluations = sql_read_evaluations()
     print("Evaluations:")
+    print("date_controle, date_visible, discipline_id, professeur_id, classe_id, periode_id")
     for row in evaluations:
         print(row)
-    evaluations_traduits = sql_read_enseignements_traduits()
+    evaluations_traduites = sql_traduis_evaluations()
     frame_evaluations = tk.Frame(f7)
     frame_evaluations.grid()
     sheet_evaluations = Sheet(f7,
-                                data=evaluations_traduits,
-                                headers=["Nom Professeur", "Prénom", "Classe", "Année scolaire", "Discipline"],
-                                set_all_heights_and_widths = True,
-                                height=500,
-                                width=800)
+                              data=evaluations_traduites,
+                              # headers=["Nom Professeur", "Prénom", "Classe", "Année scolaire", "Discipline"],
+                              set_all_heights_and_widths = True,
+                              height=500,
+                              width=800)
     sheet_evaluations.hide("row_index")
     sheet_evaluations.grid(row=1, column=0)
 

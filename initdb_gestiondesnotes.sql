@@ -211,6 +211,33 @@ INSERT INTO Professeur (prenom, nom, titre) VALUES
 ('May-Britt', 'Moser', 'F'),
 ('Youyou', 'Tu', 'F');
 
+
+DELIMITER $$  
+CREATE PROCEDURE CREATE_PROFESSEUR()
+
+   BEGIN
+      DECLARE a INT Default 1000 ;
+      DECLARE nom_prof VARCHAR(42);
+      DECLARE prenom_prof VARCHAR(42);
+      DECLARE titre VARCHAR(5);
+      simple_loop: LOOP
+         SET nom_prof = CONCAT("prof", RIGHT(CAST(a AS CHAR), 3));
+         SET prenom_prof = CONCAT("prenom", RIGHT(CAST(a AS CHAR), 3));
+         SET titre = CASE WHEN RAND() > .5
+                  THEN 'M'
+                  ELSE 'F' END;
+         INSERT INTO Professeur (prenom, nom, titre) VALUES (prenom_prof, nom_prof, titre);
+         SET a=a+1;
+         IF a=1051 THEN
+            LEAVE simple_loop;
+         END IF;
+   END LOOP simple_loop;
+END $$
+
+DELIMITER ;
+
+
+
 show warnings;
 
 -- ------------------------------------------------

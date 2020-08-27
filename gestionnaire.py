@@ -1430,7 +1430,7 @@ def sql_read_enseignements():
         messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
 
 
-def sql_read_enseignements_traduits():
+def sql_traduis_enseignements():
     """
     Se connecte à Mysql et retourne les données traduites concernant les Enseignements
     """
@@ -1466,7 +1466,7 @@ def sql_read_enseignements_traduits():
                                              password=GN_password)
         db_Info = connection.get_server_info()
         print(f"Connected to MySQL Server version {db_Info}")
-        print("sql_read_enseignements_traduits")
+        print("sql_traduis_enseignements")
         cursor = connection.cursor()
         cursor.execute(sql, tuple_selection)
         records = cursor.fetchall()
@@ -1515,7 +1515,7 @@ def afficher_enseignements():
     print("Enseignements: (PDC)")
     for row in enseignements:
         print(row)
-    enseignements_traduits = sql_read_enseignements_traduits()
+    enseignements_traduits = sql_traduis_enseignements()
     frame_enseignements = tk.Frame(f5)
     frame_enseignements.grid()
     sheet_enseignements = Sheet(f5,
