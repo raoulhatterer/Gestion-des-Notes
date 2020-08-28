@@ -79,9 +79,6 @@ CREATE OR replace USER PierreSerre@localhost identified BY 'p';
 GRANT role_professeur TO PierreSerre@localhost;
 SET DEFAULT ROLE role_professeur FOR PierreSerre@localhost;
 
-CREATE OR replace USER KlausRoth@localhost identified BY 'p';
-GRANT role_professeur TO KlausRoth@localhost;
-SET DEFAULT ROLE role_professeur FOR KlausRoth@localhost;
 
 
 
@@ -216,22 +213,38 @@ DELIMITER $$
 CREATE PROCEDURE CREATE_PROFESSEUR()
 
    BEGIN
-      DECLARE a INT Default 1000 ;
-      DECLARE nom_prof VARCHAR(42);
-      DECLARE prenom_prof VARCHAR(42);
-      DECLARE titre VARCHAR(5);
+      DECLARE v_a INT Default 1 ;
+      DECLARE v_nom VARCHAR(42);
+      DECLARE v_prenom VARCHAR(42);
+      DECLARE v_login VARCHAR(84);
+      DECLARE v_titre VARCHAR(5);
+      DECLARE v_pwd VARCHAR(5);
+      SET v_pwd = 'p';
       simple_loop: LOOP
-         SET nom_prof = CONCAT("prof", RIGHT(CAST(a AS CHAR), 3));
-         SET prenom_prof = CONCAT("prenom", RIGHT(CAST(a AS CHAR), 3));
-         SET titre = CASE WHEN RAND() > .5
+         SET v_nom = CONCAT("prof", LPAD(CAST(v_a AS CHAR), 3, '0'));
+         SET v_prenom = CONCAT("prenom", LPAD(CAST(v_a AS CHAR), 3, '0'));
+         SET v_titre = CASE WHEN RAND() > .5
                   THEN 'M'
                   ELSE 'F' END;
-         INSERT INTO Professeur (prenom, nom, titre) VALUES (prenom_prof, nom_prof, titre);
-         SET a=a+1;
-         IF a=1051 THEN
+         INSERT INTO Professeur (prenom, nom, titre) VALUES (v_prenom, v_nom, v_titre);
+         SET v_login = CONCAT(v_prenom, v_nom);
+         SET @sql1 = CONCAT('CREATE OR REPLACE USER ', v_login, '@localhost identified BY  \'p\' ');
+         PREPARE stm1 FROM @sql1;
+         EXECUTE stm1;
+         SET @sql2 = CONCAT('GRANT role_professeur TO ', v_login, '@localhost');
+         PREPARE stm2 FROM @sql2;
+         EXECUTE stm2;
+         SET @sql3 = CONCAT('SET DEFAULT ROLE role_professeur FOR ', v_login, '@localhost');
+         PREPARE stm3 FROM @sql3;
+         EXECUTE stm3;
+         SET v_a=v_a+1;
+         IF v_a=51 THEN
             LEAVE simple_loop;
          END IF;
    END LOOP simple_loop;
+   DEALLOCATE PREPARE stm1;
+   DEALLOCATE PREPARE stm2;
+   DEALLOCATE PREPARE stm3;      
 END $$
 
 DELIMITER ;
@@ -627,4 +640,7 @@ SELECT * FROM Evaluation;
 
 
 SELECT "UTILISATEURS";
-select host, USER, password from mysql.user;
+select host, USER, password from mysql.USER;
+
+
+
