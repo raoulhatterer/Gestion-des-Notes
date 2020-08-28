@@ -132,82 +132,9 @@ titre char DEFAULT NULL,
 PRIMARY KEY (professeur_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-
-
-INSERT INTO Professeur (prenom, nom, titre) VALUES
-('Kunihiko', 'Kodaira', 'M'),
-('Pierre', 'Serre', 'M'),
-('Klaus', 'Roth', 'M'),
-('René', 'Thom', 'M'),
-('Lars', 'Hörmander', 'M'),
-('John', 'Milnor', 'M'),
-('Michael', 'Atiyah', 'M'),
-('Paul', 'Cohen', 'M'),
-('Alexandre', 'Grothendieckd', 'M'),
-('Stephen', 'Smale', 'M'),
-('Alan', 'Baker', 'M'),
-('Heisuke', 'Hironaka', 'M'),
-('Sergueï', 'Novikov', 'M'),
-('Griggs', 'Thompson', 'M'),
-('Enrico', 'Bombieri', 'M'),
-('David', 'Mumford', 'M'),
-('Pierre', 'Deligne', 'M'),
-('Charles', 'Fefferman', 'M'),
-('Gregori', 'Margulis', 'M'),
-('Daniel', 'Quillen', 'M'),
-('Alain', 'Connes', 'M'),
-('William', 'Thurston', 'M'),
-('Tung', 'Yaue', 'M'),
-('Simon', 'Donaldson', 'M'),
-('Gerd', 'Faltings', 'M'),
-('Michael', 'Freedman', 'M'),
-('Vladimir', 'Drinfeld', 'M'),
-('Vaughan', 'Jones', 'M'),
-('Shigefumi', 'Mori', 'M'),
-('Edward', 'Witten', 'M'),
-('Jean', 'Bourgain', 'M'),
-('Louis', 'Lions', 'M'),
-('Christophe', 'Yoccoz', 'M'),
-('Efim', 'Zelmanov', 'M'),
-('Ewen', 'Borcherds', 'M'),
-('Timothy', 'Gowers', 'M'),
-('Maxim', 'Kontsevich', 'M'),
-('Curtis', 'McMullen', 'M'),
-('Laurent', 'Lafforgue', 'M'),
-('Vladimir', 'Voevodsky', 'M'),
-('Andreï', 'Okounkov', 'M'),
-('Terence', 'Tao', 'M'),
-('Wendelin', 'Werner', 'M'),
-('Elon', 'Lindenstrauss', 'M'),
-('Bảo', 'Châu', 'M'),
-('Stanislav', 'Smirnov', 'M'),
-('Cédric', 'Villani', 'M'),
-('Artur', 'Ávila', 'M'),
-('Manjul', 'Bhargava', 'M'),
-('Martin', 'Hairer', 'M'),
-('Maryam', 'Mirzakhani', 'F'),
-('Caucher', 'Birkar', 'M'),
-('Alessio', 'Figalli', 'M'),
-('Peter', 'Scholze', 'M'),
-('Akshay', 'Venkatesh', 'M'),
-('Marie', 'Curie', 'F'),
-('Irène', 'Joliot-Curie', 'F'),
-('Gerty', 'Cori', 'F'),
-('Maria', 'Goeppert-Mayer', 'F'),
-('Dorothy', 'Crowfoot-Hodgkin', 'F'),
-('Rosalyn', 'Yalow', 'F'),
-('Barbara', 'McClintock', 'F'),
-('Rita', 'Levi-Montalcini', 'F'),
-('Gertrude', 'Elion', 'F'),
-('Christiane', 'Nüsslein-Volhard', 'F'),
-('Linda', 'Buck', 'F'),
-('Françoise', 'Barré-Sinoussi', 'F'),
-('Elizabeth', 'Blackburn', 'F'),
-('Carol', 'Greider', 'F'),
-('Ada', 'Yonath', 'F'),
-('May-Britt', 'Moser', 'F'),
-('Youyou', 'Tu', 'F');
-
+-- ------------------------------------------------
+-- Procédure pour remplissage de la table Professeur
+-- Avec CALL CREATE_PROFESSEUR();
 
 DELIMITER $$  
 CREATE PROCEDURE CREATE_PROFESSEUR()
@@ -248,8 +175,6 @@ CREATE PROCEDURE CREATE_PROFESSEUR()
 END $$
 
 DELIMITER ;
-
-
 
 show warnings;
 
@@ -541,25 +466,59 @@ show warnings;
 
 -- ------------------------------------------------
 -- Création de la table Enseigner
-CREATE TABLE Enseigner (
+CREATE OR replace TABLE Enseigner (
  professeur_id INT,
  discipline_id INT,
  classe_id INT,
 PRIMARY KEY (professeur_id, discipline_id, classe_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO Enseigner VALUES
-(1, 1, 1),
-(1, 1, 2),
-(1, 1, 5),
-(1, 1, 6),
-(2, 2, 1),
-(2, 2, 2),
-(2, 2, 3),
-(2, 2, 4),
-(2, 3, 4);
+
+-- INSERT INTO Enseigner (professeur_id, discipline_id, classe_id) VALUES
+-- (1, 1, 1),
+-- (1, 1, 2),
+-- (1, 1, 5),
+-- (1, 1, 6),
+-- (2, 2, 1),
+-- (2, 2, 2),
+-- (2, 2, 3),
+-- (2, 2, 4),
+-- (2, 3, 4);
+
+
+
+
+DELIMITER $$  
+CREATE PROCEDURE FILL_ENSEIGNER()
+
+   BEGIN
+      DECLARE v_a INT DEFAULT 1;
+      DECLARE v_professeur INT DEFAULT 1;
+      DECLARE v_discipline INT;
+      DECLARE v_classe INT;
+      simple_loop: LOOP
+         SET v_discipline = 1+RAND()*9;
+         SET v_classe = 1+RAND()*5; 
+         SELECT v_professeur, v_discipline, v_classe;
+         INSERT INTO Enseigner  VALUES (v_professeur, v_discipline, v_classe);
+         SET v_classe = 7+RAND()*7; 
+         SELECT v_professeur, v_discipline, v_classe;
+         INSERT INTO Enseigner  VALUES (v_professeur, v_discipline, v_classe);
+         SET v_professeur=v_professeur+1;
+         IF v_professeur=51 THEN
+            LEAVE simple_loop;
+         END IF;
+   END LOOP simple_loop;
+
+
+END $$
+
+
+DELIMITER ;
 
 show warnings;
+
+
 
 
 
