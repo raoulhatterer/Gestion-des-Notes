@@ -555,6 +555,12 @@ DELIMITER ;
 show warnings;
 
 
+GRANT INSERT, UPDATE, DELETE
+ON bd_gestion_des_notes.Evaluation
+TO role_professeur;
+
+
+
 
 
 -- ------------------------------------------------
@@ -563,11 +569,10 @@ show warnings;
 ALTER TABLE Enseigner ADD FOREIGN KEY (discipline_id) REFERENCES Discipline (discipline_id);
 ALTER TABLE Enseigner ADD FOREIGN KEY (classe_id) REFERENCES Classe (classe_id);
 ALTER TABLE Enseigner ADD FOREIGN KEY (professeur_id) REFERENCES Professeur (professeur_id);
--- ALTER TABLE Evaluation ADD FOREIGN KEY (periode_id) REFERENCES Periode (periode_id);
--- ALTER TABLE Evaluation ADD FOREIGN KEY (annee_id) REFERENCES Anneescolaire (annee_id);
--- ALTER TABLE Evaluation ADD FOREIGN KEY (classe_id) REFERENCES Classe (classe_id);
--- ALTER TABLE Evaluation ADD FOREIGN KEY (professeur_id) REFERENCES Professeur (professeur_id);
--- ALTER TABLE Evaluation ADD FOREIGN KEY (discipline_id) REFERENCES Discipline (discipline_id);
+ALTER TABLE Evaluation ADD FOREIGN KEY (periode_id) REFERENCES Periode (periode_id);
+ALTER TABLE Evaluation ADD FOREIGN KEY (classe_id) REFERENCES Classe (classe_id);
+ALTER TABLE Evaluation ADD FOREIGN KEY (professeur_id) REFERENCES Professeur (professeur_id);
+ALTER TABLE Evaluation ADD FOREIGN KEY (discipline_id) REFERENCES Discipline (discipline_id);
 ALTER TABLE Classe ADD FOREIGN KEY (annee_id) REFERENCES Anneescolaire (annee_id);
 -- ALTER TABLE Evaluer ADD FOREIGN KEY (eleve_id) REFERENCES Eleve (eleve_id);
 -- ALTER TABLE Evaluer ADD FOREIGN KEY (evaluation_id) REFERENCES Evaluation (evaluation_id);

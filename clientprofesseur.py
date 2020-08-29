@@ -161,7 +161,7 @@ def appliquer_selections():
     sheet_enseignements.destroy()
     afficher_enseignements()
     frame_selection_evaluations.destroy()
-    afficher_selections_evaluations()
+    afficher_selections_et_parametres_evaluations()
     sheet_evaluations.destroy()
     afficher_evaluations()
     
@@ -188,7 +188,7 @@ def afficher_notebook_professeur():
     afficher_annees_et_periodes()
     afficher_selections_enseignements()
     afficher_enseignements()
-    afficher_selections_evaluations()
+    afficher_selections_et_parametres_evaluations()
     afficher_evaluations()
 
 
@@ -1289,14 +1289,16 @@ def afficher_evaluations():
     sheet_evaluations.grid(row=1, column=0)
 
 
-def afficher_selections_evaluations():
+def afficher_selections_et_parametres_evaluations():
     """
-    Affiche le professeur, la classe et la discipline sélectionnées dans l'IHM Evaluations
+    Affiche le professeur, la classe et la discipline sélectionnées ainsi que les paramètres (nom et dates) dans l'IHM Evaluations 
     """
-    global frame_selection_evaluations
+    global frame_selection_evaluations, nom_controle_entry_text, date_controle_entry_text, date_visible_entry_text
     print('Sélection:',(professeur_selected, classe_selected, discipline_selected))
     frame_top_evaluations = tk.Frame(f7)
     frame_top_evaluations.grid(row=0, column=0)
+    
+    # FRAME SÉLECTION
     frame_selection_evaluations = tk.LabelFrame(frame_top_evaluations, text=' (id SQL) Sélection ')
     frame_selection_evaluations.grid(row=0, column=0)
     # Ligne 1
@@ -1327,40 +1329,42 @@ def afficher_selections_evaluations():
     lbl_periode_selected.grid(row=3, column=1, sticky=tk.W)
     button_deselect_periode = tk.Button(frame_selection_evaluations, text="Désélectionner", command=deselect_periode)
     button_deselect_periode.grid(row=3,column=2)
-    frame_top_evaluations.grid_columnconfigure(1, minsize=100)    
-    # Frame Paramètres
-    frame_parametre_evaluation = tk.LabelFrame(frame_top_evaluations, text='Paramètres')
+    frame_top_evaluations.grid_columnconfigure(1, minsize=100)
+    
+    # FRAME PARAMÈTRES
+    frame_parametre_evaluation = tk.LabelFrame(frame_top_evaluations, text='Nouveau contrôle')
     frame_parametre_evaluation.grid(row=0, column=2)
     # Ligne 1
-    lbl_professeur = tk.Label(frame_parametre_evaluation, text = 'Professeur:')
-    lbl_professeur.grid(row=0, column=0, sticky=tk.E)
-    lbl_professeur_selected = tk.Label(frame_parametre_evaluation, text = professeur_selected)
-    lbl_professeur_selected.grid(row=0, column=1, sticky=tk.W)
-    button_deselect_prof = tk.Button(frame_parametre_evaluation, text="Désélectionner", command=deselect_prof)
-    button_deselect_prof.grid(row=0,column=2)
+    lbl_nom = tk.Label(frame_parametre_evaluation, text = 'Nom:')
+    lbl_nom.grid(row=0, column=0, sticky=tk.E)
+    nom_controle_entry_text = tk.StringVar()
+    entry_nom = tk.Entry(frame_parametre_evaluation, textvariable=nom_controle_entry_text)
+    entry_nom.grid(row=0, column=1, sticky=tk.W)
     # Ligne 2
-    lbl_classe = tk.Label(frame_parametre_evaluation, text = 'Classe:')
-    lbl_classe.grid(row=1, column=0, sticky=tk.E)
-    lbl_classe_selected = tk.Label(frame_parametre_evaluation, text = classe_selected)
-    lbl_classe_selected.grid(row=1, column=1, sticky=tk.W)
-    button_deselect_classe = tk.Button(frame_parametre_evaluation, text="Désélectionner", command=deselect_classe)
-    button_deselect_classe.grid(row=1,column=2)
+    lbl_date_controle = tk.Label(frame_parametre_evaluation, text = 'Date du contrôle (AAAA-MM-JJ):')
+    lbl_date_controle.grid(row=1, column=0, sticky=tk.E)
+    date_controle_entry_text = tk.StringVar()
+    entry_date_controle = tk.Entry(frame_parametre_evaluation, textvariable=date_controle_entry_text)
+    entry_date_controle.grid(row=1, column=1, sticky=tk.W)
     # Ligne 3
-    lbl_discipline = tk.Label(frame_parametre_evaluation, text = 'Discipline:')
-    lbl_discipline.grid(row=2, column=0, sticky=tk.E)
-    lbl_discipline_selected = tk.Label(frame_parametre_evaluation, text = discipline_selected)
-    lbl_discipline_selected.grid(row=2, column=1, sticky=tk.W)
-    button_deselect_discipline = tk.Button(frame_parametre_evaluation, text="Désélectionner", command=deselect_discipline)
-    button_deselect_discipline.grid(row=2,column=2)
+    lbl_date_visible = tk.Label(frame_parametre_evaluation, text = 'Date de visibilité (AAAA-MM-JJ):')
+    lbl_date_visible.grid(row=2, column=0, sticky=tk.E)
+    date_visible_entry_text = tk.StringVar()
+    entry_date_visible = tk.Entry(frame_parametre_evaluation, textvariable=date_visible_entry_text)
+    entry_date_visible.grid(row=2, column=1, sticky=tk.W)
+    # Ligne 4
+    button_add_evaluation = tk.Button(frame_parametre_evaluation, text='Ajouter',
+                                      command=ajouter_evaluation)
+    button_add_evaluation.grid(row=3, column=1)    
 
 
 
-def sql_add_evaluation():
+def sql_add_evaluation(nom_controle, date_controle, date_visible):
     """
-    Se connecte à Mysql et ajoute l'évaluation à partir de la discipline, du professeur, de la classe et de la période sélectionnés.
+    Se connecte à Mysql et ajoute l'évaluation à partir de la discipline, du professeur, de la classe et de la période sélectionnés dans la table Evaluation.
     """
-    sql = "INSERT INTO Evaluation (date_controle, date_visible, discipline_id, professeur_id, classe_id, periode_id) VALUES (%s, %s, %s, %s);"
-    tuple_selection = ('2020-1-1', '2020-1-10', discipline_selected[0], professeur_selected[0], classe_selected[0], periode_selected[0])
+    sql = "INSERT INTO Evaluation (nom, date_controle, date_visible, discipline_id, professeur_id, classe_id, periode_id) VALUES (%s, %s, %s, %s, %s, %s, %s);"
+    tuple_selection = (nom_controle, date_controle, date_visible, discipline_selected[0], professeur_selected[0], classe_selected[0], periode_selected[0])
     try:
         print(f"Try to connect to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
@@ -1386,21 +1390,23 @@ def ajouter_evaluation():
     """
     Crée une évaluation à partir d'un enseignement assuré par le professeur connecté
     """
+    global nom_controle_entry_text, date_controle_entry_text, date_visible_entry_text
     if professeur_selected and classe_selected and discipline_selected and periode_selected and (professeur_selected[0] == current_user_id) and sql_read_enseignements():
-        print(f"Ajout de l'évaluation: {discipline_selected} {professeur_selected} {classe_selected} {periode_selected}")        
+        nom_controle, date_controle, date_visible = (nom_controle_entry_text.get(), date_controle_entry_text.get(), date_visible_entry_text.get())
+        if nom_controle and date_controle and date_visible:
+            print(f"Ajout de l'évaluation: {discipline_selected} {professeur_selected} {classe_selected} {periode_selected}")
+            print(nom_controle, date_controle, date_visible)
+            sql_add_evaluation(nom_controle, date_controle, date_visible)
+            appliquer_selections()
+        else:
+            messagebox.showwarning("Données incomplètes", "Veuillez donner un nom au nouveau contrôle, saisir la date du contrôle et celle où le contrôle sera rendu visible aux élèves. ")
+            
+        
     else:
         messagebox.showwarning("Opération non valide", "Veuillez sélectionner un enseignement que vous assurez et une période dans leurs onglets respectifs.")
 
         
     
-
-    # if professeur_selected and classe_selected and discipline_selected and not(sql_read_enseignements()):
-    #     print(f"Ajout de l'enseignement: {professeur_selected} {classe_selected} {discipline_selected}")
-    #     sql_add_enseignement()
-    #     sheet_enseignements.destroy()
-    #     afficher_enseignements()
-    # elif professeur_selected and classe_selected and discipline_selected:
-    #     messagebox.showerror("Ajout impossible", "Cet enseignement existe déjà")
 
     
     
@@ -1433,14 +1439,12 @@ button_mes_enseignements = tk.Button(f5, text='Filtrer mes enseignements',
                                     command=filtrer_mes_enseignements)
 
 
-button_add_evaluation = tk.Button(f7, text='Ajouter',
-                                    command=ajouter_evaluation)
 
 notebook.add(f0, text="Mon compte")
 
 notebook.grid(row=0, column=0, sticky="nswe")
 button_mes_enseignements.grid(row=2, column=0)
-button_add_evaluation.grid(row=2, column=0)
+
 
 afficher_IHM_connexion()
 
