@@ -53,6 +53,36 @@ def select_annee(response):
     annee_selected = (annee_id[index], annee_Name[index][0])
     print(annee_selected)
 
+def select_periode(response):
+    """
+    Mémorise la période scolaire par clic dans la case du tableau des périodes scolaires 
+    """
+    global periode_selected
+    index = response[1]
+    periode_selected = (periode_id[index], periode_Name[index][0])
+    print(periode_selected)
+
+def select_enseignement(response):
+    """
+    Mémorise  le professeur, la discipline et la classe par clic dans la case du tableau des enseignements 
+    """
+    global annee_selected, classe_selected, professeur_selected, discipline_selected
+    index = response[1]
+    print(index)
+    enseignements_traduits = sql_traduis_enseignements()
+    enseignement_selected = enseignements_traduits[index]
+    print(enseignement_selected)
+    selected_professeur_id = sql_professeur_id(enseignement_selected[0], enseignement_selected[1])
+    professeur_selected = (selected_professeur_id, enseignement_selected[0])
+    frame_selection_enseignements.destroy()    
+    afficher_selections_enseignements()
+    sheet_enseignements.destroy()
+    afficher_enseignements()
+
+
+
+    
+
 
 def select_classe(response):
     """
@@ -61,8 +91,8 @@ def select_classe(response):
     global classe_selected
     index = response[1]
     classe_selected = (classe_id[index], classe_Name[index])
-    frame_selection.destroy()    
-    afficher_selections()
+    frame_selection_enseignements.destroy()    
+    afficher_selections_enseignements()
     sheet_enseignements.destroy()
     afficher_enseignements()
     
@@ -72,8 +102,8 @@ def deselect_classe():
     """
     global classe_selected
     classe_selected = None
-    frame_selection.destroy()    
-    afficher_selections()
+    frame_selection_enseignements.destroy()    
+    afficher_selections_enseignements()
     sheet_enseignements.destroy()
     afficher_enseignements()
     
@@ -84,10 +114,10 @@ def select_professeur(response):
     """
     global professeur_selected
     print(response)
-    index = response[1]
+    index = response[1]  # index dans le tableau affiché pas dans la table Professeur
     professeur_selected = (professeur_id[index], prof_Name[index])
-    frame_selection.destroy()
-    afficher_selections()
+    frame_selection_enseignements.destroy()
+    afficher_selections_enseignements()
     sheet_enseignements.destroy()
     afficher_enseignements()
     
@@ -97,8 +127,8 @@ def deselect_prof():
     """
     global professeur_selected
     professeur_selected = None
-    frame_selection.destroy()    
-    afficher_selections()
+    frame_selection_enseignements.destroy()    
+    afficher_selections_enseignements()
     sheet_enseignements.destroy()
     afficher_enseignements()
 
@@ -110,8 +140,8 @@ def select_discipline(response):
     global discipline_selected
     index = response[1]
     discipline_selected = (discipline_id[index], disc_Name[index][0])
-    frame_selection.destroy()    
-    afficher_selections()
+    frame_selection_enseignements.destroy()    
+    afficher_selections_enseignements()
     sheet_enseignements.destroy()
     afficher_enseignements()
     
@@ -121,41 +151,70 @@ def deselect_discipline():
     """
     global discipline_selected
     discipline_selected = None
-    frame_selection.destroy()    
-    afficher_selections()
+    frame_selection_enseignements.destroy()    
+    afficher_selections_enseignements()
     sheet_enseignements.destroy()
     afficher_enseignements()
 
-def afficher_selections():
+def afficher_selections_enseignements():
     """
-    Affiche le professeur, la classe et la discipline sélectionnées
+    Affiche le professeur, la classe et la discipline sélectionnées dans l'IHM Enseignements
     """
-    global frame_selection
+    global frame_selection_enseignements
     # print((professeur_selected, classe_selected, discipline_selected))
-    frame_selection = tk.LabelFrame(f5, text=' (id SQL) Sélection ')
-    frame_selection.grid(row=0, column=0)
+    frame_selection_enseignements = tk.LabelFrame(f5, text=' (id SQL) Sélection ')
+    frame_selection_enseignements.grid(row=0, column=0)
     
-    lbl_professeur = tk.Label(frame_selection, text = 'Professeur:')
+    lbl_professeur = tk.Label(frame_selection_enseignements, text = 'Professeur:')
     lbl_professeur.grid(row=0, column=0, sticky=tk.E)
-    lbl_professeur_selected = tk.Label(frame_selection, text = professeur_selected)
+    lbl_professeur_selected = tk.Label(frame_selection_enseignements, text = professeur_selected)
     lbl_professeur_selected.grid(row=0, column=1, sticky=tk.W)
-    button_deselect_prof = tk.Button(frame_selection, text="Désélectionner", command=deselect_prof)
+    button_deselect_prof = tk.Button(frame_selection_enseignements, text="Désélectionner", command=deselect_prof)
     button_deselect_prof.grid(row=0,column=2)
 
-    lbl_classe = tk.Label(frame_selection, text = 'Classe:')
+    lbl_classe = tk.Label(frame_selection_enseignements, text = 'Classe:')
     lbl_classe.grid(row=1, column=0, sticky=tk.E)
-    lbl_classe_selected = tk.Label(frame_selection, text = classe_selected)
+    lbl_classe_selected = tk.Label(frame_selection_enseignements, text = classe_selected)
     lbl_classe_selected.grid(row=1, column=1, sticky=tk.W)
-    button_deselect_classe = tk.Button(frame_selection, text="Désélectionner", command=deselect_classe)
+    button_deselect_classe = tk.Button(frame_selection_enseignements, text="Désélectionner", command=deselect_classe)
     button_deselect_classe.grid(row=1,column=2)
 
-    lbl_discipline = tk.Label(frame_selection, text = 'Discipline:')
+    lbl_discipline = tk.Label(frame_selection_enseignements, text = 'Discipline:')
     lbl_discipline.grid(row=2, column=0, sticky=tk.E)
-    lbl_discipline_selected = tk.Label(frame_selection, text = discipline_selected)
+    lbl_discipline_selected = tk.Label(frame_selection_enseignements, text = discipline_selected)
     lbl_discipline_selected.grid(row=2, column=1, sticky=tk.W)
-    button_deselect_discipline = tk.Button(frame_selection, text="Désélectionner", command=deselect_discipline)
+    button_deselect_discipline = tk.Button(frame_selection_enseignements, text="Désélectionner", command=deselect_discipline)
     button_deselect_discipline.grid(row=2,column=2)
 
+# def afficher_selections_evaluations():
+#     """
+#     Affiche l'enseignement et la période sélectionnés dans l'IHM Evaluations
+#     """
+#     global frame_selection_evaluations
+#     # print((professeur_selected, classe_selected, discipline_selected))
+#     frame_selection_enseignements = tk.LabelFrame(f5, text=' (id SQL) Sélection ')
+#     frame_selection_enseignements.grid(row=0, column=0)
+    
+#     lbl_professeur = tk.Label(frame_selection_enseignements, text = 'Professeur:')
+#     lbl_professeur.grid(row=0, column=0, sticky=tk.E)
+#     lbl_professeur_selected = tk.Label(frame_selection_enseignements, text = professeur_selected)
+#     lbl_professeur_selected.grid(row=0, column=1, sticky=tk.W)
+#     button_deselect_prof = tk.Button(frame_selection_enseignements, text="Désélectionner", command=deselect_prof)
+#     button_deselect_prof.grid(row=0,column=2)
+
+#     lbl_classe = tk.Label(frame_selection_enseignements, text = 'Classe:')
+#     lbl_classe.grid(row=1, column=0, sticky=tk.E)
+#     lbl_classe_selected = tk.Label(frame_selection_enseignements, text = classe_selected)
+#     lbl_classe_selected.grid(row=1, column=1, sticky=tk.W)
+#     button_deselect_classe = tk.Button(frame_selection_enseignements, text="Désélectionner", command=deselect_classe)
+#     button_deselect_classe.grid(row=1,column=2)
+
+#     lbl_discipline = tk.Label(frame_selection_enseignements, text = 'Discipline:')
+#     lbl_discipline.grid(row=2, column=0, sticky=tk.E)
+#     lbl_discipline_selected = tk.Label(frame_selection_enseignements, text = discipline_selected)
+#     lbl_discipline_selected.grid(row=2, column=1, sticky=tk.W)
+#     button_deselect_discipline = tk.Button(frame_selection_enseignements, text="Désélectionner", command=deselect_discipline)
+#     button_deselect_discipline.grid(row=2,column=2)
     
 # ------------------------------------------------------------------------------
 # AFFICHAGE NOTEBOOK
@@ -178,7 +237,7 @@ def afficher_notebook_professeur():
     afficher_eleves()
     afficher_classes()
     afficher_annees_et_periodes()
-    afficher_selections()
+    afficher_selections_enseignements()
     afficher_enseignements()
     afficher_evaluations()
 
@@ -261,6 +320,34 @@ def sql_read_professeur():
         print("Error while connecting to MySQL", e)
         messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
 
+
+def sql_professeur_id(nom, prenom):
+    """
+    Se connecte à Mysql et retourne le numéro d'enregistrement d'un professeur à partir de la table Professeur. 
+    """
+    try:
+        print(f"Try to connect to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print(f"Connected to MySQL Server version {db_Info}")
+        print("sql_professeur_id")
+        cursor = connection.cursor()
+        sql = "SELECT professeur_id FROM Professeur WHERE  nom=%s AND prenom=%s"
+        tuple_data = (nom, prenom)
+        cursor.execute(sql, tuple_data)
+        records = cursor.fetchall()
+        # print(records)
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        return(records[0][0])
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+        messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
+        
 
 def afficher_compte_professeur():
     """
@@ -569,70 +656,9 @@ def afficher_disciplines():
                                        "edit_cell"))
 
 
-def enregistrer_disciplines():
-    """
-    Met à jour la base de données en y ajoutant d'éventuelles nouvelles
-    disciplines puis rafraîchi l'ÌHM 
-    """
-    try:
-        print(f"Try to connect to MySQL Server as {GN_user}")
-        connection = mysql.connector.connect(host=GN_host,
-                                             database=GN_database,
-                                             user=GN_user,
-                                             password=GN_password)
-        db_Info = connection.get_server_info()
-        print("Connected to MySQL Server version", db_Info)
-        print("enregistrer_disciplines")
-        cursor = connection.cursor()
-        for index in range(len(disc_Name)):
-            sql = "UPDATE Discipline SET nom = %s WHERE discipline_id = %s"
-            discipline = (disc_Name[index][0], discipline_id[index])
-            cursor.execute(sql, discipline)
-            connection.commit()
-        # déconnexion
-        cursor.close()
-        connection.close()
-        print("MySQL connection is closed")
-        # rafraîchissement IHM
-        sheet_disciplines.destroy()
-        afficher_disciplines()
-
-    except Error as e:
-        print("Error while connecting to MySQL", e)
 
 
 
-def ajouter_discipline():
-    """
-    Ajoute une discipline 'À définir' dans le tableau des disciplines (et dans
-    la base de données) et sélectionne la ligne. 
-    """
-    global sheet_disciplines
-    if ['À définir'] in disc_Name:
-        messagebox.showerror("L'ajout précédent reste à définir", "Avant d'ajouter une nouvelle discipline, veuillez au préalable terminer l'ajout de la discipline précédente.")        
-        sheet_disciplines.select_row(classe_Name.index('À définir')) 
-    else: 
-        sql = "INSERT INTO Discipline (nom) VALUES ('À définir')"
-        try:
-            print(f"Try to connect to MySQL Server as {GN_user}")
-            connection = mysql.connector.connect(host=GN_host,
-                                                 database=GN_database,
-                                                 user=GN_user,
-                                                 password=GN_password)
-            db_Info = connection.get_server_info()
-            print("Connected to MySQL Server version", db_Info)
-            print("ajouter_discipline")
-            cursor = connection.cursor()
-            cursor.execute(sql)
-            connection.commit()
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
-        except Error as e:
-            print("Error while connecting to MySQL", e)
-        sheet_disciplines.destroy()
-        afficher_disciplines()
-        sheet_disciplines.select_row(disc_Name.index(['À définir']))
 
 
 # ------------------------------------------------------------------------------
@@ -683,6 +709,11 @@ def sql_read_professeurs():
     return (professeur_id, prof_Name, prof_Print)
 
 
+
+
+
+
+
 def afficher_professeurs():
     """
     Affiche un tableau de type tableur avec toutes les professeurs (IHM)
@@ -710,88 +741,10 @@ def afficher_professeurs():
                                        "edit_cell"))
 
 
-def enregistrer_professeurs():
-    """
-    Met à jour la base de données en y ajoutant d'éventuelles modifications puis rafraîchi l'IHM pour une remise dans l'ordre alphabétique.
-    """
-    try:
-        print(f"Try to connect to MySQL Server as {GN_user}")
-        connection = mysql.connector.connect(host=GN_host,
-                                             database=GN_database,
-                                             user=GN_user,
-                                             password=GN_password)
-        db_Info = connection.get_server_info()
-        print("Connected to MySQL Server version", db_Info)
-        print("enregistrer_professeurs")
-        cursor = connection.cursor()
-        for index in range(len(prof_Name)):
-            sql = "UPDATE Professeur SET prenom=%s, nom=%s,  titre=%s WHERE professeur_id = %s"
-            if prof_Print[index][0] in ['M', 'M.']:
-                professeur = (prof_Print[index][1],  # FirstName
-                              prof_Print[index][2],  # LastName
-                              'M',
-                              professeur_id[index])
-            elif prof_Print[index][0] in ['Mme', 'Mme.']:
-                professeur = (prof_Print[index][1],  # FirstName 
-                              prof_Print[index][2],  # LastName  
-                              'F',
-                              professeur_id[index])
-            else:
-                professeur = (prof_Print[index][1],  # FirstName 
-                              prof_Print[index][2],  # LastName  
-                              None,
-                              professeur_id[index])
-            # print(professeur)
-            cursor.execute(sql, professeur)
-            connection.commit()
-        cursor.close()
-        connection.close()
-        print("MySQL connection is closed")
-        # Rafraîchissement IHM
-        sheet_professeurs.destroy()
-        afficher_professeurs()
-
-    except Error as e:
-        print("Error while connecting to MySQL", e)
 
 
-def ajouter_professeur():
-    """
-    Ajoute un nouveau professeur dans le tableau des professeurs (et dans
-    la base de données) et sélectionne la ligne. Commence par enregistrer
-    l'état précédent du tableau dans la base de données dans le cas où
-    l'utilisateur enchaîne les ajouts.
-    """
-    global sheet_professeurs, prof_Name
-    if '* Nom ? *' in prof_Name:
-        messagebox.showerror("L'ajout précédent reste à définir", "Avant d'ajouter un nouvel enseignant, veuillez au préalable terminer l'ajout de l'enseignant précédent.")        
-        row_index = prof_Name.index('* Nom ? *')
-        sheet_professeurs.select_row(row_index)
-    else:
-        sql = "INSERT INTO Professeur (prenom, nom) VALUES (%s, %s)"
-        prof_nouveau = ('* Prénom ? *', '* Nom ? *')
-        try:
-            print(f"Try to connect to MySQL Server as {GN_user}")
-            connection = mysql.connector.connect(host=GN_host,
-                                                 database=GN_database,
-                                                 user=GN_user,
-                                                 password=GN_password)
-            db_Info = connection.get_server_info()
-            print("Connected to MySQL Server version", db_Info)
-            print("ajouter_professeur")
-            cursor = connection.cursor()
-            cursor.execute(sql, prof_nouveau)
-            connection.commit()
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
-            sheet_professeurs.destroy()
-            afficher_professeurs()
-            row_index = prof_Name.index('* Nom ? *')
-            sheet_professeurs.select_row(row_index)
-    
-        except Error as e:
-            print("Error while connecting to MySQL", e)
+
+
     
 # ------------------------------------------------------------------------------
 # ÉLÈVES
@@ -862,88 +815,10 @@ def afficher_eleves():
                                        "edit_cell"))
 
 
-def enregistrer_eleves():
-    """
-    Met à jour la base de données en y ajoutant d'éventuelles modifications puis rafraîchi l'IHM
-    """
-    # Contrôle l'existence des classes saisies pour les élèves
-    classes_toutes_valides = True
-    for index in range(len(eleves_Name)):
-        if eleves_Print[index][3] not in classe_Name:
-            classes_toutes_valides = False
-            sheet_eleves.select_cell(index, 3)
-            messagebox.showerror("Erreur", f"Cette classe n'est pas encore enregistrée: {eleves_Print[index][3]}")
-    if classes_toutes_valides:
-        try:
-            print(f"Try to connect to MySQL Server as {GN_user}")
-            connection = mysql.connector.connect(host=GN_host,
-                                                 database=GN_database,
-                                                 user=GN_user,
-                                                 password=GN_password)
-            db_Info = connection.get_server_info()
-            print("Connected to MySQL Server version", db_Info)
-            print("enregistrer_eleves")
-            cursor = connection.cursor()
-            for index in range(len(eleves_Name)):
-                sql = "UPDATE Eleve SET prenom=%s, nom=%s, genre=%s, classe_id=%s WHERE eleve_id = %s"
-                eleve = (eleves_Print[index][1],  # prenom
-                         eleves_Print[index][0],  # nom
-                         eleves_Print[index][2],  # genre
-                         classe_id[classe_Name.index(eleves_Print[index][3])],  # classe_id
-                         eleve_id[index])
-                # print(eleve)
-                cursor.execute(sql, eleve)
-                connection.commit()
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
-            # Rafraîchissement
-            sheet_eleves.destroy()
-            afficher_eleves()
-    
-        except Error as e:
-            print("Error while connecting to MySQL", e)
 
 
-def ajouter_eleve():
-    """
-    Ajoute un nouvel élève dans le tableau des élèves (et dans
-    la base de données) et sélectionne la ligne.
-    """
-    global sheet_eleves, disc_Name, discipline_id
-    if '* Nom ? *' in eleves_Name:
-        messagebox.showerror("L'ajout précédent reste à définir", "Avant d'ajouter un nouvel élève, veuillez au préalable terminer l'ajout de l'élève précédent.")        
-        row_index = eleves_Name.index('* Nom ? *')
-        sheet_eleves.select_row(row_index)
-    else:
-        if classe_selected:
-            sql = "INSERT INTO Eleve (prenom, nom, genre, classe_id) VALUES (%s, %s, %s, %s)"
-            eleve_nouveau = ('* Prénom ? *', '* Nom ? *', 'M ou F', classe_selected[0])
-            try:
-                print(f"Try to connect to MySQL Server as {GN_user}")
-                connection = mysql.connector.connect(host=GN_host,
-                                                     database=GN_database,
-                                                     user=GN_user,
-                                                     password=GN_password)
-                db_Info = connection.get_server_info()
-                print("Connected to MySQL Server version", db_Info)
-                print("ajouter_eleve")
-                cursor = connection.cursor()
-                cursor.execute(sql, eleve_nouveau)
-                connection.commit()
-                cursor.close()
-                connection.close()
-                print("MySQL connection is closed")
-                # Rafraîchissement
-                sheet_eleves.destroy()
-                afficher_eleves()
-                row_index = eleves_Name.index('* Nom ? *')
-                sheet_eleves.select_row(row_index)
-        
-            except Error as e:
-                print("Error while connecting to MySQL", e)
-        else:
-            messagebox.showerror("Classe à définir", "Avant d'ajouter un élève, veuillez au préalable sélectionner la classe dans l'onglet « Classes »")
+
+
         
 
 # ------------------------------------------------------------------------------
@@ -1015,78 +890,9 @@ def afficher_classes():
                                    "edit_cell"))
 
 
-def enregistrer_classes():
-    """
-    Met à jour la base de données en y ajoutant d'éventuelles nouvelles
-    classes.
-    """
-    # Contrôle l'existence des années scolaires saisies pour les classes
-    annees_toutes_valides = True
-    for index in range(len(classe_Name)):
-        if [classe_Print[index][2]] not in annee_Name:
-            annees_toutes_valides = False
-            sheet_classes.select_cell(index, 2)
-            messagebox.showerror("Erreur", f"Cette année scolaire n'est pas enregistrée: {classe_Print[index][2]}")
-    if annees_toutes_valides:        
-        try:
-            print(f"Try to connect to MySQL Server as {GN_user}")
-            connection = mysql.connector.connect(host=GN_host,
-                                                 database=GN_database,
-                                                 user=GN_user,
-                                                 password=GN_password)
-            db_Info = connection.get_server_info()
-            print("Connected to MySQL Server version", db_Info)
-            print("enregistrer_classes")
-            cursor = connection.cursor()
-            for index in range(len(classe_Name)):
-                sql = "UPDATE Classe SET nom = %s, niveau = %s, annee_id = %s WHERE classe_id = %s"
-                classe = (classe_Print[index][0], classe_Print[index][1], annee_id[annee_Name.index([classe_Print[index][2]])], # from annee_Name to annee_id
-                classe_id[index])
-                cursor.execute(sql, classe)
-                connection.commit()
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
-        except Error as e:
-            print("Error while connecting to MySQL", e)
-        sheet_classes.destroy()
-        afficher_classes()
 
-def ajouter_classe():
-    """
-    Ajoute une 'À définir' dans le tableau des disciplines (et dans
-    la base de données) et sélectionne la ligne.
-    """
-    global sheet_classes
-    if 'À définir' in classe_Name:
-        messagebox.showerror("L'ajout précédent reste à définir", "Avant d'ajouter une nouvelle classe, veuillez au préalable terminer l'ajout de la classe précédente.")        
-        sheet_classes.select_row(classe_Name.index('À définir')) 
-    else: 
-        if annee_selected:
-            sql = "INSERT INTO Classe (nom, niveau, annee_id) VALUES ('À définir', 'À définir', %s)"
-            annee = (annee_selected[0],)
-            try:
-                print(f"Try to connect to MySQL Server as {GN_user}")
-                connection = mysql.connector.connect(host=GN_host,
-                                                     database=GN_database,
-                                                     user=GN_user,
-                                                     password=GN_password)
-                db_Info = connection.get_server_info()
-                print("Connected to MySQL Server version", db_Info)
-                print("ajouter_classe")
-                cursor = connection.cursor()
-                cursor.execute(sql, annee)
-                connection.commit()
-                cursor.close()
-                connection.close()
-                print("MySQL connection is closed")
-                sheet_classes.destroy()
-                afficher_classes()
-                sheet_classes.select_row(classe_Name.index('À définir'))
-            except Error as e:
-                print("Error while connecting to MySQL", e)
-        else:
-            messagebox.showerror("Année scolaire à définir", "Avant d'ajouter une classe, veuillez au préalable sélectionner l'année scolaire dans l'onglet « Périodes »")
+
+
 
 
 
@@ -1215,6 +1021,7 @@ def afficher_annees_et_periodes():
     sheet_periodes.hide("top_left")
     # sheet_periodes.hide("header")
     sheet_periodes.grid(row=0, column=0, columnspan=2,  sticky="we")
+    sheet_periodes.extra_bindings([ ("cell_select", select_periode)])    
     sheet_periodes.enable_bindings(("single_select",  # "single_select" or "toggle_select"
                                        "arrowkeys",
                                        "copy",
@@ -1223,146 +1030,6 @@ def afficher_annees_et_periodes():
                                        "delete",
                                        "undo",
                                        "edit_cell"))
-
-
-
-    
-def enregistrer_annees():
-    """
-    Met à jour la base de données en y ajoutant d'éventuelles nouvelles
-    années scolaires puis rafraîchi l'ÌHM 
-    """
-    try:
-        print(f"Try to connect to MySQL Server as {GN_user}")
-        connection = mysql.connector.connect(host=GN_host,
-                                             database=GN_database,
-                                             user=GN_user,
-                                             password=GN_password)
-        db_Info = connection.get_server_info()
-        print("Connected to MySQL Server version", db_Info)
-        print("enregistrer_annees")
-        cursor = connection.cursor()
-        for index in range(len(annee_Name)):
-            sql = "UPDATE Anneescolaire SET nom = %s WHERE annee_id = %s"
-            annee = (annee_Name[index][0], annee_id[index])
-            cursor.execute(sql, annee)
-            connection.commit()
-        # déconnexion
-        cursor.close()
-        connection.close()
-        print("MySQL connection is closed")
-        # rafraîchissement IHM
-        sheet_annees.destroy()
-        sheet_periodes.destroy()
-        afficher_annees_et_periodes()
-
-    except Error as e:
-        print("Error while connecting to MySQL", e)
-
-
-def enregistrer_periodes():
-    """
-    Met à jour la base de données en y ajoutant d'éventuelles nouvelles
-    périodes scolaires puis rafraîchi l'ÌHM 
-    """
-    try:
-        print(f"Try to connect to MySQL Server as {GN_user}")
-        connection = mysql.connector.connect(host=GN_host,
-                                             database=GN_database,
-                                             user=GN_user,
-                                             password=GN_password)
-        db_Info = connection.get_server_info()
-        print("Connected to MySQL Server version", db_Info)
-        print("enregistrer_periodes")
-        cursor = connection.cursor()
-        for index in range(len(periode_Name)):
-            sql = "UPDATE Periode SET nom = %s WHERE periode_id = %s"
-            periode = (periode_Name[index][0], periode_id[index])
-            cursor.execute(sql, periode)
-            connection.commit()
-        # déconnexion
-        cursor.close()
-        connection.close()
-        print("MySQL connection is closed")
-        # rafraîchissement IHM
-        sheet_annees.destroy()
-        sheet_periodes.destroy()
-        afficher_annees_et_periodes()
-
-    except Error as e:
-        print("Error while connecting to MySQL", e)
-
-
-        
-def ajouter_annee():
-    """
-    Ajoute une année 'À définir' dans le tableau des années (et dans
-    la base de données) et sélectionne la ligne. 
-    """
-    global sheet_annees, sheet_periodes
-    if ['À définir'] in annee_Name:
-        messagebox.showerror("L'ajout précédent reste à définir", "Avant d'ajouter une nouvelle années scolaire, veuillez au préalable terminer l'ajout de la précédente.")
-        sheet_annees.select_row(annee_Name.index(['À définir']))
-    else:
-        sql = "INSERT INTO Anneescolaire (nom) VALUES ('À définir')"
-        try:
-            print(f"Try to connect to MySQL Server as {GN_user}")
-            connection = mysql.connector.connect(host=GN_host,
-                                                 database=GN_database,
-                                                 user=GN_user,
-                                                 password=GN_password)
-            db_Info = connection.get_server_info()
-            print("Connected to MySQL Server version", db_Info)
-            print("ajouter_annee")
-            cursor = connection.cursor()
-            cursor.execute(sql)
-            connection.commit()
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
-        except Error as e:
-            print("Error while connecting to MySQL", e)
-        sheet_annees.destroy()
-        sheet_periodes.destroy()
-        afficher_annees_et_periodes()
-        sheet_annees.select_row(annee_Name.index(['À définir']))
-
-def ajouter_periode():
-    """
-    Ajoute une période 'À définir' dans le tableau des périodes (et dans
-    la base de données) et sélectionne la ligne.
-    """
-    global sheet_annees, sheet_periodes
-    if ['À définir'] in periode_Name:
-        messagebox.showerror("L'ajout précédent reste à définir", "Avant d'ajouter une nouvelle période scolaire, veuillez au préalable terminer l'ajout de la précédente.")
-        sheet_periodes.select_row(periode_Name.index(['À définir']))
-    else:
-        sql = "INSERT INTO Periode (nom) VALUES ('À définir')"
-        try:
-            print(f"Try to connect to MySQL Server as {GN_user}")
-            connection = mysql.connector.connect(host=GN_host,
-                                                 database=GN_database,
-                                                 user=GN_user,
-                                                 password=GN_password)
-            db_Info = connection.get_server_info()
-            print("Connected to MySQL Server version", db_Info)
-            print("ajouter_periode")
-            cursor = connection.cursor()
-            cursor.execute(sql)
-            connection.commit()
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
-        except Error as e:
-            print("Error while connecting to MySQL", e)
-        sheet_annees.destroy()
-        sheet_periodes.destroy()
-        afficher_annees_et_periodes()
-        sheet_periodes.select_row(periode_Name.index(['À définir']))
-    
-
-
-
 
 # ------------------------------------------------------------------------------
 # ENSEIGNEMENTS
@@ -1500,9 +1167,9 @@ def afficher_enseignements():
     """
     global sheet_enseignements
     enseignements = sql_read_enseignements()
-    print("Enseignements: (PDC)")
-    for row in enseignements:
-        print(row)
+    # print("Enseignements: (PDC)")
+    # for row in enseignements:
+    #     print(row)
     enseignements_traduits = sql_traduis_enseignements()
     frame_enseignements = tk.Frame(f5)
     frame_enseignements.grid()
@@ -1514,21 +1181,29 @@ def afficher_enseignements():
                                 width=800)
     sheet_enseignements.hide("row_index")
     sheet_enseignements.grid(row=1, column=0)
+    sheet_enseignements.extra_bindings([ ("cell_select", select_enseignement)])        
+    sheet_enseignements.enable_bindings(("cell_select",
+                                       "single_select",  # "single_select" or "toggle_select"
+                                       "arrowkeys",
+                                       "copy",
+                                       "cut",
+                                       "paste",
+                                       "delete",
+                                       "undo"))
+    
 
-def ajouter_enseignement():
+def afficher_mes_enseignements():
     """
-    Crée un enseignement à partir du professeur, de la classe et de la discipline sélectionnés.
+    Affiche les enseignements du professeur utilisateur
     """
-    if professeur_selected and classe_selected and discipline_selected and not(sql_read_enseignements()):
-        print(f"Ajout de l'enseignement: {professeur_selected} {classe_selected} {discipline_selected}")
-        sql_add_enseignement()
-        sheet_enseignements.destroy()
-        afficher_enseignements()
-    elif professeur_selected and classe_selected and discipline_selected:
-        messagebox.showerror("Ajout impossible", "Cet enseignement existe déjà")
-    else:
-        messagebox.showwarning("Opération non valide", "Veuillez sélectionner un professeur, une classe et une discipline dans leurs onglets respectifs.")
-
+    global professeur_selected
+    index = current_user_id-1
+    professeur_selected = (professeur_id[index], prof_Name[index])
+    frame_selection_enseignements.destroy()
+    afficher_selections_enseignements()
+    sheet_enseignements.destroy()
+    afficher_enseignements()
+    
 
 # ------------------------------------------------------------------------------
 # EVALUATIONS
@@ -1641,52 +1316,13 @@ f7 = tk.Frame(notebook, width=800, height=600)  # frame pour les évaluations
 frame_annees = tk.Frame(f6)
 frame_periodes = tk.Frame(f6)
 
-
-button_add_discipline = tk.Button(f1, text='Ajouter',
-                                  command=ajouter_discipline)
-button_save_disciplines = tk.Button(f1, text='Enregistrer',
-                                    command=enregistrer_disciplines)
-button_add_prof = tk.Button(f2, text='Ajouter',
-                            command=ajouter_professeur)
-button_save_profs = tk.Button(f2, text='Enregistrer',
-                              command=enregistrer_professeurs)
-button_add_eleve = tk.Button(f3, text='Ajouter',
-                             command=ajouter_eleve)
-button_save_eleves = tk.Button(f3, text='Enregistrer',
-                               command=enregistrer_eleves)
-button_add_classe = tk.Button(f4, text='Ajouter',
-                              command=ajouter_classe)
-button_save_classes = tk.Button(f4, text='Enregistrer',
-                                command=enregistrer_classes)
-button_add_annee = tk.Button(frame_annees, text='Ajouter',
-                              command=ajouter_annee)
-button_save_annees = tk.Button(frame_annees, text='Enregistrer',
-                                command=enregistrer_annees)
-button_add_periode = tk.Button(frame_periodes, text='Ajouter',
-                               command=ajouter_periode)
-button_save_periodes = tk.Button(frame_periodes, text='Enregistrer',
-                                command=enregistrer_periodes)
-button_add_enseignement = tk.Button(f5, text='Ajouter',
-                                    command=ajouter_enseignement)
+button_add_enseignement = tk.Button(f5, text='Mes enseignements',
+                                    command=afficher_mes_enseignements)
 
 
 notebook.add(f0, text="Mon compte")
 
 notebook.grid(row=0, column=0, sticky="nswe")
-
-
-button_add_discipline.grid(row=1, column=0)
-button_save_disciplines.grid(row=1, column=1)
-button_add_prof.grid(row=1, column=0)
-button_save_profs.grid(row=1, column=1)
-button_add_eleve.grid(row=1, column=0)
-button_save_eleves.grid(row=1, column=1)
-button_add_classe.grid(row=1, column=0)
-button_save_classes.grid(row=1, column=1)
-button_add_annee.grid(row=1, column=0)
-button_save_annees.grid(row=1, column=1)
-button_add_periode.grid(row=1, column=0)
-button_save_periodes.grid(row=1, column=1)
 button_add_enseignement.grid(row=2,column=0)
 
 afficher_IHM_connexion()

@@ -474,25 +474,13 @@ PRIMARY KEY (professeur_id, discipline_id, classe_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+-- Remplissage aléatoire de la table Enseigner
 -- INSERT INTO Enseigner (professeur_id, discipline_id, classe_id) VALUES
--- (1, 1, 1),
--- (1, 1, 2),
--- (1, 1, 5),
--- (1, 1, 6),
--- (2, 2, 1),
--- (2, 2, 2),
--- (2, 2, 3),
--- (2, 2, 4),
--- (2, 3, 4);
-
-
-
+-- (1, 2, 3);
 
 DELIMITER $$  
 CREATE PROCEDURE FILL_ENSEIGNER()
-
    BEGIN
-      DECLARE v_a INT DEFAULT 1;
       DECLARE v_professeur INT DEFAULT 1;
       DECLARE v_discipline INT;
       DECLARE v_classe INT;
@@ -509,27 +497,19 @@ CREATE PROCEDURE FILL_ENSEIGNER()
             LEAVE simple_loop;
          END IF;
    END LOOP simple_loop;
-
-
 END $$
-
 
 DELIMITER ;
 
 show warnings;
-
-
-
-
-
 
 -- ------------------------------------------------
 -- Création de la table Evaluation
 
 CREATE TABLE Evaluation (
   evaluation_id int NOT NULL AUTO_INCREMENT,
-  date_controle DATE,
-  date_visible DATE,
+  date_controle DATE DEFAULT '2020-10-1',
+  date_visible DATE DEFAULT '2020-10-11',
   discipline_id INT,
   professeur_id INT,
   classe_id INT,
@@ -537,8 +517,34 @@ CREATE TABLE Evaluation (
   PRIMARY KEY (evaluation_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-INSERT INTO Evaluation (date_controle, date_visible, discipline_id, professeur_id, classe_id, periode_id)  VALUES
-('2020-10-5', '2020-10-12', 2, 2, 3, 1);
+-- Remplissage aléatoire de la table Evaluation
+-- INSERT INTO Evaluation (date_controle, date_visible, discipline_id, professeur_id, classe_id, periode_id)  VALUES
+-- ('2020-10-5', '2020-10-12', 2, 2, 3, 1);
+
+DELIMITER $$  
+CREATE PROCEDURE FILL_EVALUATION()
+BEGIN
+  DECLARE done INT DEFAULT FALSE;
+  DECLARE v_professeur INT;
+  DECLARE v_discipline INT;
+  DECLARE v_classe INT;
+  DECLARE cur1 CURSOR FOR SELECT professeur_id, discipline_id, classe_id FROM Enseigner;
+  DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+  OPEN cur1;
+  read_loop: LOOP
+    FETCH cur1 INTO v_professeur, v_discipline, v_classe;
+    IF done THEN
+      LEAVE read_loop;
+    END IF;
+    INSERT INTO Evaluation (discipline_id, professeur_id, classe_id, periode_id) VALUES (v_discipline, v_professeur, v_classe, 1);
+    INSERT INTO Evaluation (discipline_id, professeur_id, classe_id, periode_id) VALUES (v_discipline, v_professeur, v_classe, 2);
+    INSERT INTO Evaluation (discipline_id, professeur_id, classe_id, periode_id) VALUES (v_discipline, v_professeur, v_classe, 3);    
+  END LOOP;
+  CLOSE cur1;
+
+END $$
+
+DELIMITER ;
 
 
 show warnings;
