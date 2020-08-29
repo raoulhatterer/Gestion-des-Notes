@@ -40,6 +40,7 @@ user_role = None
 # ------------------------------------------------------------------------------
 
 annee_selected = None
+periode_selected = None
 classe_selected = None
 professeur_selected = None
 discipline_selected = None
@@ -61,6 +62,17 @@ def select_periode(response):
     index = response[1]
     periode_selected = (periode_id[index], periode_Name[index][0])
     print(periode_selected)
+    appliquer_selections()
+
+
+def deselect_periode():
+    """
+    Désélectionne la période
+    """
+    global periode_selected
+    periode_selected = None
+    appliquer_selections()
+
 
 def select_enseignement(response):
     """
@@ -81,6 +93,65 @@ def select_enseignement(response):
     classe_selected = (selected_classe_id, nom_classe)
     appliquer_selections()
 
+    
+def select_classe(response):
+    """
+    Mémorise la classe par clic dans la case du tableau des classes
+    """
+    global classe_selected
+    index = response[1]
+    classe_selected = (classe_id[index], classe_Name[index])
+    appliquer_selections()
+
+    
+def deselect_classe():
+    """
+    Désélectionne la classe 
+    """
+    global classe_selected
+    classe_selected = None
+    appliquer_selections()    
+
+
+def select_professeur(response):
+    """
+    Mémorise le professeur par clic dans la case du tableau des professeurs
+    """
+    global professeur_selected
+    print(response)
+    index = response[1]  # index dans le tableau affiché pas dans la table Professeur
+    professeur_selected = (professeur_id[index], prof_Name[index])
+    appliquer_selections()
+
+    
+def deselect_prof():
+    """
+    Désélectionne le professeur
+    """
+    global professeur_selected
+    professeur_selected = None
+    appliquer_selections()
+
+    
+def select_discipline(response):
+    """
+    Mémorise la discipline par clic dans la case du tableau des disciplines
+    """
+    global discipline_selected
+    index = response[1]
+    discipline_selected = (discipline_id[index], disc_Name[index][0])
+    appliquer_selections()
+
+    
+def deselect_discipline():
+    """
+    Désélectionne la discipline 
+    """
+    global discipline_selected
+    discipline_selected = None
+    appliquer_selections()
+
+
 def appliquer_selections():
     """
     Rafraîchi l'affichage des onglets Enseignements et Evaluations suivant les sélections en cours
@@ -93,58 +164,6 @@ def appliquer_selections():
     afficher_selections_evaluations()
     sheet_evaluations.destroy()
     afficher_evaluations()
-    
-def select_classe(response):
-    """
-    Mémorise la classe par clic dans la case du tableau des classes
-    """
-    global classe_selected
-    index = response[1]
-    classe_selected = (classe_id[index], classe_Name[index])
-    appliquer_selections()
-    
-def deselect_classe():
-    """
-    Désélectionne la classe 
-    """
-    global classe_selected
-    classe_selected = None
-    appliquer_selections()    
-
-def select_professeur(response):
-    """
-    Mémorise le professeur par clic dans la case du tableau des professeurs
-    """
-    global professeur_selected
-    print(response)
-    index = response[1]  # index dans le tableau affiché pas dans la table Professeur
-    professeur_selected = (professeur_id[index], prof_Name[index])
-    appliquer_selections()
-    
-def deselect_prof():
-    """
-    Désélectionne le professeur
-    """
-    global professeur_selected
-    professeur_selected = None
-    appliquer_selections()
-    
-def select_discipline(response):
-    """
-    Mémorise la discipline par clic dans la case du tableau des disciplines
-    """
-    global discipline_selected
-    index = response[1]
-    discipline_selected = (discipline_id[index], disc_Name[index][0])
-    appliquer_selections()
-    
-def deselect_discipline():
-    """
-    Désélectionne la discipline 
-    """
-    global discipline_selected
-    discipline_selected = None
-    appliquer_selections()
     
 # ------------------------------------------------------------------------------
 # AFFICHAGE NOTEBOOK
@@ -1019,7 +1038,7 @@ def afficher_annees_et_periodes():
         
 def sql_read_enseignements():
     """
-    Se connecte à Mysql et retourne les données brutes concernant les Enseignements
+    Se connecte à Mysql et retourne les données brutes concernant les Enseignements à partir des sélections en cours.
     """
     if not(professeur_selected) and not(classe_selected) and not(discipline_selected):
         sql = "SELECT *  FROM Enseigner;"
@@ -1186,10 +1205,7 @@ def filtrer_mes_enseignements():
     global professeur_selected
     index = current_user_id-1
     professeur_selected = (professeur_id[index], prof_Name[index])
-    frame_selection_enseignements.destroy()
-    afficher_selections_enseignements()
-    sheet_enseignements.destroy()
-    afficher_enseignements()
+    appliquer_selections()
 
 # ------------------------------------------------------------------------------
 # EVALUATIONS
@@ -1303,8 +1319,37 @@ def afficher_selections_evaluations():
     button_deselect_discipline = tk.Button(frame_selection_evaluations, text="Désélectionner", command=deselect_discipline)
     button_deselect_discipline.grid(row=2,column=2)
 
+    lbl_periode = tk.Label(frame_selection_evaluations, text = 'Période:')
+    lbl_periode.grid(row=3, column=0, sticky=tk.E)
+    lbl_periode_selected = tk.Label(frame_selection_evaluations, text = periode_selected)
+    lbl_periode_selected.grid(row=3, column=1, sticky=tk.W)
+    button_deselect_periode = tk.Button(frame_selection_evaluations, text="Désélectionner", command=deselect_periode)
+    button_deselect_periode.grid(row=3,column=2)    
 
 
+
+def ajouter_evaluation():
+    """
+    Crée une évaluation à partir d'un enseignement assuré par le professeur connecté
+    """
+    if professeur_selected and classe_selected and discipline_selected and periode_selected and (professeur_selected[0] == current_user_id) and sql_read_enseignements():
+        print(f"Ajout de l'évaluation: {discipline_selected} {professeur_selected} {classe_selected} {periode_selected}")        
+    else:
+        messagebox.showwarning("Opération non valide", "Veuillez sélectionner un enseignement que vous assurez et une période dans leurs onglets respectifs.")
+
+        
+    
+
+    # if professeur_selected and classe_selected and discipline_selected and not(sql_read_enseignements()):
+    #     print(f"Ajout de l'enseignement: {professeur_selected} {classe_selected} {discipline_selected}")
+    #     sql_add_enseignement()
+    #     sheet_enseignements.destroy()
+    #     afficher_enseignements()
+    # elif professeur_selected and classe_selected and discipline_selected:
+    #     messagebox.showerror("Ajout impossible", "Cet enseignement existe déjà")
+
+    
+    
         
 # ------------------------------------------------------------------------------
 # Application
@@ -1330,14 +1375,18 @@ f7 = tk.Frame(notebook, width=800, height=600)  # frame pour les évaluations
 frame_annees = tk.Frame(f6)
 frame_periodes = tk.Frame(f6)
 
-button_add_enseignement = tk.Button(f5, text='Filtrer mes enseignements',
+button_mes_enseignements = tk.Button(f5, text='Filtrer mes enseignements',
                                     command=filtrer_mes_enseignements)
 
+
+button_add_evaluation = tk.Button(f7, text='Ajouter',
+                                    command=ajouter_evaluation)
 
 notebook.add(f0, text="Mon compte")
 
 notebook.grid(row=0, column=0, sticky="nswe")
-button_add_enseignement.grid(row=2,column=0)
+button_mes_enseignements.grid(row=2, column=0)
+button_add_evaluation.grid(row=2, column=0)
 
 afficher_IHM_connexion()
 
