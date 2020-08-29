@@ -79,10 +79,20 @@ def select_enseignement(response):
     discipline_selected = (selected_discipline_id, nom_discipline)
     selected_classe_id = sql_classe_id(nom_classe, annee_classe)
     classe_selected = (selected_classe_id, nom_classe)
+    appliquer_selections()
+
+def appliquer_selections():
+    """
+    Rafraîchi l'affichage des onglets Enseignements et Evaluations suivant les sélections en cours
+    """
     frame_selection_enseignements.destroy()    
     afficher_selections_enseignements()
     sheet_enseignements.destroy()
     afficher_enseignements()
+    frame_selection_evaluations.destroy()
+    afficher_selections_evaluations()
+    sheet_evaluations.destroy()
+    afficher_evaluations()
     
 def select_classe(response):
     """
@@ -91,10 +101,7 @@ def select_classe(response):
     global classe_selected
     index = response[1]
     classe_selected = (classe_id[index], classe_Name[index])
-    frame_selection_enseignements.destroy()    
-    afficher_selections_enseignements()
-    sheet_enseignements.destroy()
-    afficher_enseignements()
+    appliquer_selections()
     
 def deselect_classe():
     """
@@ -102,11 +109,7 @@ def deselect_classe():
     """
     global classe_selected
     classe_selected = None
-    frame_selection_enseignements.destroy()    
-    afficher_selections_enseignements()
-    sheet_enseignements.destroy()
-    afficher_enseignements()
-    
+    appliquer_selections()    
 
 def select_professeur(response):
     """
@@ -116,10 +119,7 @@ def select_professeur(response):
     print(response)
     index = response[1]  # index dans le tableau affiché pas dans la table Professeur
     professeur_selected = (professeur_id[index], prof_Name[index])
-    frame_selection_enseignements.destroy()
-    afficher_selections_enseignements()
-    sheet_enseignements.destroy()
-    afficher_enseignements()
+    appliquer_selections()
     
 def deselect_prof():
     """
@@ -127,11 +127,7 @@ def deselect_prof():
     """
     global professeur_selected
     professeur_selected = None
-    frame_selection_enseignements.destroy()    
-    afficher_selections_enseignements()
-    sheet_enseignements.destroy()
-    afficher_enseignements()
-
+    appliquer_selections()
     
 def select_discipline(response):
     """
@@ -140,10 +136,7 @@ def select_discipline(response):
     global discipline_selected
     index = response[1]
     discipline_selected = (discipline_id[index], disc_Name[index][0])
-    frame_selection_enseignements.destroy()    
-    afficher_selections_enseignements()
-    sheet_enseignements.destroy()
-    afficher_enseignements()
+    appliquer_selections()
     
 def deselect_discipline():
     """
@@ -151,11 +144,7 @@ def deselect_discipline():
     """
     global discipline_selected
     discipline_selected = None
-    frame_selection_enseignements.destroy()    
-    afficher_selections_enseignements()
-    sheet_enseignements.destroy()
-    afficher_enseignements()
-
+    appliquer_selections()
     
 # ------------------------------------------------------------------------------
 # AFFICHAGE NOTEBOOK
@@ -180,6 +169,7 @@ def afficher_notebook_professeur():
     afficher_annees_et_periodes()
     afficher_selections_enseignements()
     afficher_enseignements()
+    afficher_selections_evaluations()
     afficher_evaluations()
 
 
@@ -232,8 +222,8 @@ def sql_read_role():
     except Error as e:
         print("Error while connecting to MySQL", e)
         messagebox.showwarning("Erreur de connexion", "Identifiant ou mot de passe non valide")
+
     
-        
 def sql_read_professeur():
     """
     Se connecte à Mysql et retourne les données concernant le professeur à partir de la table Professeur. 
@@ -288,7 +278,7 @@ def sql_professeur_id(nom, prenom):
     except Error as e:
         print("Error while connecting to MySQL", e)
         messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
-        
+
 
 def afficher_compte_professeur():
     """
@@ -437,6 +427,7 @@ def change_password():
     frame_new_password.grid_columnconfigure(3, minsize=100)
     
     frame_new_password.grid()
+
     
 def annuler_new_password():
     """
@@ -473,8 +464,7 @@ def sql_save_compte_admin():
     except Error as e:
         print("Error while connecting to MySQL", e)
 
-        
-            
+
 def deconnexion():
     """
     Déconnexion du compte et retour à l'IHM de connexion 
@@ -487,6 +477,7 @@ def deconnexion():
     notebook.hide(5)  # enseignements    
     notebook.hide(6)  # années scolaires 
     afficher_IHM_connexion()
+
 
 def afficher_IHM_connexion():
     """
@@ -595,6 +586,7 @@ def sql_discipline_id(nom):
         print("Error while connecting to MySQL", e)
         messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
 
+
 def afficher_disciplines():
     """
     Affiche un tableau de type tableur avec toutes les disciplines (IHM)
@@ -674,6 +666,7 @@ def sql_read_professeurs():
         print("Error while connecting to MySQL", e)
     return (professeur_id, prof_Name, prof_Print)
 
+
 def afficher_professeurs():
     """
     Affiche un tableau de type tableur avec toutes les professeurs (IHM)
@@ -746,7 +739,6 @@ def sql_read_eleves():
         return (eleve_id, eleves_Name, eleves_Print)
     except Error as e:
         print("Error while connecting to MySQL", e)
-
 
 
 def afficher_eleves():
@@ -824,9 +816,6 @@ def _charger_classes():
     return (classe_id, classe_Name, classe_Print)
 
 
-
-
-
 def sql_classe_id(nom, annee):
     """
     Se connecte à Mysql et retourne le numéro d'enregistrement d'une classe à partir de la table Classe. 
@@ -853,12 +842,6 @@ def sql_classe_id(nom, annee):
     except Error as e:
         print("Error while connecting to MySQL", e)
         messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
-
-
-
-
-
-
 
 
 def afficher_classes():
@@ -1171,7 +1154,7 @@ def afficher_selections_enseignements():
     Affiche le professeur, la classe et la discipline sélectionnées dans l'IHM Enseignements
     """
     global frame_selection_enseignements
-    # print((professeur_selected, classe_selected, discipline_selected))
+    print('Sélection:',(professeur_selected, classe_selected, discipline_selected))
     frame_selection_enseignements = tk.LabelFrame(f5, text=' (id SQL) Sélection ')
     frame_selection_enseignements.grid(row=0, column=0)
     
@@ -1290,7 +1273,35 @@ def afficher_evaluations():
     sheet_evaluations.grid(row=1, column=0)
 
 
+def afficher_selections_evaluations():
+    """
+    Affiche le professeur, la classe et la discipline sélectionnées dans l'IHM Evaluations
+    """
+    global frame_selection_evaluations
+    print('Sélection:',(professeur_selected, classe_selected, discipline_selected))
+    frame_selection_evaluations = tk.LabelFrame(f7, text=' (id SQL) Sélection ')
+    frame_selection_evaluations.grid(row=0, column=0)
+    
+    lbl_professeur = tk.Label(frame_selection_evaluations, text = 'Professeur:')
+    lbl_professeur.grid(row=0, column=0, sticky=tk.E)
+    lbl_professeur_selected = tk.Label(frame_selection_evaluations, text = professeur_selected)
+    lbl_professeur_selected.grid(row=0, column=1, sticky=tk.W)
+    button_deselect_prof = tk.Button(frame_selection_evaluations, text="Désélectionner", command=deselect_prof)
+    button_deselect_prof.grid(row=0,column=2)
 
+    lbl_classe = tk.Label(frame_selection_evaluations, text = 'Classe:')
+    lbl_classe.grid(row=1, column=0, sticky=tk.E)
+    lbl_classe_selected = tk.Label(frame_selection_evaluations, text = classe_selected)
+    lbl_classe_selected.grid(row=1, column=1, sticky=tk.W)
+    button_deselect_classe = tk.Button(frame_selection_evaluations, text="Désélectionner", command=deselect_classe)
+    button_deselect_classe.grid(row=1,column=2)
+
+    lbl_discipline = tk.Label(frame_selection_evaluations, text = 'Discipline:')
+    lbl_discipline.grid(row=2, column=0, sticky=tk.E)
+    lbl_discipline_selected = tk.Label(frame_selection_evaluations, text = discipline_selected)
+    lbl_discipline_selected.grid(row=2, column=1, sticky=tk.W)
+    button_deselect_discipline = tk.Button(frame_selection_evaluations, text="Désélectionner", command=deselect_discipline)
+    button_deselect_discipline.grid(row=2,column=2)
 
 
 
