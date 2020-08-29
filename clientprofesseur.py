@@ -72,18 +72,18 @@ def select_enseignement(response):
     enseignements_traduits = sql_traduis_enseignements()
     enseignement_selected = enseignements_traduits[index]
     print(enseignement_selected)
-    selected_professeur_id = sql_professeur_id(enseignement_selected[0], enseignement_selected[1])
-    professeur_selected = (selected_professeur_id, enseignement_selected[0])
+    nom_professeur, prenom_professeur, nom_classe, annee_classe, nom_discipline = enseignement_selected
+    selected_professeur_id = sql_professeur_id(nom_professeur, prenom_professeur)
+    professeur_selected = (selected_professeur_id, nom_professeur)
+    selected_discipline_id = sql_discipline_id(nom_discipline)
+    discipline_selected = (selected_discipline_id, nom_discipline)
+    selected_classe_id = sql_classe_id(nom_classe, annee_classe)
+    classe_selected = (selected_classe_id, nom_classe)
     frame_selection_enseignements.destroy()    
     afficher_selections_enseignements()
     sheet_enseignements.destroy()
     afficher_enseignements()
-
-
-
     
-
-
 def select_classe(response):
     """
     Mémorise la classe par clic dans la case du tableau des classes
@@ -156,65 +156,6 @@ def deselect_discipline():
     sheet_enseignements.destroy()
     afficher_enseignements()
 
-def afficher_selections_enseignements():
-    """
-    Affiche le professeur, la classe et la discipline sélectionnées dans l'IHM Enseignements
-    """
-    global frame_selection_enseignements
-    # print((professeur_selected, classe_selected, discipline_selected))
-    frame_selection_enseignements = tk.LabelFrame(f5, text=' (id SQL) Sélection ')
-    frame_selection_enseignements.grid(row=0, column=0)
-    
-    lbl_professeur = tk.Label(frame_selection_enseignements, text = 'Professeur:')
-    lbl_professeur.grid(row=0, column=0, sticky=tk.E)
-    lbl_professeur_selected = tk.Label(frame_selection_enseignements, text = professeur_selected)
-    lbl_professeur_selected.grid(row=0, column=1, sticky=tk.W)
-    button_deselect_prof = tk.Button(frame_selection_enseignements, text="Désélectionner", command=deselect_prof)
-    button_deselect_prof.grid(row=0,column=2)
-
-    lbl_classe = tk.Label(frame_selection_enseignements, text = 'Classe:')
-    lbl_classe.grid(row=1, column=0, sticky=tk.E)
-    lbl_classe_selected = tk.Label(frame_selection_enseignements, text = classe_selected)
-    lbl_classe_selected.grid(row=1, column=1, sticky=tk.W)
-    button_deselect_classe = tk.Button(frame_selection_enseignements, text="Désélectionner", command=deselect_classe)
-    button_deselect_classe.grid(row=1,column=2)
-
-    lbl_discipline = tk.Label(frame_selection_enseignements, text = 'Discipline:')
-    lbl_discipline.grid(row=2, column=0, sticky=tk.E)
-    lbl_discipline_selected = tk.Label(frame_selection_enseignements, text = discipline_selected)
-    lbl_discipline_selected.grid(row=2, column=1, sticky=tk.W)
-    button_deselect_discipline = tk.Button(frame_selection_enseignements, text="Désélectionner", command=deselect_discipline)
-    button_deselect_discipline.grid(row=2,column=2)
-
-# def afficher_selections_evaluations():
-#     """
-#     Affiche l'enseignement et la période sélectionnés dans l'IHM Evaluations
-#     """
-#     global frame_selection_evaluations
-#     # print((professeur_selected, classe_selected, discipline_selected))
-#     frame_selection_enseignements = tk.LabelFrame(f5, text=' (id SQL) Sélection ')
-#     frame_selection_enseignements.grid(row=0, column=0)
-    
-#     lbl_professeur = tk.Label(frame_selection_enseignements, text = 'Professeur:')
-#     lbl_professeur.grid(row=0, column=0, sticky=tk.E)
-#     lbl_professeur_selected = tk.Label(frame_selection_enseignements, text = professeur_selected)
-#     lbl_professeur_selected.grid(row=0, column=1, sticky=tk.W)
-#     button_deselect_prof = tk.Button(frame_selection_enseignements, text="Désélectionner", command=deselect_prof)
-#     button_deselect_prof.grid(row=0,column=2)
-
-#     lbl_classe = tk.Label(frame_selection_enseignements, text = 'Classe:')
-#     lbl_classe.grid(row=1, column=0, sticky=tk.E)
-#     lbl_classe_selected = tk.Label(frame_selection_enseignements, text = classe_selected)
-#     lbl_classe_selected.grid(row=1, column=1, sticky=tk.W)
-#     button_deselect_classe = tk.Button(frame_selection_enseignements, text="Désélectionner", command=deselect_classe)
-#     button_deselect_classe.grid(row=1,column=2)
-
-#     lbl_discipline = tk.Label(frame_selection_enseignements, text = 'Discipline:')
-#     lbl_discipline.grid(row=2, column=0, sticky=tk.E)
-#     lbl_discipline_selected = tk.Label(frame_selection_enseignements, text = discipline_selected)
-#     lbl_discipline_selected.grid(row=2, column=1, sticky=tk.W)
-#     button_deselect_discipline = tk.Button(frame_selection_enseignements, text="Désélectionner", command=deselect_discipline)
-#     button_deselect_discipline.grid(row=2,column=2)
     
 # ------------------------------------------------------------------------------
 # AFFICHAGE NOTEBOOK
@@ -627,7 +568,32 @@ def sql_read_disciplines():
         print("Error while connecting to MySQL", e)
 
 
-
+def sql_discipline_id(nom):
+    """
+    Se connecte à Mysql et retourne le numéro d'enregistrement d'une discipline à partir de la table Discipline. 
+    """
+    try:
+        print(f"Try to connect to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print(f"Connected to MySQL Server version {db_Info}")
+        print("sql_discipline_id")
+        cursor = connection.cursor()
+        sql = "SELECT discipline_id FROM Discipline WHERE  nom=%s"
+        tuple_data = (nom,)
+        cursor.execute(sql, tuple_data)
+        records = cursor.fetchall()
+        print(records)
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        return(records[0][0])
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+        messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
 
 def afficher_disciplines():
     """
@@ -707,12 +673,6 @@ def sql_read_professeurs():
     except Error as e:
         print("Error while connecting to MySQL", e)
     return (professeur_id, prof_Name, prof_Print)
-
-
-
-
-
-
 
 def afficher_professeurs():
     """
@@ -862,6 +822,44 @@ def _charger_classes():
     except Error as e:
         print("Error while connecting to MySQL", e)
     return (classe_id, classe_Name, classe_Print)
+
+
+
+
+
+def sql_classe_id(nom, annee):
+    """
+    Se connecte à Mysql et retourne le numéro d'enregistrement d'une classe à partir de la table Classe. 
+    """
+    try:
+        print(f"Try to connect to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print(f"Connected to MySQL Server version {db_Info}")
+        print("sql_classe_id")
+        cursor = connection.cursor()
+        sql = "SELECT Classe.classe_id FROM Classe INNER JOIN Anneescolaire WHERE  Classe.nom=%s AND Anneescolaire.nom=%s"
+        tuple_data = (nom, annee)
+        cursor.execute(sql, tuple_data)
+        records = cursor.fetchall()
+        # print(records)
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        return(records[0][0])
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+        messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
+
+
+
+
+
+
+
 
 def afficher_classes():
     """
@@ -1134,31 +1132,6 @@ def sql_traduis_enseignements():
         messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
 
 
-def sql_add_enseignement():
-    """
-    Se connecte à Mysql et ajoute l'enseignement à partir du professeur, de la classe et de la discipline sélectionnés.
-    """
-    sql = "INSERT INTO Enseigner (professeur_id, classe_id, discipline_id) VALUES (%s, %s, %s);"
-    tuple_selection = (professeur_selected[0], classe_selected[0], discipline_selected[0])
-    try:
-        print(f"Try to connect to MySQL Server as {GN_user}")
-        connection = mysql.connector.connect(host=GN_host,
-                                             database=GN_database,
-                                             user=GN_user,
-                                             password=GN_password)
-        db_Info = connection.get_server_info()
-        print(f"Connected to MySQL Server version {db_Info}")
-        print("sql_add_enseignement")
-        cursor = connection.cursor()
-        cursor.execute(sql, tuple_selection)
-        connection.commit()
-        cursor.close()
-        connection.close()
-        print("MySQL connection is closed")
-    except Error as e:
-        print("Error while connecting to MySQL", e)
-        messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
-
         
         
 def afficher_enseignements():
@@ -1190,11 +1163,42 @@ def afficher_enseignements():
                                        "paste",
                                        "delete",
                                        "undo"))
-    
 
-def afficher_mes_enseignements():
+
+
+def afficher_selections_enseignements():
     """
-    Affiche les enseignements du professeur utilisateur
+    Affiche le professeur, la classe et la discipline sélectionnées dans l'IHM Enseignements
+    """
+    global frame_selection_enseignements
+    # print((professeur_selected, classe_selected, discipline_selected))
+    frame_selection_enseignements = tk.LabelFrame(f5, text=' (id SQL) Sélection ')
+    frame_selection_enseignements.grid(row=0, column=0)
+    
+    lbl_professeur = tk.Label(frame_selection_enseignements, text = 'Professeur:')
+    lbl_professeur.grid(row=0, column=0, sticky=tk.E)
+    lbl_professeur_selected = tk.Label(frame_selection_enseignements, text = professeur_selected)
+    lbl_professeur_selected.grid(row=0, column=1, sticky=tk.W)
+    button_deselect_prof = tk.Button(frame_selection_enseignements, text="Désélectionner", command=deselect_prof)
+    button_deselect_prof.grid(row=0,column=2)
+
+    lbl_classe = tk.Label(frame_selection_enseignements, text = 'Classe:')
+    lbl_classe.grid(row=1, column=0, sticky=tk.E)
+    lbl_classe_selected = tk.Label(frame_selection_enseignements, text = classe_selected)
+    lbl_classe_selected.grid(row=1, column=1, sticky=tk.W)
+    button_deselect_classe = tk.Button(frame_selection_enseignements, text="Désélectionner", command=deselect_classe)
+    button_deselect_classe.grid(row=1,column=2)
+
+    lbl_discipline = tk.Label(frame_selection_enseignements, text = 'Discipline:')
+    lbl_discipline.grid(row=2, column=0, sticky=tk.E)
+    lbl_discipline_selected = tk.Label(frame_selection_enseignements, text = discipline_selected)
+    lbl_discipline_selected.grid(row=2, column=1, sticky=tk.W)
+    button_deselect_discipline = tk.Button(frame_selection_enseignements, text="Désélectionner", command=deselect_discipline)
+    button_deselect_discipline.grid(row=2,column=2)
+
+def filtrer_mes_enseignements():
+    """
+    Affiche les enseignements du professeur utilisateur en conservant les autres filtres éventuels.
     """
     global professeur_selected
     index = current_user_id-1
@@ -1203,7 +1207,6 @@ def afficher_mes_enseignements():
     afficher_selections_enseignements()
     sheet_enseignements.destroy()
     afficher_enseignements()
-    
 
 # ------------------------------------------------------------------------------
 # EVALUATIONS
@@ -1316,8 +1319,8 @@ f7 = tk.Frame(notebook, width=800, height=600)  # frame pour les évaluations
 frame_annees = tk.Frame(f6)
 frame_periodes = tk.Frame(f6)
 
-button_add_enseignement = tk.Button(f5, text='Mes enseignements',
-                                    command=afficher_mes_enseignements)
+button_add_enseignement = tk.Button(f5, text='Filtrer mes enseignements',
+                                    command=filtrer_mes_enseignements)
 
 
 notebook.add(f0, text="Mon compte")
