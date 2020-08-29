@@ -9,7 +9,7 @@ Enseigner: #professeur_id->Professeur->professeur_id, _#discipline_id->Disciplin
 :
 Professeur: professeur_id, prenom, nom, titre
 :::
-Evaluation: evaluation_id, Date_Controle, Date_Visible, #discipline_id->Discipline->discipline_id, #professeur_id->Professeur->professeur_id, #classe_id->Classe->classe_id, #annee_id->AnneeScolaire->annee_id, #periode_id->Periode->periode_id
+Evaluation: evaluation_id, nom, Date_Controle, Date_Visible, #discipline_id->Discipline->discipline_id, #professeur_id->Professeur->professeur_id, #classe_id->Classe->classe_id, #annee_id->AnneeScolaire->annee_id, #periode_id->Periode->periode_id
 :::
 
 

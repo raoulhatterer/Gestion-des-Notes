@@ -24,6 +24,7 @@ CREATE TABLE `PROFESSEUR` (
 
 CREATE TABLE `EVALUATION` (
   `evaluation_id` VARCHAR(42),
+  `nom` VARCHAR(42),
   `date_controle` VARCHAR(42),
   `date_visible` VARCHAR(42),
   `discipline_id` VARCHAR(42),

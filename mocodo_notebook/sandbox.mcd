@@ -6,7 +6,7 @@ Porter, 11 Evaluation, 0N Discipline
 Enseigner,  0N Professeur, 0N Discipline, 1N Classe
 Professeur: professeur_id, prenom, nom, titre
 Realiser, 11 Evaluation,  0N Professeur
-Evaluation: evaluation_id, Date_Controle, Date_Visible
+Evaluation: evaluation_id, nom, Date_Controle, Date_Visible
 
 :
     

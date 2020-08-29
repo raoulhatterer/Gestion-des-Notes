@@ -1243,7 +1243,7 @@ def sql_traduis_evaluations():
     Se connecte à Mysql et retourne les données traduites concernant les évaluations réalisées par le professeur connecté
     """
 
-    sql = "SELECT Evaluation.evaluation_id, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.professeur_id=%s  AND Evaluation.Classe_id=Enseigner.classe_id ;"
+    sql = "SELECT Evaluation.evaluation_id, Evaluation.nom, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.professeur_id=%s  AND Evaluation.Classe_id=Enseigner.classe_id ;"
     tuple_selection=(current_user_id,)
     try:
         print(f"Try to connect to MySQL Server as {GN_user}")
@@ -1273,7 +1273,7 @@ def afficher_evaluations():
     global sheet_evaluations
     evaluations = sql_read_evaluations()
     print("Evaluations:")
-    print("date_controle, date_visible, discipline_id, professeur_id, classe_id, periode_id")
+    print("nom, date_controle, date_visible, discipline_id, professeur_id, classe_id, periode_id")
     for row in evaluations:
         print(row)
     evaluations_traduites = sql_traduis_evaluations()
@@ -1281,7 +1281,7 @@ def afficher_evaluations():
     frame_evaluations.grid()
     sheet_evaluations = Sheet(f7,
                               data=evaluations_traduites,
-                              # headers=["Nom Professeur", "Prénom", "Classe", "Année scolaire", "Discipline"],
+                              headers=["Evaluation_id", "Nom", "Date du contrôle", "Date Publication", "Discipline", "Classe", "Année scolaire", "Période"],
                               set_all_heights_and_widths = True,
                               height=500,
                               width=800)
@@ -1295,39 +1295,93 @@ def afficher_selections_evaluations():
     """
     global frame_selection_evaluations
     print('Sélection:',(professeur_selected, classe_selected, discipline_selected))
-    frame_selection_evaluations = tk.LabelFrame(f7, text=' (id SQL) Sélection ')
+    frame_top_evaluations = tk.Frame(f7)
+    frame_top_evaluations.grid(row=0, column=0)
+    frame_selection_evaluations = tk.LabelFrame(frame_top_evaluations, text=' (id SQL) Sélection ')
     frame_selection_evaluations.grid(row=0, column=0)
-    
+    # Ligne 1
     lbl_professeur = tk.Label(frame_selection_evaluations, text = 'Professeur:')
     lbl_professeur.grid(row=0, column=0, sticky=tk.E)
     lbl_professeur_selected = tk.Label(frame_selection_evaluations, text = professeur_selected)
     lbl_professeur_selected.grid(row=0, column=1, sticky=tk.W)
     button_deselect_prof = tk.Button(frame_selection_evaluations, text="Désélectionner", command=deselect_prof)
     button_deselect_prof.grid(row=0,column=2)
-
+    # Ligne 2
     lbl_classe = tk.Label(frame_selection_evaluations, text = 'Classe:')
     lbl_classe.grid(row=1, column=0, sticky=tk.E)
     lbl_classe_selected = tk.Label(frame_selection_evaluations, text = classe_selected)
     lbl_classe_selected.grid(row=1, column=1, sticky=tk.W)
     button_deselect_classe = tk.Button(frame_selection_evaluations, text="Désélectionner", command=deselect_classe)
     button_deselect_classe.grid(row=1,column=2)
-
+    # Ligne 3
     lbl_discipline = tk.Label(frame_selection_evaluations, text = 'Discipline:')
     lbl_discipline.grid(row=2, column=0, sticky=tk.E)
     lbl_discipline_selected = tk.Label(frame_selection_evaluations, text = discipline_selected)
     lbl_discipline_selected.grid(row=2, column=1, sticky=tk.W)
     button_deselect_discipline = tk.Button(frame_selection_evaluations, text="Désélectionner", command=deselect_discipline)
     button_deselect_discipline.grid(row=2,column=2)
-
+    # Ligne 4
     lbl_periode = tk.Label(frame_selection_evaluations, text = 'Période:')
     lbl_periode.grid(row=3, column=0, sticky=tk.E)
     lbl_periode_selected = tk.Label(frame_selection_evaluations, text = periode_selected)
     lbl_periode_selected.grid(row=3, column=1, sticky=tk.W)
     button_deselect_periode = tk.Button(frame_selection_evaluations, text="Désélectionner", command=deselect_periode)
-    button_deselect_periode.grid(row=3,column=2)    
+    button_deselect_periode.grid(row=3,column=2)
+    frame_top_evaluations.grid_columnconfigure(1, minsize=100)    
+    # Frame Paramètres
+    frame_parametre_evaluation = tk.LabelFrame(frame_top_evaluations, text='Paramètres')
+    frame_parametre_evaluation.grid(row=0, column=2)
+    # Ligne 1
+    lbl_professeur = tk.Label(frame_parametre_evaluation, text = 'Professeur:')
+    lbl_professeur.grid(row=0, column=0, sticky=tk.E)
+    lbl_professeur_selected = tk.Label(frame_parametre_evaluation, text = professeur_selected)
+    lbl_professeur_selected.grid(row=0, column=1, sticky=tk.W)
+    button_deselect_prof = tk.Button(frame_parametre_evaluation, text="Désélectionner", command=deselect_prof)
+    button_deselect_prof.grid(row=0,column=2)
+    # Ligne 2
+    lbl_classe = tk.Label(frame_parametre_evaluation, text = 'Classe:')
+    lbl_classe.grid(row=1, column=0, sticky=tk.E)
+    lbl_classe_selected = tk.Label(frame_parametre_evaluation, text = classe_selected)
+    lbl_classe_selected.grid(row=1, column=1, sticky=tk.W)
+    button_deselect_classe = tk.Button(frame_parametre_evaluation, text="Désélectionner", command=deselect_classe)
+    button_deselect_classe.grid(row=1,column=2)
+    # Ligne 3
+    lbl_discipline = tk.Label(frame_parametre_evaluation, text = 'Discipline:')
+    lbl_discipline.grid(row=2, column=0, sticky=tk.E)
+    lbl_discipline_selected = tk.Label(frame_parametre_evaluation, text = discipline_selected)
+    lbl_discipline_selected.grid(row=2, column=1, sticky=tk.W)
+    button_deselect_discipline = tk.Button(frame_parametre_evaluation, text="Désélectionner", command=deselect_discipline)
+    button_deselect_discipline.grid(row=2,column=2)
 
 
 
+def sql_add_evaluation():
+    """
+    Se connecte à Mysql et ajoute l'évaluation à partir de la discipline, du professeur, de la classe et de la période sélectionnés.
+    """
+    sql = "INSERT INTO Evaluation (date_controle, date_visible, discipline_id, professeur_id, classe_id, periode_id) VALUES (%s, %s, %s, %s);"
+    tuple_selection = ('2020-1-1', '2020-1-10', discipline_selected[0], professeur_selected[0], classe_selected[0], periode_selected[0])
+    try:
+        print(f"Try to connect to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print(f"Connected to MySQL Server version {db_Info}")
+        print("sql_add_evaluation")
+        cursor = connection.cursor()
+        cursor.execute(sql, tuple_selection)
+        connection.commit()
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+        messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
+
+
+    
 def ajouter_evaluation():
     """
     Crée une évaluation à partir d'un enseignement assuré par le professeur connecté

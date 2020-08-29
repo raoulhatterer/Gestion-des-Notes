@@ -508,6 +508,7 @@ show warnings;
 
 CREATE TABLE Evaluation (
   evaluation_id int NOT NULL AUTO_INCREMENT,
+  nom VARCHAR(20) COLLATE utf8_bin NOT NULL,  
   date_controle DATE DEFAULT '2020-10-1',
   date_visible DATE DEFAULT '2020-10-11',
   discipline_id INT,
@@ -519,12 +520,14 @@ CREATE TABLE Evaluation (
 
 -- Remplissage aléatoire de la table Evaluation
 -- INSERT INTO Evaluation (date_controle, date_visible, discipline_id, professeur_id, classe_id, periode_id)  VALUES
--- ('2020-10-5', '2020-10-12', 2, 2, 3, 1);
+-- ('C1', 2020-10-5', '2020-10-12', 2, 2, 3, 1);
 
 DELIMITER $$  
 CREATE PROCEDURE FILL_EVALUATION()
 BEGIN
   DECLARE done INT DEFAULT FALSE;
+  DECLARE v_nom VARCHAR(20);
+  DECLARE v_a INT DEFAULT 1;
   DECLARE v_professeur INT;
   DECLARE v_discipline INT;
   DECLARE v_classe INT;
@@ -536,9 +539,11 @@ BEGIN
     IF done THEN
       LEAVE read_loop;
     END IF;
-    INSERT INTO Evaluation (discipline_id, professeur_id, classe_id, periode_id) VALUES (v_discipline, v_professeur, v_classe, 1);
-    INSERT INTO Evaluation (discipline_id, professeur_id, classe_id, periode_id) VALUES (v_discipline, v_professeur, v_classe, 2);
-    INSERT INTO Evaluation (discipline_id, professeur_id, classe_id, periode_id) VALUES (v_discipline, v_professeur, v_classe, 3);    
+    SET v_nom=CONCAT('C',CAST(v_a AS CHAR));
+    INSERT INTO Evaluation (nom, discipline_id, professeur_id, classe_id, periode_id) VALUES (v_nom, v_discipline, v_professeur, v_classe, 1);
+    INSERT INTO Evaluation (nom, discipline_id, professeur_id, classe_id, periode_id) VALUES (v_nom, v_discipline, v_professeur, v_classe, 2);
+    INSERT INTO Evaluation (nom, discipline_id, professeur_id, classe_id, periode_id) VALUES (v_nom, v_discipline, v_professeur, v_classe, 3);
+    SET v_a=v_a+1;
   END LOOP;
   CLOSE cur1;
 
