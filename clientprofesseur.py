@@ -101,7 +101,6 @@ def select_classe(response):
     global classe_selected
     index = response[1]
     classe_selected = (classe_id[index], classe_Name[index])
-    afficher_eleves_classe()
     appliquer_selections()
 
     
@@ -157,6 +156,7 @@ def appliquer_selections():
     """
     Rafraîchi l'affichage des onglets Enseignements et Evaluations suivant les sélections en cours
     """
+    afficher_eleves_classe()
     frame_selection_enseignements.destroy()    
     afficher_selections_enseignements()
     sheet_enseignements.destroy()
@@ -1099,7 +1099,7 @@ def sql_traduis_enseignements():
     """
     if not(professeur_selected) and not(classe_selected) and not(discipline_selected):
         sql = "SELECT Professeur.nom,  Professeur.prenom, Classe.nom AS Classe, Anneescolaire.nom AS Annee, Discipline.nom AS Discipline FROM Enseigner JOIN Professeur ON Enseigner.professeur_id = Professeur.professeur_id JOIN Classe ON Enseigner.classe_id = Classe.classe_id JOIN Discipline ON Enseigner.discipline_id = Discipline.discipline_id JOIN Anneescolaire ON Classe.annee_id = Anneescolaire.annee_id;"
-        tuple_selection ="" 
+        tuple_selection = "" 
     elif professeur_selected and not(classe_selected) and not(discipline_selected):
         sql = "SELECT Professeur.nom,  Professeur.prenom, Classe.nom AS Classe, Anneescolaire.nom AS Annee, Discipline.nom AS Discipline FROM Enseigner JOIN Professeur ON Enseigner.professeur_id = Professeur.professeur_id JOIN Classe ON Enseigner.classe_id = Classe.classe_id JOIN Discipline ON Enseigner.discipline_id = Discipline.discipline_id JOIN Anneescolaire ON Classe.annee_id = Anneescolaire.annee_id WHERE Enseigner.professeur_id=%s;"
         tuple_selection = (professeur_selected[0],)
@@ -1251,8 +1251,54 @@ def sql_traduis_evaluations():
     Se connecte à Mysql et retourne les données traduites concernant les évaluations réalisées par le professeur connecté
     """
 
-    sql = "SELECT Evaluation.evaluation_id, Evaluation.nom, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.professeur_id=%s  AND Evaluation.Classe_id=Enseigner.classe_id ;"
-    tuple_selection=(current_user_id,)
+    if not(discipline_selected) and not(professeur_selected) and not(classe_selected) and not(periode_selected):  # 0000 
+        sql = "SELECT Evaluation.evaluation_id, Professeur.nom, Evaluation.nom, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Professeur ON Evaluation.professeur_id=Professeur.professeur_id INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.classe_id=Enseigner.classe_id ORDER by Evaluation.evaluation_id ASC;"
+        tuple_selection = ""
+    elif not(discipline_selected) and not(professeur_selected) and not(classe_selected) and periode_selected:  # 0001 
+        sql = "SELECT Evaluation.evaluation_id, Professeur.nom, Evaluation.nom, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Professeur ON Evaluation.professeur_id=Professeur.professeur_id INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.periode_id=%s  AND Evaluation.classe_id=Enseigner.classe_id ;"
+        tuple_selection=(periode_selected[0] ,)
+    elif not(discipline_selected) and not(professeur_selected) and classe_selected and not(periode_selected):  # 0010 
+        sql = "SELECT Evaluation.evaluation_id, Professeur.nom, Evaluation.nom, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Professeur ON Evaluation.professeur_id=Professeur.professeur_id INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.classe_id=%s  AND Evaluation.classe_id=Enseigner.classe_id ;"
+        tuple_selection=(classe_selected[0] ,)
+    elif not(discipline_selected) and not(professeur_selected) and classe_selected and periode_selected:  # 0011 
+        sql = "SELECT Evaluation.evaluation_id, Professeur.nom, Evaluation.nom, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Professeur ON Evaluation.professeur_id=Professeur.professeur_id INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.classe_id=%s  and Evaluation.periode_id=%s AND Evaluation.classe_id=Enseigner.classe_id ;"
+        tuple_selection=(classe_selected[0] , periode_selected[0])
+    elif not(discipline_selected) and professeur_selected and not(classe_selected) and not(periode_selected):  # 0100
+        sql = "SELECT Evaluation.evaluation_id, Professeur.nom, Evaluation.nom, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Professeur ON Evaluation.professeur_id=Professeur.professeur_id INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.professeur_id=%s  AND Evaluation.classe_id=Enseigner.classe_id ;"
+        tuple_selection=(professeur_selected[0] ,)
+    elif not(discipline_selected) and professeur_selected and  not(classe_selected) and periode_selected:  # 0101
+        sql = "SELECT Evaluation.evaluation_id, Professeur.nom, Evaluation.nom, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Professeur ON Evaluation.professeur_id=Professeur.professeur_id INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.professeur_id=%s  AND Evaluation.classe_id=Enseigner.classe_id AND Evaluation.periode_id=%s;"
+        tuple_selection=(professeur_selected[0] , periode_selected[0])
+    elif not(discipline_selected) and professeur_selected and classe_selected and not(periode_selected):  # 0110 
+        sql = "SELECT Evaluation.evaluation_id, Professeur.nom, Evaluation.nom, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Professeur ON Evaluation.professeur_id=Professeur.professeur_id INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.professeur_id=%s  AND Evaluation.classe_id=Enseigner.classe_id AND Evaluation.classe_id=%s;"
+        tuple_selection=(professeur_selected[0] , classe_selected[0])
+    elif not(discipline_selected) and professeur_selected and classe_selected and periode_selected:  # 0111
+        sql = "SELECT Evaluation.evaluation_id, Professeur.nom, Evaluation.nom, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Professeur ON Evaluation.professeur_id=Professeur.professeur_id INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.professeur_id=%s  AND Evaluation.classe_id=Enseigner.classe_id AND Evaluation.classe_id=%s AND Evaluation.periode_id=%s;"
+        tuple_selection=(professeur_selected[0] , classe_selected[0], periode_selected[0])
+    elif discipline_selected and not(professeur_selected) and not(classe_selected) and not(periode_selected):  # 000 
+        sql = "SELECT Evaluation.evaluation_id, Professeur.nom, Evaluation.nom, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Professeur ON Evaluation.professeur_id=Professeur.professeur_id INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.discipline_id=%s AND Evaluation.classe_id=Enseigner.classe_id ORDER by Evaluation.evaluation_id ASC;"
+        tuple_selection = (discipline_selected[0],)
+    elif discipline_selected and not(professeur_selected) and not(classe_selected) and periode_selected:  # 1001 
+        sql = "SELECT Evaluation.evaluation_id, Professeur.nom, Evaluation.nom, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Professeur ON Evaluation.professeur_id=Professeur.professeur_id INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.discipline_id=%s AND Evaluation.periode_id=%s  AND Evaluation.classe_id=Enseigner.classe_id ;"
+        tuple_selection=(discipline_selected[0], periode_selected[0])
+    elif discipline_selected and not(professeur_selected) and classe_selected and not(periode_selected):  # 1010 
+        sql = "SELECT Evaluation.evaluation_id, Professeur.nom, Evaluation.nom, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Professeur ON Evaluation.professeur_id=Professeur.professeur_id INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.discipline_id=%s AND Evaluation.classe_id=%s  AND Evaluation.classe_id=Enseigner.classe_id ;"
+        tuple_selection=(discipline_selected[0], classe_selected[0])
+    elif discipline_selected and not(professeur_selected) and classe_selected and periode_selected:  # 1011 
+        sql = "SELECT Evaluation.evaluation_id, Professeur.nom, Evaluation.nom, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Professeur ON Evaluation.professeur_id=Professeur.professeur_id INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.discipline_id=%s AND Evaluation.classe_id=%s  and Evaluation.periode_id=%s AND Evaluation.classe_id=Enseigner.classe_id ;"
+        tuple_selection=(discipline_selected[0], classe_selected[0], periode_selected[0])
+    elif discipline_selected and professeur_selected and not(classe_selected) and not(periode_selected):  # 1100
+        sql = "SELECT Evaluation.evaluation_id, Professeur.nom, Evaluation.nom, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Professeur ON Evaluation.professeur_id=Professeur.professeur_id INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.discipline_id=%s AND Evaluation.professeur_id=%s  AND Evaluation.classe_id=Enseigner.classe_id ;"
+        tuple_selection=(discipline_selected[0], professeur_selected[0])
+    elif discipline_selected and professeur_selected and  not(classe_selected) and periode_selected:  # 1101
+        sql = "SELECT Evaluation.evaluation_id, Professeur.nom, Evaluation.nom, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Professeur ON Evaluation.professeur_id=Professeur.professeur_id INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.discipline_id=%s AND Evaluation.professeur_id=%s  AND Evaluation.classe_id=Enseigner.classe_id AND Evaluation.periode_id=%s;"
+        tuple_selection=(discipline_selected[0], professeur_selected[0], periode_selected[0])
+    elif discipline_selected and professeur_selected and classe_selected and not(periode_selected):  # 1110 
+        sql = "SELECT Evaluation.evaluation_id, Professeur.nom, Evaluation.nom, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Professeur ON Evaluation.professeur_id=Professeur.professeur_id INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.discipline_id=%s AND Evaluation.professeur_id=%s  AND Evaluation.classe_id=Enseigner.classe_id AND Evaluation.classe_id=%s;"
+        tuple_selection=(discipline_selected[0], professeur_selected[0], classe_selected[0])
+    else:  # 1111
+        sql = "SELECT Evaluation.evaluation_id, Professeur.nom, Evaluation.nom, Evaluation.date_controle, Evaluation.date_visible, Discipline.nom, Classe.nom, Anneescolaire.nom, Periode.nom FROM Evaluation INNER JOIN Professeur ON Evaluation.professeur_id=Professeur.professeur_id INNER JOIN Enseigner ON Evaluation.professeur_id=Enseigner.professeur_id INNER JOIN Discipline  ON Evaluation.discipline_id = Discipline.discipline_id INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  INNER JOIN Anneescolaire ON Classe.annee_id=Anneescolaire.annee_id  INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id WHERE Evaluation.discipline_id=%s AND Evaluation.professeur_id=%s  AND Evaluation.classe_id=Enseigner.classe_id AND Evaluation.classe_id=%s AND Evaluation.periode_id=%s;"
+        tuple_selection=(discipline_selected[0], professeur_selected[0], classe_selected[0], periode_selected[0])
     try:
         print(f"Try to connect to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
@@ -1289,9 +1335,9 @@ def afficher_evaluations():
     frame_evaluations.grid()
     sheet_evaluations = Sheet(f7,
                               data=evaluations_traduites,
-                              headers=["Evaluation_id", "Nom", "Date du contrôle", "Date Publication", "Discipline", "Classe", "Année scolaire", "Période"],
+                              headers=["Evaluation_id", "Professeur", "Nom", "Date du contrôle", "Date Publication", "Discipline", "Classe", "Année scolaire", "Période"],
                               set_all_heights_and_widths = True,
-                              height=500,
+                              height=470,
                               width=800)
     sheet_evaluations.hide("row_index")
     sheet_evaluations.grid(row=1, column=0)
@@ -1415,6 +1461,14 @@ def ajouter_evaluation():
 
         
     
+def filtrer_mes_evaluations():
+    """
+    Affiche les évaluations du professeur utilisateur en conservant les autres filtres éventuels.
+    """
+    global professeur_selected
+    index = current_user_id-1
+    professeur_selected = (professeur_id[index], prof_Name[index])
+    appliquer_selections()
 
     
     
@@ -1446,12 +1500,16 @@ frame_periodes = tk.Frame(f6)
 button_mes_enseignements = tk.Button(f5, text='Filtrer mes enseignements',
                                     command=filtrer_mes_enseignements)
 
+button_mes_evaluations = tk.Button(f7, text='Filtrer mes évaluations',
+                                    command=filtrer_mes_evaluations)
+
 
 
 notebook.add(f0, text="Mon compte")
 
 notebook.grid(row=0, column=0, sticky="nswe")
 button_mes_enseignements.grid(row=2, column=0)
+button_mes_evaluations.grid(row=2, column=0)
 
 
 afficher_IHM_connexion()
