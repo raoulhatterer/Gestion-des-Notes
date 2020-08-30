@@ -5,6 +5,8 @@
 -- mysql -u root -p
 -- Dans l'invite de commande MariaDB> entrer:
 -- SOURCE ./initdb_gestiondesnotes.sql;
+-- puis: CALL initialiser;
+
 
 
 -- ------------------------------------------------
@@ -33,6 +35,7 @@ GRANT SELECT
 ON bd_gestion_des_notes.*
 TO role_professeur;
 
+-- Si création d'un client élève
 -- CREATE ROLE role_eleve;
 -- GRANT à définir
 -- TO role_eleve;
@@ -53,24 +56,11 @@ CREATE OR replace USER  noel_gest@localhost IDENTIFIED BY 'noel';
 GRANT role_gestionnaire TO noel_gest@localhost;
 SET DEFAULT ROLE role_gestionnaire FOR noel_gest@localhost;
 
--- CREATE OR replace USER  first_connection@localhost       
--- IDENTIFIED BY 'first_connection';                 
--- GRANT SELECT ON Administrateurs
--- TO first_connection@localhost;
--- GRANT SELECT ON Professeurs
--- TO first_connection@localhost;
--- GRANT SELECT ON Eleves
--- TO first_connection@localhost;
--- GRANT CREATE VIEW ON bd_gestion_des_notes.*
--- TO first_connection@localhost;
--- GRANT DROP ON bd_gestion_des_notes.*
--- TO first_connection@localhost;
 
-
--- FLUSH PRIVILEGES;
+-- FLUSH PRIVILEGES; pas utile avec les roles
 
 -- ------------------------------------------------
--- Création de différents utilisateurs avec le rôle de professeur
+-- Exemple de création à la main d'utilisateurs avec le rôle de professeur
 CREATE OR replace USER KunihikoKodaira@localhost identified BY 'p';
 GRANT role_professeur TO KunihikoKodaira@localhost;
 SET DEFAULT ROLE role_professeur FOR KunihikoKodaira@localhost;
@@ -78,13 +68,6 @@ SET DEFAULT ROLE role_professeur FOR KunihikoKodaira@localhost;
 CREATE OR replace USER PierreSerre@localhost identified BY 'p';
 GRANT role_professeur TO PierreSerre@localhost;
 SET DEFAULT ROLE role_professeur FOR PierreSerre@localhost;
-
-
-
-
-
-
-
 
 -- ------------------------------------------------
 -- Création de la table des fonctions
@@ -133,11 +116,12 @@ PRIMARY KEY (professeur_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
 -- ------------------------------------------------
--- Procédure pour remplissage de la table Professeur
--- Avec CALL CREATE_PROFESSEUR();
+-- Procédure de création d'utilisateurs avec le rôle de professeur
+-- et de remplissage de la table Professeur
+-- À exécuter avec: CALL remplir_professeur();
 
 DELIMITER $$  
-CREATE PROCEDURE CREATE_PROFESSEUR()
+CREATE PROCEDURE REMPLIR_PROFESSEUR()
 
    BEGIN
       DECLARE v_a INT Default 1 ;
@@ -473,13 +457,16 @@ CREATE OR replace TABLE Enseigner (
 PRIMARY KEY (professeur_id, discipline_id, classe_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-
--- Remplissage aléatoire de la table Enseigner
+-- Exemple:
 -- INSERT INTO Enseigner (professeur_id, discipline_id, classe_id) VALUES
 -- (1, 2, 3);
 
+-- Remplissage aléatoire de la table Enseigner
+-- À exécuter avec: CALL remplir_enseigner(); 
+
+
 DELIMITER $$  
-CREATE PROCEDURE FILL_ENSEIGNER()
+CREATE PROCEDURE REMPLIR_ENSEIGNER()
    BEGIN
       DECLARE v_professeur INT DEFAULT 1;
       DECLARE v_discipline INT;
@@ -487,10 +474,8 @@ CREATE PROCEDURE FILL_ENSEIGNER()
       simple_loop: LOOP
          SET v_discipline = 1+RAND()*9;
          SET v_classe = 1+RAND()*5; 
-         SELECT v_professeur, v_discipline, v_classe;
          INSERT INTO Enseigner  VALUES (v_professeur, v_discipline, v_classe);
          SET v_classe = 7+RAND()*7; 
-         SELECT v_professeur, v_discipline, v_classe;
          INSERT INTO Enseigner  VALUES (v_professeur, v_discipline, v_classe);
          SET v_professeur=v_professeur+1;
          IF v_professeur=51 THEN
@@ -506,7 +491,7 @@ show warnings;
 -- ------------------------------------------------
 -- Création de la table Evaluation
 
-CREATE TABLE Evaluation (
+CREATE OR REPLACE  TABLE Evaluation (
   evaluation_id int NOT NULL AUTO_INCREMENT,
   nom VARCHAR(20) COLLATE utf8_bin NOT NULL,  
   date_controle DATE DEFAULT '2020-10-1',
@@ -518,12 +503,15 @@ CREATE TABLE Evaluation (
   PRIMARY KEY (evaluation_id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+-- Exemple:
+-- INSERT INTO Evaluation (date_controle, date_visible, discipline_id, professeur_id, classe_id, periode_id)  VALUES ('C1', 2020-10-5', '2020-10-12', 2, 2, 3, 1);
+
+
 -- Remplissage aléatoire de la table Evaluation
--- INSERT INTO Evaluation (date_controle, date_visible, discipline_id, professeur_id, classe_id, periode_id)  VALUES
--- ('C1', 2020-10-5', '2020-10-12', 2, 2, 3, 1);
+-- À exécuter avec: CALL remplir_evaluation();
 
 DELIMITER $$  
-CREATE PROCEDURE FILL_EVALUATION()
+CREATE PROCEDURE REMPLIR_EVALUATION()
 BEGIN
   DECLARE done INT DEFAULT FALSE;
   DECLARE v_nom VARCHAR(20);
@@ -559,6 +547,18 @@ GRANT INSERT, UPDATE, DELETE
 ON bd_gestion_des_notes.Evaluation
 TO role_professeur;
 
+-- ------------------------------------------------
+-- Création de la table Evaluer
+
+CREATE OR REPLACE TABLE Evaluer (
+  evaluation_id INT,
+  eleve_id INT,
+  note DECIMAL(4, 2), 
+  PRIMARY KEY (evaluation_id, eleve_id)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- Exemple:
+-- INSERT INTO Evaluer (evaluation_id, eleve_id, note)  VALUES (2, 2, 17);
 
 
 
@@ -566,6 +566,7 @@ TO role_professeur;
 -- ------------------------------------------------
 -- Clés étrangères
 
+ALTER TABLE Eleve ADD FOREIGN KEY (classe_id) REFERENCES Classe (classe_id);
 ALTER TABLE Enseigner ADD FOREIGN KEY (discipline_id) REFERENCES Discipline (discipline_id);
 ALTER TABLE Enseigner ADD FOREIGN KEY (classe_id) REFERENCES Classe (classe_id);
 ALTER TABLE Enseigner ADD FOREIGN KEY (professeur_id) REFERENCES Professeur (professeur_id);
@@ -574,48 +575,69 @@ ALTER TABLE Evaluation ADD FOREIGN KEY (classe_id) REFERENCES Classe (classe_id)
 ALTER TABLE Evaluation ADD FOREIGN KEY (professeur_id) REFERENCES Professeur (professeur_id);
 ALTER TABLE Evaluation ADD FOREIGN KEY (discipline_id) REFERENCES Discipline (discipline_id);
 ALTER TABLE Classe ADD FOREIGN KEY (annee_id) REFERENCES Anneescolaire (annee_id);
--- ALTER TABLE Evaluer ADD FOREIGN KEY (eleve_id) REFERENCES Eleve (eleve_id);
--- ALTER TABLE Evaluer ADD FOREIGN KEY (evaluation_id) REFERENCES Evaluation (evaluation_id);
-ALTER TABLE Eleve ADD FOREIGN KEY (classe_id) REFERENCES Classe (classe_id);
+ALTER TABLE Evaluer ADD FOREIGN KEY (eleve_id) REFERENCES Eleve (eleve_id);
+ALTER TABLE Evaluer ADD FOREIGN KEY (evaluation_id) REFERENCES Evaluation (evaluation_id);
+
+
+
 
 -- ------------------------------------------------
--- DESCRIPTIONS
-SELECT "TABLES";
+-- DESCRIPTIONS DES TABLES
 SHOW tables;
 SELECT "Description de la TABLE Discipline";
 DESCRIBE Discipline;
-SELECT * FROM Discipline;
 SELECT "Description de la TABLE des Fonctions du personnel";
 DESCRIBE Fonction;
-SELECT * FROM Fonction;
 SELECT "Description de la TABLE Administrateur";
 DESCRIBE Administrateur;
-SELECT * FROM Administrateur;
 SELECT "Description de la TABLE Professeur";
 DESCRIBE Professeur;
-SELECT * FROM Professeur;
 SELECT "Description de la TABLE Eleve";
 DESCRIBE Eleve;
-SELECT * FROM Eleve;
 SELECT "Description de la TABLE Classe";
 DESCRIBE Classe;
-SELECT * FROM Classe;
 SELECT "Description de la TABLE Periode";
 DESCRIBE Periode;
-SELECT * FROM Periode;
 SELECT "Description de la TABLE Anneescolaire";
 DESCRIBE Anneescolaire;
-SELECT * FROM Anneescolaire;
 SELECT "Description de la TABLE Enseigner";
 DESCRIBE Enseigner;
-SELECT * FROM Enseigner;
 SELECT "Description de la TABLE Evaluation";
 DESCRIBE Evaluation;
-SELECT * FROM Evaluation;
+SELECT "Description de la TABLE Evaluer";
+DESCRIBE Evaluer;
 
+-- ------------------------------------------------
+-- Procédure d'initialisation globale qui appelle
+-- les autres procédures d'initialisation dans l'ordre souhaité
 
-SELECT "UTILISATEURS";
-select host, USER, password from mysql.USER;
+DELIMITER $$  
+CREATE PROCEDURE INITIALISER()
 
+   BEGIN
+      CALL remplir_professeur();
+      CALL remplir_enseigner();
+      CALL remplir_evaluation();
+      
+      SELECT * FROM Discipline;
+      SELECT * FROM Fonction;
+      SELECT * FROM Administrateur;
+      SELECT * FROM Professeur;
+      SELECT * FROM Eleve;
+      SELECT * FROM Classe;
+      SELECT * FROM Periode;
+      SELECT * FROM Anneescolaire;
+      SELECT * FROM Enseigner;
+      SELECT * FROM Evaluation;
+      SELECT * FROM Evaluer;      
+
+      SELECT "UTILISATEURS";
+      select host, USER, password from mysql.USER;
+      
+END $$
+
+DELIMITER ;
+
+show warnings;
 
 
