@@ -1343,8 +1343,6 @@ def afficher_evaluations():
     for row in evaluations:
         print(row)
     evaluations_traduites = sql_traduis_evaluations()
-    frame_evaluations = tk.Frame(f7)
-    frame_evaluations.grid()
     sheet_evaluations = Sheet(f7,
                               data=evaluations_traduites,
                               headers=["Evaluation_id", "Professeur", "Nom", "Date du contrôle", "Date Publication", "Discipline", "Classe", "Année scolaire", "Période"],
@@ -1352,7 +1350,7 @@ def afficher_evaluations():
                               height=470,
                               width=800)
     sheet_evaluations.hide("row_index")
-    sheet_evaluations.grid(row=1, column=0)
+    sheet_evaluations.grid(row=1, column=0, columnspan=2)
     sheet_evaluations.extra_bindings([ ("cell_select", select_evaluation)])        
     sheet_evaluations.enable_bindings(("cell_select",
                                        "single_select",  # "single_select" or "toggle_select"
@@ -1372,7 +1370,7 @@ def afficher_selections_et_parametres_evaluations():
     global frame_selection_evaluations, nom_controle_entry_text, date_controle_entry_text, date_visible_entry_text
     print('Sélection:',(professeur_selected, classe_selected, discipline_selected))
     frame_top_evaluations = tk.Frame(f7)
-    frame_top_evaluations.grid(row=0, column=0)
+    frame_top_evaluations.grid(row=0, column=0, columnspan=2)
     
     # FRAME SÉLECTION
     frame_selection_evaluations = tk.LabelFrame(frame_top_evaluations, text=' (id SQL) Sélection ')
@@ -1492,9 +1490,13 @@ def filtrer_mes_evaluations():
     professeur_selected = (professeur_id[index], prof_Name[index])
     appliquer_selections()
 
-    
-    
-        
+def noter():
+    """
+    Permet de noter l'évaluation sélectionnée
+    """
+    pass
+
+
 # ------------------------------------------------------------------------------
 # Application
 # ------------------------------------------------------------------------------
@@ -1524,6 +1526,8 @@ button_mes_enseignements = tk.Button(f5, text='Filtrer mes enseignements',
 
 button_mes_evaluations = tk.Button(f7, text='Filtrer mes évaluations',
                                     command=filtrer_mes_evaluations)
+button_noter = tk.Button(f7, text='Noter',
+                         command=noter)
 
 
 
@@ -1532,7 +1536,7 @@ notebook.add(f0, text="Mon compte")
 notebook.grid(row=0, column=0, sticky="nswe")
 button_mes_enseignements.grid(row=2, column=0)
 button_mes_evaluations.grid(row=2, column=0)
-
+button_noter.grid(row=2, column=1, sticky=tk.W)
 
 afficher_IHM_connexion()
 
