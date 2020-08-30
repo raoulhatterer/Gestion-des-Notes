@@ -1232,12 +1232,12 @@ def filtrer_mes_enseignements():
 # ------------------------------------------------------------------------------
 
 
-def sql_read_evaluations():
+def sql_read_evaluations(professeur_id):
     """
-    Se connecte à Mysql et retourne les données brutes concernant les Evaluations réalisées par le professeur connecté
+    Se connecte à Mysql et retourne les données brutes concernant les Evaluations réalisées par le professeur 
     """
     sql = "SELECT * FROM Evaluation WHERE professeur_id=%s;"
-    tuple_selection = (current_user_id ,)
+    tuple_selection = (professeur_id ,)
     try:
         print(f"Try to connect to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
@@ -1260,7 +1260,7 @@ def sql_read_evaluations():
 
 def sql_traduis_evaluations():
     """
-    Se connecte à Mysql et retourne les données traduites concernant les évaluations réalisées par le professeur connecté
+    Se connecte à Mysql et retourne les données traduites concernant les évaluations réalisées
     """
 
     if not(discipline_selected) and not(professeur_selected) and not(classe_selected) and not(periode_selected):  # 0000 
@@ -1331,17 +1331,47 @@ def sql_traduis_evaluations():
         print("Error while connecting to MySQL", e)
         messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
 
+
+def sql_professeur_evaluateur(evaluation_id):
+    """
+    Extrait l'id du professeur ayant réalisé l'évaluation
+    """
+    try:
+        print(f"Try to connect to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        print("sql_professeur_evaluateur")
+        cursor = connection.cursor()
+        sql = "SELECT professeur_id FROM Evaluation WHERE evaluation_id=%s;"
+        tuple_evaluation = (evaluation_id,)
+        cursor.execute(sql, tuple_evaluation)
+        records = cursor.fetchall()
+        # print(records)
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        return (records[0][0])
+    
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+
+    
+
     
 def afficher_evaluations():
     """
     Affiche l'IHM des Evaluations
     """
     global sheet_evaluations
-    evaluations = sql_read_evaluations()
-    print("Evaluations:")
-    print("nom, date_controle, date_visible, discipline_id, professeur_id, classe_id, periode_id")
-    for row in evaluations:
-        print(row)
+    # evaluations = sql_read_evaluations(current_user_id)
+    # print("Evaluations:")
+    # print("nom, date_controle, date_visible, discipline_id, professeur_id, classe_id, periode_id")
+    # for row in evaluations:
+    #     print(row)
     evaluations_traduites = sql_traduis_evaluations()
     sheet_evaluations = Sheet(f7,
                               data=evaluations_traduites,
@@ -1494,7 +1524,12 @@ def noter():
     """
     Permet de noter l'évaluation sélectionnée
     """
-    pass
+    # print(sql_professeur_evaluateur(evaluation_selected[0]))
+    # print(current_user_id)
+    if evaluation_selected and (sql_professeur_evaluateur(evaluation_selected[0]) == current_user_id):
+        print("Notation de l'évaluation autorisée")
+    else:
+        messagebox.showwarning("Opération non valide","Veuillez sélectionner une de vos évaluations.")
 
 
 # ------------------------------------------------------------------------------

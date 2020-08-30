@@ -57,17 +57,8 @@ GRANT role_gestionnaire TO noel_gest@localhost;
 SET DEFAULT ROLE role_gestionnaire FOR noel_gest@localhost;
 
 
--- FLUSH PRIVILEGES; pas utile avec les roles
+-- FLUSH PRIVILEGES; pas utile avec les rôles
 
--- ------------------------------------------------
--- Exemple de création à la main d'utilisateurs avec le rôle de professeur
-CREATE OR replace USER KunihikoKodaira@localhost identified BY 'p';
-GRANT role_professeur TO KunihikoKodaira@localhost;
-SET DEFAULT ROLE role_professeur FOR KunihikoKodaira@localhost;
-
-CREATE OR replace USER PierreSerre@localhost identified BY 'p';
-GRANT role_professeur TO PierreSerre@localhost;
-SET DEFAULT ROLE role_professeur FOR PierreSerre@localhost;
 
 -- ------------------------------------------------
 -- Création de la table des fonctions
@@ -161,6 +152,13 @@ END $$
 DELIMITER ;
 
 show warnings;
+
+-- ------------------------------------------------
+-- Sinon : Exemple de création à la main d'utilisateur avec le rôle de professeur
+-- CREATE OR replace USER p@localhost identified BY 'p';
+-- GRANT role_professeur TO p@localhost;
+-- SET DEFAULT ROLE role_professeur FOR p@localhost;
+-- INSERT INTO Professeur (prenom, nom, titre) VALUES ('prof', 'Testeur', 'M');
 
 -- ------------------------------------------------
 -- Création de la table Discipline
