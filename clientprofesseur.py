@@ -101,6 +101,7 @@ def select_classe(response):
     global classe_selected
     index = response[1]
     classe_selected = (classe_id[index], classe_Name[index])
+    afficher_eleves_classe()
     appliquer_selections()
 
     
@@ -322,9 +323,7 @@ def afficher_compte_professeur():
     lbl_prenom.grid(row=4, column=1, sticky=tk.E)
     lbl_nom = tk.Label(frame_compte, text="Nom")
     lbl_nom.grid(row=5, column=1, sticky=tk.E)
-    lbl_genre = tk.Label(frame_compte, text="Titre")
-    lbl_genre.grid(row=6, column=1, sticky=tk.E)
-    
+
     # column2
     login_entry_text = tk.StringVar()
     login_entry_text.set(GN_user)
@@ -333,25 +332,15 @@ def afficher_compte_professeur():
 
     prenom_entry_text = tk.StringVar()
     prenom_entry_text.set(records[0][0])
-    entry_prenom = tk.Entry(frame_compte, textvariable=prenom_entry_text)
+    entry_prenom = tk.Entry(frame_compte, textvariable=prenom_entry_text, state='disabled')
     entry_prenom.grid(row=4, column=2, sticky=tk.W)
 
     nom_entry_text = tk.StringVar()
     nom_entry_text.set(records[0][1])
-    entry_nom = tk.Entry(frame_compte, textvariable=nom_entry_text)
+    entry_nom = tk.Entry(frame_compte, textvariable=nom_entry_text, state='disabled')
     entry_nom.grid(row=5, column=2, sticky=tk.W)
 
-    combobox_titre = ttk.Combobox(frame_compte, values=['M','Mme'], width=4)
-    if records[0][2]=="M":
-        combobox_titre.current(0)
-    else:
-        combobox_titre.current(1)        
-    combobox_titre.grid(row=6, column=2, sticky=tk.W)
-
     frame_compte.grid_rowconfigure(9, minsize=20)    
-    button_save = tk.Button(frame_compte, text='Enregistrer',
-                             command=sql_save_compte_admin)
-    button_save.grid(row=10,column=2, sticky=tk.W)
 
     # column4
     button_change_pwd = tk.Button(frame_compte, text='Changer de mot de passe',
@@ -453,36 +442,7 @@ def annuler_new_password():
     Annulation du nouveau mot de passe et retour au compte.
     """
     frame_new_password.destroy()
-    afficher_notebook_gestionnaire()
-
-
-    
-def sql_save_compte_admin():
-    """
-    Se connecte à MySQL pour sauvegarder les données du compte administrateur dans la table Administrateurs
-    """
-    try:
-        print(f"Try to connect to MySQL Server as {GN_user}")
-        connection = mysql.connector.connect(host=GN_host,
-                                             database=GN_database,
-                                             user=GN_user,
-                                             password=GN_password)
-        db_Info = connection.get_server_info()
-        print("Connected to MySQL Server version", db_Info)
-        print("sql_save_compte_admin")
-        cursor = connection.cursor()
-        sql = "UPDATE Administrateur SET FirstName=%s, LastName=%s, Gender=%s, Birthday=%s WHERE Login=%s "
-        date = datetime.strptime(naissance_entry_text.get(),'%d/%m/%Y').strftime('%Y-%m-%d')
-        administrateur = (prenom_entry_text.get(), nom_entry_text.get(), combobox_titre.get(), date, login_entry_text.get())
-        print(administrateur)
-        cursor.execute(sql, administrateur)
-        connection.commit()
-        cursor.close()
-        connection.close()
-        print("MySQL connection is closed")        
-    except Error as e:
-        print("Error while connecting to MySQL", e)
-
+    afficher_notebook_professeur()
 
 def deconnexion():
     """
@@ -759,7 +719,40 @@ def sql_read_eleves():
     except Error as e:
         print("Error while connecting to MySQL", e)
 
+def sql_read_eleves_classe():
+    """
+    Fonction appelée par 'afficher_eleves_classe()'
+    Retourne un tupple contenant 'eleve_id', 'eleves_Name', eleves_Print.
+    eleve_id : liste contenant tous les index générés de façon automatique de
+    la table 'Eleve' de la base de données 'bd_gestion_des_notes'.
+    eleves_Name : liste contenant tous les noms des élèves (dans l'ordre
+    alphabétique) contenus dans la table 'Eleve' de la base de données
+    'eleves_Print': liste affichée dans l'onglet élèves sous forme de tableau
+    """
+    try:
+        print(f"Try to connect to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        print("sql_read_eleves_classe")
+        cursor = connection.cursor()
+        sql = "SELECT nom, prenom, genre FROM Eleve WHERE classe_id=%s ORDER BY nom ASC"
+        tuple_classe = (classe_selected[0],)
+        cursor.execute(sql, tuple_classe)        
+        records = cursor.fetchall()
+        # print(records)
+        print("All eleve of Eleves (", cursor.rowcount, "): ")
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        return (records)
+    except Error as e:
+        print("Error while connecting to MySQL", e)
 
+        
 def afficher_eleves():
     """
     Affiche un tableau de type tableur avec toutes les élèves (IHM)
@@ -785,7 +778,22 @@ def afficher_eleves():
                                        "undo",
                                        "edit_cell"))
 
-
+def afficher_eleves_classe():
+    """
+    Affiche les élèves de la classe sélectionnée dans l'onglet Classe
+    """
+    if classe_selected:
+        eleves_classe =  sql_read_eleves_classe()
+        sheet_eleves_classe = Sheet(f4,
+                                    data=eleves_classe,  # to set sheet data at startup
+                                    headers=["Nom", "Prénom", "Genre"],
+                                    set_all_heights_and_widths = True,
+                                    height=600,
+                                    width=400)
+        sheet_eleves.hide("row_index")
+        sheet_eleves.hide("top_left")
+        # sheet_eleves.hide("header")
+        sheet_eleves_classe.grid(row=0, column=1)
 
 
 
@@ -796,7 +804,7 @@ def afficher_eleves():
 # CLASSES
 # ------------------------------------------------------------------------------
 
-def _charger_classes():
+def sql_charger_classes():
     """
     Fonction appelée par 'afficher_classes()'
     Retourne un tuple contenant 'classe_id', 'nom', 'classe_Print'
@@ -815,7 +823,7 @@ def _charger_classes():
                                              password=GN_password)
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server version", db_Info)
-        print("_charger_classes")
+        print("sql_charger_classes")
         cursor = connection.cursor()
         cursor.execute("select classe_id, Classe.nom, niveau, Anneescolaire.nom from Classe INNER JOIN Anneescolaire ON Classe.annee_id = Anneescolaire.annee_id ORDER BY Classe.annee_id DESC, Classe.nom;")
         records = cursor.fetchall()
@@ -868,17 +876,17 @@ def afficher_classes():
     Affiche un tableau de type tableur avec toutes les classes
     """
     global sheet_classes, classe_id, classe_Name, classe_Print
-    classe_id, classe_Name, classe_Print = _charger_classes()
+    classe_id, classe_Name, classe_Print = sql_charger_classes()
     sheet_classes = Sheet(f4,
                           data=classe_Print,  # to set sheet data at startup
                           headers=["Classe", "Niveau", "Année scolaire"],
                           set_all_heights_and_widths = True,
                           height=600,
-                          width=800)
+                          width=400)
     sheet_classes.hide("row_index")
     sheet_classes.hide("top_left")
     # sheet_classes.hide("header")
-    sheet_classes.grid(row=0, column=0, columnspan=2, sticky="we")
+    sheet_classes.grid(row=0, column=0)
     sheet_classes.extra_bindings([ ("cell_select", select_classe)])    
     sheet_classes.enable_bindings(("single_select",  # "single_select" or "toggle_select"
                                    "arrowkeys",
