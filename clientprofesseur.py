@@ -125,6 +125,7 @@ def deselect_classe():
     """
     global classe_selected
     classe_selected = None
+    sheet_eleves_classe.destroy()
     appliquer_selections()    
 
 
@@ -171,6 +172,8 @@ def appliquer_selections():
     """
     Rafraîchi l'affichage des onglets Enseignements et Evaluations suivant les sélections en cours
     """
+    frame_selection_classes.destroy()
+    afficher_selections_classes()
     afficher_eleves_classe()
     frame_selection_enseignements.destroy()    
     afficher_selections_enseignements()
@@ -200,6 +203,7 @@ def afficher_notebook_professeur():
     afficher_disciplines()
     afficher_professeurs()
     afficher_eleves()
+    afficher_selections_classes()
     afficher_classes()
     afficher_annees_et_periodes()
     afficher_selections_enseignements()
@@ -596,6 +600,7 @@ def afficher_disciplines():
     sheet_disciplines.extra_bindings([ ("cell_select", select_discipline)])        
     sheet_disciplines.enable_bindings(("cell_select",
                                        "single_select",  # "single_select" or "toggle_select"
+                                       "column_width_resize",
                                        "arrowkeys",
                                        "copy",
                                        "cut",
@@ -675,6 +680,7 @@ def afficher_professeurs():
     sheet_professeurs.grid(row=0, column=0, columnspan=2, sticky="nswe")
     sheet_professeurs.extra_bindings([ ("cell_select", select_professeur)])        
     sheet_professeurs.enable_bindings(("single_select",  # "single_select" or "toggle_select"
+                                       "column_width_resize",
                                        "arrowkeys",
                                        "copy",
                                        "cut",
@@ -692,63 +698,6 @@ def afficher_professeurs():
 # ÉLÈVES
 # ------------------------------------------------------------------------------
 
-
-def sql_noter_eleve(evaluation_id, eleve_id, note):
-    """
-    Enregistre la note de l'élève pour l'évaluation
-    """
-    if note != '':
-        try:
-            print(f"Try to connect to MySQL Server as {GN_user}")
-            connection = mysql.connector.connect(host=GN_host,
-                                                 database=GN_database,
-                                                 user=GN_user,
-                                                 password=GN_password)
-            db_Info = connection.get_server_info()
-            print("Connected to MySQL Server version", db_Info)
-            print("sql_noter_eleve")
-            cursor = connection.cursor()
-            sql = "INSERT INTO Evaluer (evaluation_id, eleve_id, note) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE note=%s"
-            tuple_note = (evaluation_id, eleve_id, note, note)
-            cursor.execute(sql, tuple_note)
-            connection.commit()
-            cursor.close()
-            connection.close()
-            print("MySQL connection is closed")
-        except Error as e:
-            print("Error while connecting to MySQL", e)
-            messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
-
-
-def sql_read_note(evaluation_id, eleve_id):
-    """
-    Enregistre la note de l'élève pour l'évaluation
-    """
-    try:
-        print(f"Try to connect to MySQL Server as {GN_user}")
-        connection = mysql.connector.connect(host=GN_host,
-                                             database=GN_database,
-                                             user=GN_user,
-                                             password=GN_password)
-        db_Info = connection.get_server_info()
-        print("Connected to MySQL Server version", db_Info)
-        print("sql_read_note")
-        cursor = connection.cursor()
-        sql = "SELECT  CAST(note AS CHAR) FROM Evaluer WHERE evaluation_id=%s AND eleve_id=%s"
-        tuple_note = (evaluation_id, eleve_id)
-        cursor.execute(sql, tuple_note)
-        records = cursor.fetchall()
-        print(records)
-        print("All eleve of Eleves (", cursor.rowcount, "): ")
-        cursor.close()
-        connection.close()
-        print("MySQL connection is closed")
-        if records:
-            return (records[0][0])
-        else:
-            return('')
-    except Error as e:
-        print("Error while connecting to MySQL", e)
 
         
 def sql_read_eleves():
@@ -834,17 +783,19 @@ def afficher_eleves():
     # sheet_eleves.hide("header")
     sheet_eleves.grid(row=0, column=0, columnspan=2, sticky="we")
     sheet_eleves.enable_bindings(("single_select",  # "single_select" or "toggle_select"
-                                       "arrowkeys",
-                                       "copy",
-                                       "cut",
-                                       "paste",
-                                       "delete",
-                                       "undo"))
+                                  "column_width_resize",
+                                  "arrowkeys",
+                                  "copy",
+                                  "cut",
+                                  "paste",
+                                  "delete",
+                                  "undo"))
 
 def afficher_eleves_classe():
     """
     Affiche les élèves de la classe sélectionnée dans l'onglet Classe
     """
+    global sheet_eleves_classe
     if classe_selected:
         eleves_classe =  sql_read_eleves_classe()
         sheet_eleves_classe = Sheet(f4,
@@ -856,7 +807,8 @@ def afficher_eleves_classe():
         sheet_eleves.hide("row_index")
         sheet_eleves.hide("top_left")
         # sheet_eleves.hide("header")
-        sheet_eleves_classe.grid(row=0, column=1)
+        sheet_eleves_classe.grid(row=1, column=1)
+
 
 
 
@@ -949,15 +901,55 @@ def afficher_classes():
     sheet_classes.hide("row_index")
     sheet_classes.hide("top_left")
     # sheet_classes.hide("header")
-    sheet_classes.grid(row=0, column=0)
+    sheet_classes.grid(row=1, column=0)
     sheet_classes.extra_bindings([ ("cell_select", select_classe)])    
     sheet_classes.enable_bindings(("single_select",  # "single_select" or "toggle_select"
+                                   "column_width_resize",
                                    "arrowkeys",
                                    "copy",
                                    "cut",
                                    "paste",
                                    "delete",
                                    "undo"))
+
+
+def afficher_selections_classes():
+    """
+    Affiche le professeur, la classe et la discipline sélectionnées dans l'IHM Classes
+    """
+    global frame_selection_classes
+    print('Sélection:',(professeur_selected, classe_selected, discipline_selected))
+    frame_selection_classes = tk.LabelFrame(f4, text=' (id SQL) Sélection ')
+    frame_selection_classes.grid(row=0, column=0)
+    # Ligne 1
+    lbl_professeur = tk.Label(frame_selection_classes, text = 'Professeur:')
+    lbl_professeur.grid(row=0, column=0, sticky=tk.E)
+    lbl_professeur_selected = tk.Label(frame_selection_classes, text = professeur_selected)
+    lbl_professeur_selected.grid(row=0, column=1, sticky=tk.W)
+    button_deselect_prof = tk.Button(frame_selection_classes, text="Désélectionner", command=deselect_prof)
+    button_deselect_prof.grid(row=0,column=2)
+    # Ligne 2
+    lbl_classe = tk.Label(frame_selection_classes, text = 'Classe:')
+    lbl_classe.grid(row=1, column=0, sticky=tk.E)
+    lbl_classe_selected = tk.Label(frame_selection_classes, text = classe_selected)
+    lbl_classe_selected.grid(row=1, column=1, sticky=tk.W)
+    button_deselect_classe = tk.Button(frame_selection_classes, text="Désélectionner", command=deselect_classe)
+    button_deselect_classe.grid(row=1,column=2)
+    # Ligne 3
+    lbl_discipline = tk.Label(frame_selection_classes, text = 'Discipline:')
+    lbl_discipline.grid(row=2, column=0, sticky=tk.E)
+    lbl_discipline_selected = tk.Label(frame_selection_classes, text = discipline_selected)
+    lbl_discipline_selected.grid(row=2, column=1, sticky=tk.W)
+    button_deselect_discipline = tk.Button(frame_selection_classes, text="Désélectionner", command=deselect_discipline)
+    button_deselect_discipline.grid(row=2,column=2)
+    # Ligne 4
+    lbl_periode = tk.Label(frame_selection_classes, text = 'Période:')
+    lbl_periode.grid(row=3, column=0, sticky=tk.E)
+    lbl_periode_selected = tk.Label(frame_selection_classes, text = periode_selected)
+    lbl_periode_selected.grid(row=3, column=1, sticky=tk.W)
+    button_deselect_periode = tk.Button(frame_selection_classes, text="Désélectionner", command=deselect_periode)
+    button_deselect_periode.grid(row=3,column=2)
+    
 
 
 def sql_tableau_notation():
@@ -1101,12 +1093,13 @@ def afficher_annees_et_periodes():
     
     sheet_annees.extra_bindings([ ("cell_select", select_annee)])
     sheet_annees.enable_bindings(("single_select",  # "single_select" or "toggle_select"
-                                       "arrowkeys",
-                                       "copy",
-                                       "cut",
-                                       "paste",
-                                       "delete",
-                                       "undo"))
+                                  "column_width_resize",
+                                  "arrowkeys",
+                                  "copy",
+                                  "cut",
+                                  "paste",
+                                  "delete",
+                                  "undo"))
     periode_id, periode_Name = sql_read_periodes()
     frame_periodes.grid(row=0, column=1, sticky='we')
     sheet_periodes = Sheet(frame_periodes,
@@ -1121,12 +1114,13 @@ def afficher_annees_et_periodes():
     sheet_periodes.grid(row=0, column=0, columnspan=2,  sticky="we")
     sheet_periodes.extra_bindings([ ("cell_select", select_periode)])    
     sheet_periodes.enable_bindings(("single_select",  # "single_select" or "toggle_select"
-                                       "arrowkeys",
-                                       "copy",
-                                       "cut",
-                                       "paste",
-                                       "delete",
-                                       "undo"))
+                                    "column_width_resize",
+                                    "arrowkeys",
+                                    "copy",
+                                    "cut",
+                                    "paste",
+                                    "delete",
+                                    "undo"))
 
 # ------------------------------------------------------------------------------
 # ENSEIGNEMENTS
@@ -1255,13 +1249,14 @@ def afficher_enseignements():
     sheet_enseignements.grid(row=1, column=0)
     sheet_enseignements.extra_bindings([ ("cell_select", select_enseignement)])        
     sheet_enseignements.enable_bindings(("cell_select",
-                                       "single_select",  # "single_select" or "toggle_select"
-                                       "arrowkeys",
-                                       "copy",
-                                       "cut",
-                                       "paste",
-                                       "delete",
-                                       "undo"))
+                                         "single_select",  # "single_select" or "toggle_select"
+                                         "column_width_resize",
+                                         "arrowkeys",
+                                         "copy",
+                                         "cut",
+                                         "paste",
+                                         "delete",
+                                         "undo"))
 
 
 
@@ -1529,7 +1524,7 @@ def afficher_evaluations():
     evaluations_traduites = sql_traduis_evaluations()
     sheet_evaluations = Sheet(f7,
                               data=evaluations_traduites,
-                              headers=["Evaluation_id", "Professeur", "Nom", "Date du contrôle", "Date Publication", "Discipline", "Classe", "Année scolaire", "Période"],
+                              headers=["Eval_id", "Professeur", "Nom", "Date du contrôle", "Date Publication", "Discipline", "Classe", "Année scolaire", "Période"],
                               set_all_heights_and_widths = True,
                               height=470,
                               width=800)
@@ -1538,6 +1533,7 @@ def afficher_evaluations():
     sheet_evaluations.extra_bindings([ ("cell_select", select_evaluation)])        
     sheet_evaluations.enable_bindings(("cell_select",
                                        "single_select",  # "single_select" or "toggle_select"
+                                       "column_width_resize",
                                        "arrowkeys",
                                        "copy",
                                        "cut",
@@ -1661,10 +1657,9 @@ def ajouter_evaluation():
             
         
     else:
-        messagebox.showwarning("Opération non valide", "Veuillez sélectionner un enseignement que vous assurez et une période dans leurs onglets respectifs.")
+        messagebox.showwarning("Opération non valide", "Pour créer une évaluation, veuillez sélectionner un enseignement que vous assurez et une période dans leurs onglets respectifs.")
 
-        
-    
+
 def filtrer_mes_evaluations():
     """
     Affiche les évaluations du professeur utilisateur en conservant les autres filtres éventuels.
@@ -1673,6 +1668,87 @@ def filtrer_mes_evaluations():
     index = current_user_id-1
     professeur_selected = (professeur_id[index], prof_Name[index])
     appliquer_selections()
+
+
+def retour_evaluations():
+    """
+    Rétabli l'affichage par défaut des évaluations
+    """
+    global button_mes_evaluations, button_noter, button_retour, button_enregistrer
+    button_retour.destroy()
+    button_enregistrer.destroy()
+    button_mes_evaluations = tk.Button(f7, text='Filtrer mes évaluations',
+                                       command=filtrer_mes_evaluations)
+    button_noter = tk.Button(f7, text='Noter',
+                             command=noter)
+    button_mes_evaluations.grid(row=2, column=0)
+    button_noter.grid(row=2, column=1, sticky=tk.W)
+    deselect_classe()
+    deselect_discipline()
+    deselect_periode()
+
+# ------------------------------------------------------------------------------
+# EVALUER
+# ------------------------------------------------------------------------------
+
+
+def sql_noter_eleve(evaluation_id, eleve_id, note):
+    """
+    Enregistre la note de l'élève pour l'évaluation
+    """
+    if note != '':
+        try:
+            print(f"Try to connect to MySQL Server as {GN_user}")
+            connection = mysql.connector.connect(host=GN_host,
+                                                 database=GN_database,
+                                                 user=GN_user,
+                                                 password=GN_password)
+            db_Info = connection.get_server_info()
+            print("Connected to MySQL Server version", db_Info)
+            print("sql_noter_eleve")
+            cursor = connection.cursor()
+            sql = "INSERT INTO Evaluer (evaluation_id, eleve_id, note) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE note=%s"
+            tuple_note = (evaluation_id, eleve_id, note, note)
+            cursor.execute(sql, tuple_note)
+            connection.commit()
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+        except Error as e:
+            print("Error while connecting to MySQL", e)
+            messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
+
+
+def sql_read_note(evaluation_id, eleve_id):
+    """
+    Enregistre la note de l'élève pour l'évaluation
+    """
+    try:
+        print(f"Try to connect to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        print("sql_read_note")
+        cursor = connection.cursor()
+        sql = "SELECT  CAST(note AS CHAR) FROM Evaluer WHERE evaluation_id=%s AND eleve_id=%s"
+        tuple_note = (evaluation_id, eleve_id)
+        cursor.execute(sql, tuple_note)
+        records = cursor.fetchall()
+        print(records)
+        print("All eleve of Eleves (", cursor.rowcount, "): ")
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        if records:
+            return (records[0][0])
+        else:
+            return('')
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+
 
 def noter():
     """
@@ -1700,14 +1776,15 @@ def noter():
         sheet_tableau_notation.grid(row=1, column=0, columnspan=2)
         # sheet_tableau_notations.extra_bindings([ ("cell_select", select_evaluation)])        
         sheet_tableau_notation.enable_bindings(("cell_select",
-                                               "single_select",  # "single_select" or "toggle_select"
-                                               "arrowkeys",
-                                               "copy",
-                                               "cut",
-                                               "paste",
-                                               "delete",
-                                               "undo",
-                                               "edit_cell"))
+                                                "single_select",  # "single_select" or "toggle_select"
+                                                "column_width_resize",
+                                                "arrowkeys",
+                                                "copy",
+                                                "cut",
+                                                "paste",
+                                                "delete",
+                                                "undo",
+                                                "edit_cell"))
         button_mes_evaluations.destroy()
         button_noter.destroy()
         button_retour = tk.Button(f7, text='Retour',
@@ -1731,21 +1808,7 @@ def enregistrer_notes():
             note = tableau_notation[index][2] 
             sql_noter_eleve(evaluation_selected[0], tableau_notation_id[index], note)
         
-def retour_evaluations():
-    """
-    Rétabli l'affichage par défaut des évaluations
-    """
-    global button_mes_evaluations, button_noter, button_retour, button_enregistrer
-    button_retour.destroy()
-    button_enregistrer.destroy()
-    button_mes_evaluations = tk.Button(f7, text='Filtrer mes évaluations',
-                                       command=filtrer_mes_evaluations)
-    button_noter = tk.Button(f7, text='Noter',
-                             command=noter)
-    button_mes_evaluations.grid(row=2, column=0)
-    button_noter.grid(row=2, column=1, sticky=tk.W)
-    deselect_classe()
-    deselect_discipline()
+
 
 
 # ------------------------------------------------------------------------------
