@@ -198,7 +198,7 @@ def afficher_notebook_professeur():
     notebook.add(f1, text="Disciplines")
     notebook.add(f2, text="Professeurs")
     notebook.add(f3, text="Élèves")
-    notebook.add(f4, text="Classes")
+    notebook.add(f4, text="Classes et moyennes")
     notebook.add(f5, text="Enseignements")
     notebook.add(f6, text="Périodes")
     notebook.add(f7, text="Évaluations")    
@@ -1697,6 +1697,31 @@ def sql_moyenne_eleve(eleve_id):
     """
     Calcule la moyenne de l'élève
     """
+    if not(discipline_selected) and not(professeur_selected)  and not(periode_selected):  # 000 
+        sql = "select CAST(AVG(Evaluer.note) AS CHAR)  from  Evaluer inner join Evaluation ON Evaluer.evaluation_id=Evaluation.evaluation_id  where eleve_id=%s;" 
+        tuple_selection = (eleve_id, )
+    elif not(discipline_selected) and not(professeur_selected)  and periode_selected:  # 001 
+        sql = "select CAST(AVG(Evaluer.note) AS CHAR)  from  Evaluer inner join Evaluation ON Evaluer.evaluation_id=Evaluation.evaluation_id  where eleve_id=%s AND periode_id=%s;"  
+        tuple_selection = (eleve_id, periode_selected[0])
+    elif not(discipline_selected) and professeur_selected  and not(periode_selected):  # 010 
+        sql = "select CAST(AVG(Evaluer.note) AS CHAR)  from  Evaluer inner join Evaluation ON Evaluer.evaluation_id=Evaluation.evaluation_id  where eleve_id=%s AND professeur_id=%s;"  
+        tuple_selection = (eleve_id , professeur_selected[0])
+    elif not(discipline_selected) and professeur_selected  and periode_selected:  # 011 
+        sql = "select CAST(AVG(Evaluer.note) AS CHAR)  from  Evaluer inner join Evaluation ON Evaluer.evaluation_id=Evaluation.evaluation_id  where eleve_id=%s AND professeur_id=%s AND periode_id=%s;"  
+        tuple_selection = (eleve_id , professeur_selected[0], periode_selected[0])
+    elif discipline_selected and not(professeur_selected)  and not(periode_selected):  # 100
+        sql = "select CAST(AVG(Evaluer.note) AS CHAR)  from  Evaluer inner join Evaluation ON Evaluer.evaluation_id=Evaluation.evaluation_id  where eleve_id=%s AND discipline_id=%s;"  
+        tuple_selection = (eleve_id, discipline_selected[0])
+    elif discipline_selected and not(professeur_selected)  and periode_selected:  # 101
+        sql = "select CAST(AVG(Evaluer.note) AS CHAR)  from  Evaluer inner join Evaluation ON Evaluer.evaluation_id=Evaluation.evaluation_id  where eleve_id=%s AND discipline_id=%s AND periode_id=%s;"  
+        tuple_selection = (eleve_id, discipline_selected[0] , periode_selected[0])
+    elif discipline_selected and professeur_selected  and not(periode_selected):  # 110 
+        sql = "select CAST(AVG(Evaluer.note) AS CHAR)  from  Evaluer inner join Evaluation ON Evaluer.evaluation_id=Evaluation.evaluation_id  where eleve_id=%s AND discipline_id=%s AND professeur_id=%s;"  
+        tuple_selection = (eleve_id, discipline_selected[0], professeur_selected[0] )
+    else:  # 111
+        sql = "select CAST(AVG(Evaluer.note) AS CHAR)  from  Evaluer inner join Evaluation ON Evaluer.evaluation_id=Evaluation.evaluation_id  where eleve_id=%s AND discipline_id=%s AND professeur_id=%s AND periode_id=%s;"  
+        tuple_selection = (eleve_id, discipline_selected[0], professeur_selected[0] , periode_selected[0])
+
     try:
         print(f"Try to connect to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
@@ -1707,9 +1732,7 @@ def sql_moyenne_eleve(eleve_id):
         print("Connected to MySQL Server version", db_Info)
         print("sql_moyenne_eleve")
         cursor = connection.cursor()
-        sql = "SELECT CAST(AVG(note) AS CHAR) FROM Evaluer WHERE eleve_id=%s;"
-        tuple_note = (eleve_id,)
-        cursor.execute(sql, tuple_note)
+        cursor.execute(sql, tuple_selection)
         records = cursor.fetchall()
         print(records)
         print("Nombre d'enregistrements (", cursor.rowcount, "): ")
