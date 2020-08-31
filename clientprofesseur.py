@@ -697,6 +697,33 @@ def sql_noter_eleve(evaluation_id, eleve_id, note):
     """
     Enregistre la note de l'élève pour l'évaluation
     """
+    if note != '':
+        try:
+            print(f"Try to connect to MySQL Server as {GN_user}")
+            connection = mysql.connector.connect(host=GN_host,
+                                                 database=GN_database,
+                                                 user=GN_user,
+                                                 password=GN_password)
+            db_Info = connection.get_server_info()
+            print("Connected to MySQL Server version", db_Info)
+            print("sql_noter_eleve")
+            cursor = connection.cursor()
+            sql = "INSERT INTO Evaluer (evaluation_id, eleve_id, note) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE note=%s"
+            tuple_note = (evaluation_id, eleve_id, note, note)
+            cursor.execute(sql, tuple_note)
+            connection.commit()
+            cursor.close()
+            connection.close()
+            print("MySQL connection is closed")
+        except Error as e:
+            print("Error while connecting to MySQL", e)
+            messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
+
+
+def sql_read_note(evaluation_id, eleve_id):
+    """
+    Enregistre la note de l'élève pour l'évaluation
+    """
     try:
         print(f"Try to connect to MySQL Server as {GN_user}")
         connection = mysql.connector.connect(host=GN_host,
@@ -705,21 +732,25 @@ def sql_noter_eleve(evaluation_id, eleve_id, note):
                                              password=GN_password)
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server version", db_Info)
-        print("sql_noter_eleve")
+        print("sql_read_note")
         cursor = connection.cursor()
-        sql = "INSERT INTO Evaluer (evaluation_id, eleve_id, note) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE note=%s"
-        tuple_note = (evaluation_id, eleve_id, note, note)
+        sql = "SELECT  CAST(note AS CHAR) FROM Evaluer WHERE evaluation_id=%s AND eleve_id=%s"
+        tuple_note = (evaluation_id, eleve_id)
         cursor.execute(sql, tuple_note)
-        connection.commit()
+        records = cursor.fetchall()
+        print(records)
+        print("All eleve of Eleves (", cursor.rowcount, "): ")
         cursor.close()
         connection.close()
         print("MySQL connection is closed")
+        if records:
+            return (records[0][0])
+        else:
+            return('')
     except Error as e:
         print("Error while connecting to MySQL", e)
-        messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
 
-
-
+        
 def sql_read_eleves():
     """
     Fonction appelée par 'afficher_eleves()'
@@ -953,7 +984,8 @@ def sql_tableau_notation():
         for row in records:
             # print("\t", row)
             eleve_id += [row[0]]
-            tableau += [[row[1], row[2], ]]  # nom, prenom, vide
+            note = sql_read_note(evaluation_selected[0], row[0])
+            tableau += [[row[1], row[2], note]]  # nom, prenom, note
         cursor.close()
         connection.close()
         print("MySQL connection is closed")
