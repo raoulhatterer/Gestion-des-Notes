@@ -104,7 +104,10 @@ def select_evaluation(response):
     print(index)
     evaluations_traduites = sql_traduis_evaluations()
     evaluation_selected = evaluations_traduites[index]
-    print('Évaluation :', evaluation_selected)    
+    print('Évaluation :', evaluation_selected)
+    nom_controle_entry_text.set(evaluation_selected[2])
+    date_controle_entry_text.set(evaluation_selected[3])
+    date_visible_entry_text.set(evaluation_selected[4])
     
 def select_classe(response):
     """
@@ -203,9 +206,6 @@ def afficher_notebook_professeur():
     afficher_enseignements()
     afficher_selections_et_parametres_evaluations()
     afficher_evaluations()
-
-
-
 
 
 # ------------------------------------------------------------------------------
@@ -601,8 +601,7 @@ def afficher_disciplines():
                                        "cut",
                                        "paste",
                                        "delete",
-                                       "undo",
-                                       "edit_cell"))
+                                       "undo"))
 
 
 
@@ -681,8 +680,7 @@ def afficher_professeurs():
                                        "cut",
                                        "paste",
                                        "delete",
-                                       "undo",
-                                       "edit_cell"))
+                                       "undo"))
 
 
 
@@ -693,6 +691,34 @@ def afficher_professeurs():
 # ------------------------------------------------------------------------------
 # ÉLÈVES
 # ------------------------------------------------------------------------------
+
+
+def sql_noter_eleve(evaluation_id, eleve_id, note):
+    """
+    Enregistre la note de l'élève pour l'évaluation
+    """
+    try:
+        print(f"Try to connect to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        print("sql_noter_eleve")
+        cursor = connection.cursor()
+        sql = "INSERT INTO Evaluer (evaluation_id, eleve_id, note) VALUES (%s, %s, %s) ON DUPLICATE KEY UPDATE note=%s"
+        tuple_note = (evaluation_id, eleve_id, note, note)
+        cursor.execute(sql, tuple_note)
+        connection.commit()
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+        messagebox.showwarning("Erreur de connexion", "La base de données est inaccessible")
+
+
 
 def sql_read_eleves():
     """
@@ -734,12 +760,7 @@ def sql_read_eleves():
 def sql_read_eleves_classe():
     """
     Fonction appelée par 'afficher_eleves_classe()'
-    Retourne un tupple contenant 'eleve_id', 'eleves_Name', eleves_Print.
-    eleve_id : liste contenant tous les index générés de façon automatique de
-    la table 'Eleve' de la base de données 'bd_gestion_des_notes'.
-    eleves_Name : liste contenant tous les noms des élèves (dans l'ordre
-    alphabétique) contenus dans la table 'Eleve' de la base de données
-    'eleves_Print': liste affichée dans l'onglet élèves sous forme de tableau
+    Retourne le nom, le prenom et le genre des élèves de la classe sélectionnée dans l'ordre alphabétique 
     """
     try:
         print(f"Try to connect to MySQL Server as {GN_user}")
@@ -764,7 +785,7 @@ def sql_read_eleves_classe():
     except Error as e:
         print("Error while connecting to MySQL", e)
 
-        
+
 def afficher_eleves():
     """
     Affiche un tableau de type tableur avec toutes les élèves (IHM)
@@ -787,8 +808,7 @@ def afficher_eleves():
                                        "cut",
                                        "paste",
                                        "delete",
-                                       "undo",
-                                       "edit_cell"))
+                                       "undo"))
 
 def afficher_eleves_classe():
     """
@@ -906,13 +926,40 @@ def afficher_classes():
                                    "cut",
                                    "paste",
                                    "delete",
-                                   "undo",
-                                   "edit_cell"))
+                                   "undo"))
 
 
-
-
-
+def sql_tableau_notation():
+    """
+    Retourne un tuple contenant 'eleve_id' et un tableau avec le nom, le prénom et un colonne vierge pour noter les élèves de la classe sélectionnée dans l'ordre alphabétique 
+    """
+    try:
+        print(f"Try to connect to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        print("sql_read_eleves_classe")
+        cursor = connection.cursor()
+        sql = "SELECT eleve_id, nom, prenom  FROM Eleve WHERE classe_id=%s ORDER BY nom ASC"
+        tuple_classe = (classe_selected[0],)
+        cursor.execute(sql, tuple_classe)        
+        records = cursor.fetchall()
+        # print(records)
+        print("All eleve of Eleves (", cursor.rowcount, "): ")
+        eleve_id, tableau = list(), list()
+        for row in records:
+            # print("\t", row)
+            eleve_id += [row[0]]
+            tableau += [[row[1], row[2], ]]  # nom, prenom, vide
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        return (eleve_id, tableau)
+    except Error as e:
+        print("Error while connecting to MySQL", e)        
 
 
 
@@ -1027,8 +1074,7 @@ def afficher_annees_et_periodes():
                                        "cut",
                                        "paste",
                                        "delete",
-                                       "undo",
-                                       "edit_cell"))
+                                       "undo"))
     periode_id, periode_Name = sql_read_periodes()
     frame_periodes.grid(row=0, column=1, sticky='we')
     sheet_periodes = Sheet(frame_periodes,
@@ -1048,8 +1094,7 @@ def afficher_annees_et_periodes():
                                        "cut",
                                        "paste",
                                        "delete",
-                                       "undo",
-                                       "edit_cell"))
+                                       "undo"))
 
 # ------------------------------------------------------------------------------
 # ENSEIGNEMENTS
@@ -1334,7 +1379,7 @@ def sql_traduis_evaluations():
 
 def sql_professeur_evaluateur(evaluation_id):
     """
-    Extrait l'id du professeur ayant réalisé l'évaluation
+    Extrait l'id et le nom du professeur ayant réalisé l'évaluation
     """
     try:
         print(f"Try to connect to MySQL Server as {GN_user}")
@@ -1346,7 +1391,7 @@ def sql_professeur_evaluateur(evaluation_id):
         print("Connected to MySQL Server version", db_Info)
         print("sql_professeur_evaluateur")
         cursor = connection.cursor()
-        sql = "SELECT professeur_id FROM Evaluation WHERE evaluation_id=%s;"
+        sql = "SELECT professeur_id , nom FROM Evaluation WHERE evaluation_id=%s;"
         tuple_evaluation = (evaluation_id,)
         cursor.execute(sql, tuple_evaluation)
         records = cursor.fetchall()
@@ -1354,24 +1399,101 @@ def sql_professeur_evaluateur(evaluation_id):
         cursor.close()
         connection.close()
         print("MySQL connection is closed")
-        return (records[0][0])
+        return (records[0])
     
     except Error as e:
         print("Error while connecting to MySQL", e)
 
     
-
+def sql_classe_evaluee(evaluation_id):
+    """
+    Extrait l'id et le nom de la classe visée par l'évaluation
+    """
+    try:
+        print(f"Try to connect to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        print("sql_classe_evaluee")
+        cursor = connection.cursor()
+        sql = "SELECT Evaluation.classe_id, classe.nom FROM Evaluation INNER JOIN Classe ON Evaluation.classe_id=Classe.classe_id  WHERE evaluation_id=%s;"
+        tuple_evaluation = (evaluation_id,)
+        cursor.execute(sql, tuple_evaluation)
+        records = cursor.fetchall()
+        # print(records)
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        return (records[0])
     
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+
+
+def sql_discipline_evaluee(evaluation_id):
+    """
+    Extrait l'id et le nom de la discipline visée par l'évaluation
+    """
+    try:
+        print(f"Try to connect to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        print("sql_discipline_evaluee")
+        cursor = connection.cursor()
+        sql = "SELECT Evaluation.discipline_id, discipline.nom FROM Evaluation INNER JOIN Discipline ON Evaluation.discipline_id=Discipline.discipline_id  WHERE evaluation_id=%s;"
+        tuple_evaluation = (evaluation_id,)
+        cursor.execute(sql, tuple_evaluation)
+        records = cursor.fetchall()
+        # print(records)
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        return (records[0])
+    
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+
+
+def sql_periode_evaluee(evaluation_id):
+    """
+    Extrait l'id et le nom de la periode visée par l'évaluation
+    """
+    try:
+        print(f"Try to connect to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        print("sql_periode_evaluee")
+        cursor = connection.cursor()
+        sql = "SELECT Evaluation.periode_id, periode.nom FROM Evaluation INNER JOIN Periode ON Evaluation.periode_id=Periode.periode_id  WHERE evaluation_id=%s;"
+        tuple_evaluation = (evaluation_id,)
+        cursor.execute(sql, tuple_evaluation)
+        records = cursor.fetchall()
+        # print(records)
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        return (records[0])
+    
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+
+
 def afficher_evaluations():
     """
     Affiche l'IHM des Evaluations
     """
     global sheet_evaluations
-    # evaluations = sql_read_evaluations(current_user_id)
-    # print("Evaluations:")
-    # print("nom, date_controle, date_visible, discipline_id, professeur_id, classe_id, periode_id")
-    # for row in evaluations:
-    #     print(row)
     evaluations_traduites = sql_traduis_evaluations()
     sheet_evaluations = Sheet(f7,
                               data=evaluations_traduites,
@@ -1522,14 +1644,76 @@ def filtrer_mes_evaluations():
 
 def noter():
     """
-    Permet de noter l'évaluation sélectionnée
+    Permet de noter les élèves pour l'évaluation sélectionnée
     """
-    # print(sql_professeur_evaluateur(evaluation_selected[0]))
-    # print(current_user_id)
-    if evaluation_selected and (sql_professeur_evaluateur(evaluation_selected[0]) == current_user_id):
+    global professeur_selected, classe_selected, discipline_selected, periode_selected, tableau_notation, tableau_notation_id, button_mes_evaluations, button_noter, button_retour, button_enregistrer
+    if evaluation_selected and (sql_professeur_evaluateur(evaluation_selected[0])[0] == current_user_id):
         print("Notation de l'évaluation autorisée")
+        professeur_selected = sql_professeur_evaluateur(evaluation_selected[0])
+        classe_selected = sql_classe_evaluee(evaluation_selected[0])
+        discipline_selected = sql_discipline_evaluee(evaluation_selected[0])
+        periode_selected = sql_periode_evaluee(evaluation_selected[0])        
+        appliquer_selections()
+        tableau_notation_id, tableau_notation = sql_tableau_notation()
+        sheet_tableau_notation = Sheet(f7,
+                                      data=tableau_notation,  # to set sheet data at startup
+                                      headers=["Nom", "Prénom", "Note"],
+                                      #set_all_heights_and_widths = True,
+                                      height=470,
+                                      width=800)
+        sheet_tableau_notation.hide("row_index")
+        sheet_tableau_notation.hide("top_left")
+        # sheet_tableau_notation.hide("header")
+        sheet_evaluations.destroy()
+        sheet_tableau_notation.grid(row=1, column=0, columnspan=2)
+        # sheet_tableau_notations.extra_bindings([ ("cell_select", select_evaluation)])        
+        sheet_tableau_notation.enable_bindings(("cell_select",
+                                               "single_select",  # "single_select" or "toggle_select"
+                                               "arrowkeys",
+                                               "copy",
+                                               "cut",
+                                               "paste",
+                                               "delete",
+                                               "undo",
+                                               "edit_cell"))
+        button_mes_evaluations.destroy()
+        button_noter.destroy()
+        button_retour = tk.Button(f7, text='Retour',
+                                  command=retour_evaluations)
+        button_enregistrer = tk.Button(f7, text='Enregistrer',
+                               command=enregistrer_notes)
+        button_retour.grid(row=2, column=0)
+        button_enregistrer.grid(row=2, column=1)
+        
+        
     else:
         messagebox.showwarning("Opération non valide","Veuillez sélectionner une de vos évaluations.")
+
+
+def enregistrer_notes():
+    """
+    Enregistre les notes des élèves dans la table Evaluer
+    """
+    for index in range(len(tableau_notation)):
+        if len(tableau_notation[index]) > 2:
+            note = tableau_notation[index][2] 
+            sql_noter_eleve(evaluation_selected[0], tableau_notation_id[index], note)
+        
+def retour_evaluations():
+    """
+    Rétabli l'affichage par défaut des évaluations
+    """
+    global button_mes_evaluations, button_noter, button_retour, button_enregistrer
+    button_retour.destroy()
+    button_enregistrer.destroy()
+    button_mes_evaluations = tk.Button(f7, text='Filtrer mes évaluations',
+                                       command=filtrer_mes_evaluations)
+    button_noter = tk.Button(f7, text='Noter',
+                             command=noter)
+    button_mes_evaluations.grid(row=2, column=0)
+    button_noter.grid(row=2, column=1, sticky=tk.W)
+    deselect_classe()
+    deselect_discipline()
 
 
 # ------------------------------------------------------------------------------

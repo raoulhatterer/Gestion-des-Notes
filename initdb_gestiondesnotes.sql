@@ -558,6 +558,9 @@ CREATE OR REPLACE TABLE Evaluer (
 -- Exemple:
 -- INSERT INTO Evaluer (evaluation_id, eleve_id, note)  VALUES (2, 2, 17);
 
+GRANT INSERT, UPDATE, DELETE
+ON bd_gestion_des_notes.Evaluer
+TO role_professeur;
 
 
 
