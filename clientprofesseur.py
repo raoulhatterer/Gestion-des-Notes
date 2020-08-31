@@ -115,6 +115,8 @@ def select_classe(response):
     """
     global classe_selected
     index = response[1]
+    if classe_selected:
+        deselect_classe()
     classe_selected = (classe_id[index], classe_Name[index])
     appliquer_selections()
 
@@ -125,7 +127,7 @@ def deselect_classe():
     """
     global classe_selected
     classe_selected = None
-    sheet_eleves_classe.destroy()
+    sheet_moyenne_eleves.destroy()
     appliquer_selections()    
 
 
@@ -174,7 +176,7 @@ def appliquer_selections():
     """
     frame_selection_classes.destroy()
     afficher_selections_classes()
-    afficher_eleves_classe()
+    afficher_moyenne_eleves()
     frame_selection_enseignements.destroy()    
     afficher_selections_enseignements()
     sheet_enseignements.destroy()
@@ -723,7 +725,7 @@ def sql_read_eleves():
         cursor.execute("select eleve_id, prenom, Eleve.nom, genre, classe.nom FROM Eleve INNER JOIN Classe ON Eleve.classe_id = Classe.classe_id ORDER BY Eleve.nom ASC")        
         records = cursor.fetchall()
         # print(records)
-        print("All eleve of Eleves (", cursor.rowcount, "): ")
+        print("Nombre d'enregistrements (", cursor.rowcount, "): ")
         eleve_id, eleves_Print, eleves_Name = list(), list(), list()
         for row in records:
             # print("\t", row)
@@ -737,9 +739,9 @@ def sql_read_eleves():
     except Error as e:
         print("Error while connecting to MySQL", e)
 
-def sql_read_eleves_classe():
+def sql_read_moyenne_eleves():
     """
-    Fonction appelée par 'afficher_eleves_classe()'
+    Fonction appelée par 'afficher_moyenne_eleves()'
     Retourne le nom, le prenom et le genre des élèves de la classe sélectionnée dans l'ordre alphabétique 
     """
     try:
@@ -750,18 +752,24 @@ def sql_read_eleves_classe():
                                              password=GN_password)
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server version", db_Info)
-        print("sql_read_eleves_classe")
+        print("sql_read_moyenne_eleves")
         cursor = connection.cursor()
-        sql = "SELECT nom, prenom, genre FROM Eleve WHERE classe_id=%s ORDER BY nom ASC"
+        sql = "SELECT eleve_id, nom, prenom, genre FROM Eleve WHERE classe_id=%s ORDER BY nom ASC"
         tuple_classe = (classe_selected[0],)
         cursor.execute(sql, tuple_classe)        
         records = cursor.fetchall()
-        # print(records)
-        print("All eleve of Eleves (", cursor.rowcount, "): ")
+        print(records)
+        print("Nombre d'enregistrements (", cursor.rowcount, "): ")
+        tableau_moyennes = list()
+        for row in records:
+            print(row[0])
+            moyenne = sql_moyenne_eleve(row[0])
+            print(moyenne)
+            tableau_moyennes += [[row[1], row[2], row[3], moyenne]] # nom, prenom, genre, moyenne
         cursor.close()
         connection.close()
         print("MySQL connection is closed")
-        return (records)
+        return (tableau_moyennes)
     except Error as e:
         print("Error while connecting to MySQL", e)
 
@@ -791,29 +799,6 @@ def afficher_eleves():
                                   "delete",
                                   "undo"))
 
-def afficher_eleves_classe():
-    """
-    Affiche les élèves de la classe sélectionnée dans l'onglet Classe
-    """
-    global sheet_eleves_classe
-    if classe_selected:
-        eleves_classe =  sql_read_eleves_classe()
-        sheet_eleves_classe = Sheet(f4,
-                                    data=eleves_classe,  # to set sheet data at startup
-                                    headers=["Nom", "Prénom", "Genre"],
-                                    set_all_heights_and_widths = True,
-                                    height=600,
-                                    width=400)
-        sheet_eleves.hide("row_index")
-        sheet_eleves.hide("top_left")
-        # sheet_eleves.hide("header")
-        sheet_eleves_classe.grid(row=1, column=1)
-
-
-
-
-
-        
 
 # ------------------------------------------------------------------------------
 # CLASSES
@@ -896,12 +881,12 @@ def afficher_classes():
                           data=classe_Print,  # to set sheet data at startup
                           headers=["Classe", "Niveau", "Année scolaire"],
                           set_all_heights_and_widths = True,
-                          height=600,
+                          height=500,
                           width=400)
     sheet_classes.hide("row_index")
     sheet_classes.hide("top_left")
     # sheet_classes.hide("header")
-    sheet_classes.grid(row=1, column=0)
+    sheet_classes.grid(row=1, column=0, sticky='nw')
     sheet_classes.extra_bindings([ ("cell_select", select_classe)])    
     sheet_classes.enable_bindings(("single_select",  # "single_select" or "toggle_select"
                                    "column_width_resize",
@@ -915,12 +900,12 @@ def afficher_classes():
 
 def afficher_selections_classes():
     """
-    Affiche le professeur, la classe et la discipline sélectionnées dans l'IHM Classes
+    Affiche le professeur, la classe, la discipline et la période sélectionnées dans l'IHM Classes
     """
     global frame_selection_classes
-    print('Sélection:',(professeur_selected, classe_selected, discipline_selected))
+    # print('Sélections:',(professeur_selected, classe_selected, discipline_selected, periode_selected))
     frame_selection_classes = tk.LabelFrame(f4, text=' (id SQL) Sélection ')
-    frame_selection_classes.grid(row=0, column=0)
+    frame_selection_classes.grid(row=0, column=0, columnspan=2)
     # Ligne 1
     lbl_professeur = tk.Label(frame_selection_classes, text = 'Professeur:')
     lbl_professeur.grid(row=0, column=0, sticky=tk.E)
@@ -964,14 +949,14 @@ def sql_tableau_notation():
                                              password=GN_password)
         db_Info = connection.get_server_info()
         print("Connected to MySQL Server version", db_Info)
-        print("sql_read_eleves_classe")
+        print("sql_tableau_notation")
         cursor = connection.cursor()
         sql = "SELECT eleve_id, nom, prenom  FROM Eleve WHERE classe_id=%s ORDER BY nom ASC"
         tuple_classe = (classe_selected[0],)
         cursor.execute(sql, tuple_classe)        
         records = cursor.fetchall()
         # print(records)
-        print("All eleve of Eleves (", cursor.rowcount, "): ")
+        print("Nombre d'enregistrements (", cursor.rowcount, "): ")
         eleve_id, tableau = list(), list()
         for row in records:
             # print("\t", row)
@@ -986,10 +971,27 @@ def sql_tableau_notation():
         print("Error while connecting to MySQL", e)        
 
 
-
+def afficher_moyenne_eleves():
+    """
+    Affiche les élèves de la classe sélectionnée dans l'onglet Classe
+    """
+    global sheet_moyenne_eleves
+    if classe_selected:
+        moyenne_eleves =  sql_read_moyenne_eleves()
+        # print(moyenne_eleves)
+        sheet_moyenne_eleves = Sheet(f4,
+                                    data=moyenne_eleves,  # to set sheet data at startup
+                                    headers=["Nom", "Prénom", "Genre", "Moyenne"],
+                                    set_all_heights_and_widths = True,
+                                    height=500,
+                                    width=400)
+        sheet_eleves.hide("row_index")
+        sheet_eleves.hide("top_left")
+        # sheet_eleves.hide("header")
+        sheet_moyenne_eleves.grid(row=1, column=1, sticky='n')
 
 # ------------------------------------------------------------------------------
-# ANNEES SCOLAIRES et PERIODES
+# ANNÉES SCOLAIRES et PÉRIODES
 # ------------------------------------------------------------------------------
 
 
@@ -1265,7 +1267,7 @@ def afficher_selections_enseignements():
     Affiche le professeur, la classe et la discipline sélectionnées dans l'IHM Enseignements
     """
     global frame_selection_enseignements
-    print('Sélection:',(professeur_selected, classe_selected, discipline_selected))
+    # print('Sélections:',(professeur_selected, classe_selected, discipline_selected))
     frame_selection_enseignements = tk.LabelFrame(f5, text=' (id SQL) Sélection ')
     frame_selection_enseignements.grid(row=0, column=0)
     
@@ -1691,6 +1693,38 @@ def retour_evaluations():
 # EVALUER
 # ------------------------------------------------------------------------------
 
+def sql_moyenne_eleve(eleve_id):
+    """
+    Calcule la moyenne de l'élève
+    """
+    try:
+        print(f"Try to connect to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        print("sql_moyenne_eleve")
+        cursor = connection.cursor()
+        sql = "SELECT CAST(AVG(note) AS CHAR) FROM Evaluer WHERE eleve_id=%s;"
+        tuple_note = (eleve_id,)
+        cursor.execute(sql, tuple_note)
+        records = cursor.fetchall()
+        print(records)
+        print("Nombre d'enregistrements (", cursor.rowcount, "): ")
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        if records==[(None,)]:
+            return('')
+        else:
+            return (records[0][0])
+
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+    
+
 
 def sql_noter_eleve(evaluation_id, eleve_id, note):
     """
@@ -1738,7 +1772,7 @@ def sql_read_note(evaluation_id, eleve_id):
         cursor.execute(sql, tuple_note)
         records = cursor.fetchall()
         print(records)
-        print("All eleve of Eleves (", cursor.rowcount, "): ")
+        print("Nombre d'enregistrements (", cursor.rowcount, "): ")
         cursor.close()
         connection.close()
         print("MySQL connection is closed")
