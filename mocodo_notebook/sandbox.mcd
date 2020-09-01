@@ -1,27 +1,4 @@
 
-Discipline: discipline_id, nom
-Porter, 11 Evaluation, 0N Discipline
-::
-
-Enseigner,  0N Professeur, 0N Discipline, 1N Classe
-Professeur: professeur_id, prenom, nom, titre
-Realiser, 11 Evaluation,  0N Professeur
-Evaluation: evaluation_id, nom, Date_Controle, Date_Visible
-
-:
-    
-Classe: classe_id, nom, niveau
-Destiner, 11 Evaluation, 0N Classe
-Evaluer, 1N Evaluation, 1N Eleve: note
-Situer, 0N AnneeScolaire, 0N Periode, 11 Evaluation
-
-:
-Appartenir, 1N Classe, 11 Eleve
-Eleve: eleve_id, prénom, nom, genre
-:
-Periode: periode_id, nom
-
-Exister, 0N AnneeScolaire, 11 Classe
-::
-AnneeScolaire: annee_id, nom
-:
+Administrateur: FirstName, LastName, Gender, Birthday, Login
+Assurer, 11 Administrateur, 1N Fonction
+Fonction: Func_Id, Func_Name

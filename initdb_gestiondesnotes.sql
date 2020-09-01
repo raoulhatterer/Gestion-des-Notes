@@ -48,7 +48,6 @@ GRANT role_gestionnaire TO stil@localhost;
 SET DEFAULT ROLE role_gestionnaire FOR stil@localhost;
 GRANT ALL ON *.* TO stil@localhost WITH GRANT OPTION; 
 
-
 CREATE OR replace USER  proviseur@localhost IDENTIFIED BY 'p';                 
 GRANT role_gestionnaire TO proviseur@localhost;
 SET DEFAULT ROLE role_gestionnaire FOR proviseur@localhost;

@@ -27,6 +27,7 @@ import tkinter.simpledialog as tks
 # SOURCE ./initdb_gestiondesnotes.sql;                                 
 # pour créer la base de données et les utlisateurs stil et gestionnaire
 # et initialiser les tables de la BD.
+# Donner le bon user dans la fonction() `sql_grant_role()` de ce script. 
 
 # ------------------------------------------------------------------------------
 # MariaDB

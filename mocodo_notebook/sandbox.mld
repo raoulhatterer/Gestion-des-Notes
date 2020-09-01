@@ -1,33 +1,6 @@
 %%mocodo
 :
-Discipline: discipline_id, nom
-:::::::::
-
-
+Administrateur: FirstName, LastName, Gender, Birthday, Login, #Func_Id->Fonction->Func_Id
 :
-Enseigner: #professeur_id->Professeur->professeur_id, _#discipline_id->Discipline->discipline_id, _#classe_id->Classe->classe_id
+Fonction: Func_Id, Func_Name
 :
-Professeur: professeur_id, prenom, nom, titre
-:::
-Evaluation: evaluation_id, nom, Date_Controle, Date_Visible, #discipline_id->Discipline->discipline_id, #professeur_id->Professeur->professeur_id, #classe_id->Classe->classe_id, #annee_id->AnneeScolaire->annee_id, #periode_id->Periode->periode_id
-:::
-
-
-
-:
-Classe: classe_id, nom, niveau, #annee_id->AnneeScolaire->annee_id
-:::
-Evaluer: #evaluation_id->Evaluation->evaluation_id, _#eleve_id->Eleve->eleve_id, note
-:::::
-
-
-:::::
-Eleve: eleve_id, prénom, nom, genre, #classe_id->Classe->classe_id
-:::
-Periode: periode_id, nom
-:
-
-
-:::::::
-AnneeScolaire: annee_id, nom
-:::
