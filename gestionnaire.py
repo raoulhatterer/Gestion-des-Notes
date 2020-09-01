@@ -10,6 +10,7 @@ from tkinter import messagebox
 from tkinter import ttk
 # installer tksheet avec pip
 from tksheet import Sheet
+import tkinter.simpledialog as tks
 
 # pour debugger
 # import pdb
@@ -761,12 +762,146 @@ def enregistrer_professeurs():
         print("MySQL connection is closed")
         # Rafraîchissement IHM
         sheet_professeurs.destroy()
+        ajouter_utilisateur()
         afficher_professeurs()
 
     except Error as e:
         print("Error while connecting to MySQL", e)
 
 
+
+def sql_professeurs_login():
+    """
+    Ajoute un utilisateur avec le rôle role_professeur
+    """
+    try:
+        print(f"Try to connect to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        print("sql_professeurs_login")
+        cursor = connection.cursor()
+        cursor.execute("select CONCAT(LOWER(prenom), LOWER(nom)) from Professeur;")
+        records = cursor.fetchall()
+        # print(records)
+        professeurs_login = list()
+        for row in records:
+            professeurs_login += [row[0]]
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        return(professeurs_login)
+
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+
+
+
+def sql_mysql_users():
+    """
+    Ajoute un utilisateur avec le rôle role_professeur
+    """
+    try:
+        print(f"Try to connect to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        print("mysql_users")
+        cursor = connection.cursor()
+        cursor.execute("select USER from mysql.USER;")
+        records = cursor.fetchall()
+        # print(records)
+        mysql_users = list()
+        for row in records:
+            mysql_users += [row[0]]
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        return(mysql_users)
+
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+
+
+
+def ajouter_utilisateur():
+    """
+    Vérifie que tous les professeurs de la table 'Professeur' ont un compte utilisateur sinon en crée un.
+    """
+    professeurs_login= sql_professeurs_login()
+    mysql_users = sql_mysql_users()
+
+    for login in professeurs_login:
+        if login not in mysql_users:
+            sql_create_user(login)
+            sql_grant_role(login)
+            messagebox.showwarning("Pour accéder au client professeur", f"Login: {login}\nMot de passe: p")
+
+
+
+def sql_create_user(login):
+    """
+    Crée un nouvel utilisateur mysql
+    """
+    try:
+        print(f"Try to connect to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user=GN_user,
+                                             password=GN_password)
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        print("sql_create_user")
+        cursor = connection.cursor()
+        sql = """CREATE OR REPLACE USER %s@localhost IDENTIFIED by 'p'"""
+        tuple_user = (login,)
+        cursor.execute(sql, tuple_user)
+        connection.commit()
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+
+def sql_grant_role(login):
+    """
+    Donne le rôle de professeur au nouvel utilisateur pour qu'il puisse se connecter au client professeur 
+    """
+
+    try:
+        print(f"Try to connect to MySQL Server as {GN_user}")
+        connection = mysql.connector.connect(host=GN_host,
+                                             database=GN_database,
+                                             user='root',
+                                             password= tks.askstring(login , "Entrer le mot de passe root:", show='*', parent=root))
+        db_Info = connection.get_server_info()
+        print("Connected to MySQL Server version", db_Info)
+        print("sql_grant_role")
+        cursor = connection.cursor()
+        sql = """GRANT role_professeur to  %s@localhost;"""
+        tuple_user = (login,)
+        cursor.execute(sql, tuple_user)
+        connection.commit()
+        sql = """SET DEFAULT ROLE role_professeur FOR  %s@localhost;"""
+        tuple_user = (login,)
+        cursor.execute(sql, tuple_user)
+        connection.commit()        
+        cursor.close()
+        connection.close()
+        print("MySQL connection is closed")
+        
+    except Error as e:
+        print("Error while connecting to MySQL", e)
+
+        
+        
 def ajouter_professeur():
     """
     Ajoute un nouveau professeur dans le tableau des professeurs (et dans

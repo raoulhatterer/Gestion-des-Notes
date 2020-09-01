@@ -25,10 +25,9 @@ SET FOREIGN_KEY_CHECKS=1; -- to re-enable them
 -- ------------------------------------------------
 -- Création de différents rôles
 CREATE OR replace ROLE role_gestionnaire;
-GRANT ALL 
-ON bd_gestion_des_notes.* 
-TO role_gestionnaire;
-
+GRANT ALL ON bd_gestion_des_notes.* TO role_gestionnaire;
+grant ALL PRIVILEGES ON *.* to role_gestionnaire;
+FLUSH PRIVILEGES; 
 
 CREATE OR replace ROLE role_professeur;
 GRANT SELECT
@@ -47,17 +46,20 @@ TO role_professeur;
 CREATE OR replace USER  stil@localhost IDENTIFIED BY 's';                 
 GRANT role_gestionnaire TO stil@localhost;
 SET DEFAULT ROLE role_gestionnaire FOR stil@localhost;
+GRANT ALL ON *.* TO stil@localhost WITH GRANT OPTION; 
+
 
 CREATE OR replace USER  proviseur@localhost IDENTIFIED BY 'p';                 
 GRANT role_gestionnaire TO proviseur@localhost;
 SET DEFAULT ROLE role_gestionnaire FOR proviseur@localhost;
+GRANT ALL ON *.* TO proviseur@localhost WITH GRANT OPTION; 
 
 CREATE OR replace USER  noel_gest@localhost IDENTIFIED BY 'noel';                 
 GRANT role_gestionnaire TO noel_gest@localhost;
 SET DEFAULT ROLE role_gestionnaire FOR noel_gest@localhost;
+GRANT ALL ON *.* TO noel_gest@localhost WITH GRANT OPTION; 
 
-
--- FLUSH PRIVILEGES; pas utile avec les rôles
+FLUSH PRIVILEGES; 
 
 
 -- ------------------------------------------------

@@ -11,6 +11,7 @@ from tkinter import ttk
 # installer tksheet avec pip
 from tksheet import Sheet
 
+
 # pour debugger
 # import pdb
 # pdb.set_trace()
@@ -276,7 +277,7 @@ def sql_read_professeur():
         print(f"Connected to MySQL Server version {db_Info}")
         print("sql_read_professeur")
         cursor = connection.cursor()
-        sql = "SELECT prenom, nom, titre, professeur_id FROM Professeur WHERE  CONCAT(prenom, nom)=%s"
+        sql = "SELECT prenom, nom, titre, professeur_id FROM Professeur WHERE  CONCAT(LOWER(prenom), LOWER(nom))=%s"
         tuple_login=(GN_user,)
         cursor.execute(sql, tuple_login)
         records = cursor.fetchall()
@@ -1874,6 +1875,7 @@ def enregistrer_notes():
 
 root = tk.Tk()
 root.title("Gestion des notes (R. Hatterer) CLIENT PROFESSEUR")
+
 root.resizable(False, False)
 style = ttk.Style(root)
 style.configure("lefttab.TNotebook", tabposition="n")
